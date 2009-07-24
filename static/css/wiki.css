@@ -71,13 +71,29 @@
     white-space: -moz-pre-wrap;
     white-space: -pre-wrap;
     white-space: -o-pre-wrap;
- line-height: 1.2;
- color: #666;
- font-family: Droid Mono, DejaVu Mono, Lucida Console, Lucida Typewriter, monospace;
+    line-height: 1.2;
+    color: #666;
+    font-family: Droid Mono, DejaVu Mono, Lucida Console, Lucida Typewriter, monospace;
+    background: #f7f7f7;
+    border: 1px solid #d7d7d7;
+    margin: 1em 1.75em;
+    padding: .25em;
+    overflow: auto;
 }
 
 img.smiley {
  vertical-align: baseline;
+}
+
+.wiki table {
+    border: 2px solid #ccc;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.wiki table td {
+    border: 1px solid #ccc;
+    padding: .1em .25em;
 }
 
 .wiki i img {
