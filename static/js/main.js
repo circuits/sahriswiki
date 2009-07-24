@@ -248,8 +248,6 @@ function main() {
             }
         });
 
-        $("#window").corners()
-        $("#buttons a").corners()
         $("#content").dblclick(doEdit);
 
         $(document).keypress(handleKeyPressed);
