@@ -1,0 +1,287 @@
+/* Main Layout */
+
+* {
+	font-family: "Bitstream Vera Sans", "Verdana", sans-serif;
+	font-size: 10pt;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: none rgb(240, 255, 240);
+	min-width: 800px;
+}
+
+h1 {
+	font-size: 18pt;
+}
+
+h2 {
+	font-size: 16pt;
+}
+
+h3 {
+	font-size: 14pt;
+}
+
+h4 {
+	font-size: 12pt;
+}
+
+h5 {
+	font-size: 8pt;
+}
+
+a:link, a:visited {
+	color: #888888;
+	text-decoration: none;
+	border-bottom: 1px dashed;
+}
+
+a:focus, a:hover, a:active {
+	border-bottom: 1px solid;
+}
+
+#window {
+	position: relative;
+	width: 800px;
+	top: 10px;
+	margin: 0 auto;
+	border: 2px solid rgb(100, 155, 100);
+	background: none rgb(255, 255, 255);
+}
+
+#header, #footer {
+	background: none rgb(34, 170, 34);
+	color: rgb(255, 255, 255);
+}
+
+#header {
+	padding: 5px 5px 5px 5px;
+}
+
+#header h1 {
+	text-align: center;
+}
+
+#footer {
+    height: 20px;
+	padding: 5px 5px 5px 5px;
+}
+
+/* Content */
+
+#content {
+	margin: 0 auto;
+	padding: 20px;
+	height: 600px;
+	border: none;
+	background: none rgb(255, 255, 255);
+    overflow: auto;
+    clear: both;
+}
+
+.content h2 {
+	padding: 6px 0;
+}
+
+.content dt {
+	padding: 4px 0;
+}
+
+.content dd {
+	padding: 0 20px;
+}
+
+/* Editor */
+
+label.author {
+    display: block;
+    width: 97%;
+    margin: 0 auto;
+    text-align: right
+}
+
+label.author input {
+    width: 10em;
+    margin: 0.5em 0 0.5em 0.5em;
+}
+
+label.comment input { 
+    display: block;
+    margin: 0.5em auto;
+    width: 97%;
+}
+
+/* Menu */
+
+#menu {
+ background: #f7f7f7 url(../images/topbar_gradient.png) 0 0;
+ border: 1px solid #000;
+ font: normal 10px verdana,'Bitstream Vera Sans',helvetica,arial,sans-serif;
+ margin: .66em 0 .33em;
+ padding: .2em 0;
+}
+
+#menu li { border-right: none; padding: .25em 0 }
+
+#menu :link, #menu :visited {
+ background: url(../images/dots.gif) 0 0 no-repeat;
+ border-right: 1px solid #fff;
+ border-bottom: none;
+ border-left: 1px solid #555;
+ color: #000;
+ padding: .2em 20px;
+}
+
+* html #menu :link, * html #menu :visited { background-position: 1px 0 }
+
+#menu :link:hover, #menu :visited:hover {
+ background-color: #ccc;
+ border-right: 1px solid #ddd;
+}
+
+#menu .active :link, #menu .active :visited {
+ background: #333 url(../images/topbar_gradient2.png) 0 0 repeat-x;
+ border-top: none;
+ border-right: 1px solid #000;
+ color: #eee;
+ font-weight: bold;
+}
+
+#menu .active :link:hover, #menu .active :visited:hover {
+ border-right: 1px solid #000;
+}
+
+/* Navigation */
+
+.nav h2, .nav hr { display: none }
+.nav ul { font-size: 10px; list-style: none; margin: 0; text-align: right }
+.nav li {
+ border-right: 1px solid #d7d7d7;
+ display: inline;
+ padding: 0 .75em;
+ white-space: nowrap;
+}
+.nav li.last { border-right: none }
+
+/* Context Navigation */
+
+#ctxtnav {
+    height: 1em
+    padding: 5px;
+}
+#ctxtnav li ul {
+ background: #f7f7f7;
+ color: #ccc;
+ border: 1px solid;
+ padding: 0;
+ display: inline;
+ margin: 0;
+}
+#ctxtnav li li { padding: 0; }
+#ctxtnav li li :link, #ctxtnav li li :visited { padding: 0 1em }
+#ctxtnav li li :link:hover, #ctxtnav li li :visited:hover {
+ background: #bba;
+ color: #fff;
+}
+
+/* validate icons */
+
+#icons {
+	float: right;
+	margin-top: 5px;
+}
+
+#icons img, a:link, a:active, a:focus, a:visited, a:hover {
+	border: none;
+}
+
+/* Buttons */
+
+#buttons {
+    float: left;
+    border-right: 1px solid #d00;
+}
+
+#buttons a {
+	padding: 2px;
+	margin: 0px;
+	color: rgb(0, 0, 0);
+	text-decoration: none;
+    border: none;
+}
+
+#buttons a:hover {
+	background: rgb(100, 100, 100);
+}
+
+/* Status */
+
+#status {
+    float: left;
+}
+
+/* Styles for the error page (and rst errors) */
+#content.error .message, div.system-message {
+ background: #fdc;
+ border: 2px solid #d00;
+ color: #500;
+ padding: .5em;
+ margin: 1em 0;
+}
+#content.error div.message pre, div.system-message pre {
+  margin-left: 1em;
+  overflow: hidden;
+  white-space: normal;
+}
+div.system-message p { margin: 0; }
+div.system-message p.system-message-title { font-weight: bold; }
+
+#warning.system-message { background: #ffa; border: 2px solid #886; }
+#warning.system-message li { list-style-type: square; }
+
+#notice.system-message { background: #bfb; border: 2px solid #484; }
+#notice.system-message li { list-style-type: square; }
+
+#content.error form.newticket { display: inline; }
+#content.error form.newticket textarea { display: none; }
+
+#content.error #systeminfo { margin: 1em; width: auto; }
+#content.error #systeminfo th { font-weight: bold; text-align: right; }
+
+#content.error #traceback { margin-left: 1em; }
+#content.error #traceback :link, #content.error #traceback :visited {
+  border: none;
+}
+#content.error #tbtoggle { font-size: 80%; }
+#content.error #traceback div { margin-left: 1em; }
+#content.error #traceback h3 { font-size: 95%; margin: .5em 0 0; }
+#content.error #traceback :link var, #content.error #traceback :visited var {
+  font-family: monospace;
+  font-style: normal;
+  font-weight: bold;
+}
+#content.error #traceback span.file { color: #666; font-size: 85%; }
+#content.error #traceback ul { list-style: none; margin: .5em 0; padding: 0; }
+#content.error #traceback ol {
+  border: 1px dotted #d7d7d7;
+  color: #999;
+  font-size: 85%;
+  line-height: 1;
+  margin: .5em 0;
+}
+#content.error #traceback ol li { white-space: pre; }
+#content.error #traceback ol li.current { background: #e6e6e6; color: #333; }
+#content.error #traceback ol li code { color: #666; }
+#content.error #traceback ol li.current code { color: #000; }
+#content.error #traceback table { margin: .5em 0 1em;  }
+#content.error #traceback th, #content.error #traceback td {
+  font-size: 85%; padding: 1px;
+}
+#content.error #traceback th var {
+  font-family: monospace;
+  font-style: normal;
+}
+#content.error #traceback td code { white-space: pre; }
+#content.error #traceback pre { font-size: 95%; }
