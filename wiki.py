@@ -26,10 +26,9 @@ from mercurial.hgweb import hgweb
 from circuits import Manager, Debugger
 from circuits.net.pollers import Select, Poll
 
-from circuits.web.utils import url
 from circuits.web.wsgi import Gateway
 from circuits.web.utils import url_quote, url_unquote
-from circuits.web import Server, Controller, Logger, Static
+from circuits.web import expose, url, Server, Controller, Logger, Static
 
 try:
     from circuits.net.pollers import EPoll
@@ -449,12 +448,14 @@ class WikiStorage(object):
 
 class Root(Controller):
 
-    def GET(self, *args, **kwargs):
+    def index(self):
         self.expires(2592000)
-        if self.request.path == "favicon.ico":
-            return self.serve_file(abspath("static/favicon.ico"))
-        else:
-            return self.serve_file(abspath("static/index.xhtml"))
+        return self.serve_file(abspath("static/index.xhtml"))
+
+    @expose("favicon.ico")
+    def favicon(self):
+        self.expires(2592000)
+        return self.serve_file(abspath("static/favicon.ico"))
 
     def getip(self):
         self.response.headers["Content-Type"] = "application/javascript"
