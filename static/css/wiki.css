@@ -8,6 +8,10 @@
  padding: 1px 0 0 0;
 }
 
+.wiki p {
+    padding-top: 10px;
+}
+
 .wiki a {
  color: #3465a4;
  text-decoration: none;
@@ -63,6 +67,12 @@
  line-height: 1;
  margin: 0.75em 0 0.5em 0;
 }
+
+h1 { font-size: 19px; margin: .15em 1em 0.5em 0 }
+h2 { font-size: 16px }
+h3 { font-size: 14px }
+hr { border: none;  border-top: 1px solid #ccb; margin: 2em 0 }
+address { font-style: normal }
 
 .wiki pre {
  font-size: 90%;
