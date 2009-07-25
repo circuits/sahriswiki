@@ -449,11 +449,7 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
         console.log("Page failed...");
         console.log(page);
 
-        if (page.status == 404) {
-            this.setError("Page not found");
-        } else {
-            this.setError("Unknown error: " + page.status);
-        }
+        this.setError(page.message);
     }
 });
 
