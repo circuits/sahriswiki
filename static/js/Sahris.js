@@ -116,7 +116,11 @@ Sahris.UI = new Class({
             "failed": this.onFailed.bind(this)
         });
 
-        this.tpl = new Sahris.Template(document.body, "/templates/base.xhtml");
+        this.el = $(document.body);
+        this.url = "/templates/base.xhtml";
+
+        this.tpl = new Sahris.Template(this.el, this.url);
+
         this.tpl.on("loaded", this._onTplLoaded.bind(this));
         this.tpl.on("failed", this._onTplFailed.bind(this));
     },
