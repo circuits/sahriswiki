@@ -153,7 +153,7 @@ Sahris.Page = new Class({
     Extends: Component,
 
     initialize: function(el, baseurl, defaultPage) {
-        this.el = $(el);
+        this.el = el;
         this.baseurl = baseurl;
         this.defaultPage = defaultPage;
 
