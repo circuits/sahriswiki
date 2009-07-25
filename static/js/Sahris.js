@@ -74,7 +74,7 @@ Sahris.Template = new Class({
     Extends: Component,
 
     initialize: function(el, url) {
-        this.el = $(el);
+        this.el = el;
         this.url = url;
 
         this.addEvents({
