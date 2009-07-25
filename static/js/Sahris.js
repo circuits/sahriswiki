@@ -271,15 +271,18 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
             author: $("#editor #fields input[name=author]").val()
         };
 
+
+        var callback = function(o) {
+            this.setStatus(o.message);
+        };
+
         $.ajax({
             type: "POST",
             url: "/wiki/" + this.page.name,
             data: $.json.encode(data),
             dataType: "json",
             contentType: "application/javascript",
-            success: function(data) {
-                console.log(data);
-            }
+            success: callback.createDelegate(this)
         });
 
         this.edit(false);
