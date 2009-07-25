@@ -193,6 +193,17 @@ Sahris.Page = new Class({
                 self.fire("failed", xhr.status, xhr.statusText);
             }
         });
+    },
+
+    onLoaded: function() {
+        console.log("Page loaded");
+    },
+
+    onFailed: function(status, statusText) {
+        console.log("Page failed: {status} {statusText}".substitute({
+            status: status,
+            statusText: statusText
+        }));
     }
 });
 
