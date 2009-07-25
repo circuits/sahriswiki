@@ -113,8 +113,7 @@ Sahris.Page = Ext.extend(Ext.util.Observable, {
         var callback = function(o) {
             this.success = o.success;
             if (o.success) {
-                Ext.apply(this, o.page);
-                Ext.apply(this, o.meta);
+                Ext.apply(this, o.data);
                 this.fireEvent("loaded", this);
             } else {
                 this.message = o.message;
