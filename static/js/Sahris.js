@@ -431,6 +431,8 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
 
         $("#ctxnav a#history").attr("href", "#History/" + name);
 
+        this.setTitle(name);
+
         this.setStatus(this.templates.meta, {
                 author: page.author,
                 rev: page.rev,
