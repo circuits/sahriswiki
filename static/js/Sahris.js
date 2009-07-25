@@ -429,7 +429,9 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
             }
         });
 
-        $("#ctxnav a#history").attr("href", "#History/" + page.name);
+        if (page.name) {
+            $("#ctxnav a#history").attr("href", "#History/" + page.name);
+        }
 
         this.setTitle(page.name);
 
