@@ -8,23 +8,118 @@
  * @license     MIT (See LICENSE file in source distribution)
  */
 
-var Sahris = {};
+//
+// mootools Enhancements
+//
 
-Sahris = (function() {
-    var version = "0.1";
+Native.implement([Events, Element, Window, Document], {
+    on: function(type, fn) {
+        this.addEvent(type, fn);
+    },
 
-    return {
-        init: function() {
-            var ui = new Sahris.UI();
-            ui.load();
-        },
-        
-        getVersion: function() {
-            return version;
-        }
-    };
-})();
+    fire: function(type, args) {
+        this.fireEvent(type, args);
+    },
 
+    un: function(type, fn) {
+        this.removeEvent(type, fn);
+    }
+});
+
+var Component = new Class({
+    Extends: Events,
+});
+
+var Foo = new Class({
+    Extends: Component,
+
+    initialize: function() {
+        this.foo = "Hello World!";
+    },
+
+    hello: function() {
+        console.log(this.foo);
+        this.fire("hello");
+    },
+});
+
+var foo = new Foo();
+foo.on("hello", function() {
+    alert("Hello World!");
+});
+
+//
+// Sahris
+//
+
+var Sahris = {
+    version: "0.1"
+};
+
+Sahris.App = new Class({
+    Extends: Component,
+
+    initialize: function() {
+        console.log("Sahris.App initializing...");
+        this.ui = new Sahris.UI();
+    },
+
+    run: function() {
+        console.log("Sahris.App running...");
+        this.ui.load();
+    }
+});
+
+Sahris.Template = new Class({
+    Extends: Component,
+
+    initialize: function(el, url) {
+        this.el = $(el);
+        this.url = url;
+
+        this.addEvents({
+            "loaded": this.onLoaded.bind(this),
+            "failed": this.onFailed.bind(this)
+        });
+    },
+
+    load: function() {
+        var self = this;
+        this.el.set("load", {
+            "onSuccess": function(responseText, responseXML) {
+               self.fire("loaded");
+            },
+            "onFailure": function(xhr) {
+                self.fire("failed", xhr.status, xhr.statusText);
+            }
+        }).load(this.url);
+    },
+
+    onLoaded: function() {
+        console.log("Template loaded");
+    },
+
+    onFailed: function(status, statusText) {
+        console.log("Template failed: {status} {statusText}".substitute({
+            status: status,
+            statusText: statusText
+        }));
+    }
+});
+
+Sahris.UI = new Class({
+    Extends: Component,
+
+    initialize: function() {
+        this.tpl = new Sahris.Template(document.body, "/templates/base.xhtml");
+    },
+
+    load: function() {
+        this.tpl.load();
+    }
+});
+
+/*
 Sahris.Menu = function() {
 
     return {
@@ -135,30 +230,6 @@ Sahris.Parser = function() {
         parse: function(el, text) {
             this.creole.parse(el, text);
             this.fireEvent("parsed");
-        }
-    }
-}
-
-Sahris.Template = function() {
-    var url = null;
-
-    return {
-        init: function(url) {
-            this.url = url;
-
-            this.addEvents(
-                "loaded",
-            "failed"
-            );
-
-        },
-
-        load: function() {
-            var callback = function() {
-                this.fireEvent("loaded", this);
-            };
-
-            $("body").load(this.url, callback.createDelegate(this));
         }
     }
 }
@@ -428,34 +499,9 @@ Sahris.UI = function() {
         }
     }
 }
+*/
 
-$(document).ready(Sahris.init, Sahris);
-
-var Base = new Class({
-    Extends: Events,
-
-    on: this.addEvent,
-    un: this.removeEvent
-});
-
-var Foo = new Class({
-    Extends: Base,
-
-    initialize: function() {
-        this.foo = "Hello World!";
-    },
-
-    hello: function() {
-        console.log(this.foo);
-        this.fireEvent("hello");
-    },
-
-    onHello: function() {
-        console.log("Hello!");
-    }
-});
-
-var foo = new Foo();
-foo.on("hello", function() {
-    alert("Hello World!");
+$(document).on("domready", function() {
+    console.log("Ready!");
+    new Sahris.App().run();
 });
