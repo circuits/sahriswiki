@@ -55,7 +55,7 @@ def parse_options():
             help="Bind to address:[port]")
 
     parser.add_option("-d", "--data-dir",
-            action="store", type="string", default="pages",
+            action="store", type="string", default="wiki",
             dest="data",
             help="Location of data directory")
 
