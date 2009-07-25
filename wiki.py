@@ -506,7 +506,7 @@ class Wiki(Controller):
         else:
             title = "Recent Changes"
             out("= %s =" % title)
-            for name, rev, date, author, comment in self.storage.history():
+            for name, ver, date, rev, author, comment in self.storage.history():
                 out(" * [[History/%s/%d|%s]] [[%s]]" % (name, rev,
                     strftime("%Y-%m-%d", gmtime(date)), name))
                 out("[ [[%s|%d]] ] by %s\\\\" % (
