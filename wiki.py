@@ -422,10 +422,10 @@ class WikiStorage(object):
                 if repo_file.startswith(self.repo_prefix):
                     title = self._file_to_title(repo_file)
                     try:
-                        rev = change[repo_file].filerev()
+                        version = change[repo_file].filerev()
                     except mercurial.revlog.LookupError:
-                        rev = -1
-                    yield title, rev, date, author, comment
+                        version = -1
+                    yield title, version, date, wiki_rev, author, comment
 
     def all_pages(self):
         """Iterate over the titles of all pages in the wiki."""
