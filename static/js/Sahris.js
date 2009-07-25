@@ -254,9 +254,6 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
             $("#buttons a#a").text("Edit");
             $("#buttons a#b").text("More...");
 
-            if (this.page.name == "SiteMenu") {
-                this.menu.load();
-            }
             this.displayPage(this.page.name);
         }
     },
@@ -274,6 +271,9 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
 
         var callback = function(o) {
             this.setStatus(o.message);
+            if (this.page.name == "SiteMenu") {
+                this.menu.load();
+            }
         };
 
         $.ajax({
