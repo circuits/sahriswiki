@@ -185,7 +185,8 @@ Sahris.Page = new Class({
 
         var jsonRequest = new Request.JSON({
             url: url,
-            onSuccess: function(o) {
+            onSuccess: function(responseJSON, responseText) {
+                var o = responseJSON;
                 if (o.success) {
                     $extend(this, o.data);
                     this.fireEvent("loaded", this);
