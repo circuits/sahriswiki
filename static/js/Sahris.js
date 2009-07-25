@@ -400,9 +400,12 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
         var dblclickCallback = function() {
             this.edit(true);
         };
-
         $("#content").dblclick(dblclickCallback.createDelegate(this));
-        $(document).keypress(this.onKeyPressed);
+
+        var keypressCallback = function(e) {
+            this.onKeyPressed(e)
+        };
+        $(document).keypress(keypressCallback.createDelegate(this));
 
         var callback = function(hash) {
             this.onHistory(hash);
