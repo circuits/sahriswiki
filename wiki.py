@@ -542,8 +542,7 @@ class Wiki(Controller):
                         }
                     }
         else:
-            data = {"success": False,
-                    "message": "Page does not exist"}
+            data = {"success": False, "message": "Page not found"}
 
         self.response.headers["Content-Type"] = "application/javascript"
         return dumps(data)
