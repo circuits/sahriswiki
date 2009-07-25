@@ -289,13 +289,11 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
     },
 
     displayPage: function(name) {
-        console.log("Displaying page " + name);
         this.page.load(name);
         this.pageEl.empty();
     },
 
     clearError: function() {
-        console.log("Clearing error...");
         if ($("#content").attr("class") == "error") {
             $("#content").switchClass("error", "content");
             $("#page").addClass("wiki");
@@ -321,7 +319,6 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
     },
 
     setTitle: function(title) {
-        console.log("Setting title...");
         $("#title").html(title);
     },
 
@@ -341,13 +338,10 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
             this.edit(false);
         } else if (action == "Edit") {
             this.edit(true);
-        } else {
-            console.log("Invalid action: " + action);
         }
     },
 
     onHistory: function(hash) {
-        console.log("History changed: " + hash);
         var name = "";
         if (hash) {
             name = hash;
@@ -358,7 +352,6 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
     },
 
     onLoaded: function(tpl) {
-        console.log("UI loaded")
         this.el.html(tpl.text);
 
         this.pageEl = $("#content > #page");
@@ -418,13 +411,9 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
     },
 
     onFailed: function() {
-        console.log("UI failed")
     },
 
     onPageLoaded: function(page) {
-        console.log("Page loaded...");
-        console.log(page);
-
         this.parser.parse(this.pageEl[0], page.text);
 
         $("#content > #page a").click(function(e) {
@@ -449,9 +438,6 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
     },
 
     onPageFailed: function(page) {
-        console.log("Page failed...");
-        console.log(page);
-
         this.setError(page.message);
     }
 });
