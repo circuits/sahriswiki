@@ -198,6 +198,7 @@ Sahris.Page = new Class({
                 self.fire("failed", xhr.status, xhr.statusText);
             }
         });
+        jsonRequest.get();
     },
 
     onLoaded: function() {
