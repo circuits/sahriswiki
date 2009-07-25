@@ -111,11 +111,37 @@ Sahris.UI = new Class({
     Extends: Component,
 
     initialize: function() {
+        this.addEvents({
+            "loaded": this.onLoaded.bind(this),
+            "failed": this.onFailed.bind(this)
+        });
+
         this.tpl = new Sahris.Template(document.body, "/templates/base.xhtml");
+        this.tpl.on("loaded", this._onTplLoaded.bind(this));
+        this.tpl.on("failed", this._onTplFailed.bind(this));
+    },
+
+    _onTplLoaded: function() {
+        this.fire("loaded");
+    },
+
+    _onTplFailed: function(status, statusText) {
+        this.fire("failed", status, statusText);
     },
 
     load: function() {
         this.tpl.load();
+    },
+
+    onLoaded: function() {
+        console.log("UI loaded");
+    },
+
+    onFailed: function(status, statusText) {
+        console.log("UI failed: {status} {statusText}".substitute({
+            status: status,
+            statusText: statusText
+        }));
     }
 });
 
