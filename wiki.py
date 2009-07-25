@@ -500,7 +500,7 @@ class Wiki(Controller):
                 out(" * [[History/%s/%d|%s]]" % (name, rev,
                     strftime("%Y-%m-%d", gmtime(date))))
                 out("[ [[%s|%d]] ] by %s\\\\" % (
-                    url(self.request, "/hg/rev/%d" % rev), rev, author))
+                    url(self.request, "/data/rev/%d" % rev), rev, author))
                 out(comment)
             text = "\n".join(lines)
         else:
@@ -510,7 +510,7 @@ class Wiki(Controller):
                 out(" * [[History/%s/%d|%s]] [[%s]]" % (name, rev,
                     strftime("%Y-%m-%d", gmtime(date)), name))
                 out("[ [[%s|%d]] ] by %s\\\\" % (
-                    url(self.request, "/hg/rev/%d" % rev), rev, author))
+                    url(self.request, "/data/rev/%d" % rev), rev, author))
                 out(comment)
             text = "\n".join(lines)
 
@@ -588,7 +588,8 @@ def main():
         Poller = Select
 
     manager += (Server(bind, poller=Poller)
-        + Gateway(hgweb(opts.data), "/hg")
+        + Gateway(hgweb(opts.data), "/data")
+        + Gateway(hgweb(os.getcwd()), "/source")
         + Static("/js",        docroot="static/js")
         + Static("/css",       docroot="static/css")
         + Static("/images",    docroot="static/images")
