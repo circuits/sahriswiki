@@ -148,10 +148,10 @@ Sahris.UI = new Class({
 Sahris.Page = new Class({
     Extends: Component,
 
-    initialize: function(el, baseurl, default) {
+    initialize: function(el, baseurl, defaultPage) {
         this.el = $(el);
         this.baseurl = baseurl;
-        this.default = default;
+        this.defaultPage = defaultPage;
 
         this.addEvents({
             "loaded": this.onLoaded.bind(this),
