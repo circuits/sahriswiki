@@ -145,6 +145,57 @@ Sahris.UI = new Class({
     }
 });
 
+Sahris.Page = new Class({
+    Extends: Component,
+
+    initialize: function(el, baseurl, default) {
+        this.el = $(el);
+        this.baseurl = baseurl;
+        this.default = default;
+
+        this.addEvents({
+            "loaded": this.onLoaded.bind(this),
+            "failed": this.onFailed.bind(this)
+        });
+
+        this.clear();
+    },
+
+    clear: function() {
+        this.el.empty()
+        this.name = "";
+        this.text = "";
+        this.rev = 0;
+        this.author = "";
+        this.comment = "";
+    },
+
+    load: function(name) {
+        this.clear();
+        this.name = name;
+
+        var url = "{baseurl}/{name}".substitute({
+            baseurl: this.baseurl,
+            name: name
+        });
+
+        var jsonRequest = new Request.JSON({
+            url: url,
+            onSuccess: function(o) {
+                if (o.success) {
+                    $extend(this, o.data);
+                    this.fireEvent("loaded", this);
+                } else {
+                    this.fireEvent("failed", o.message);
+                }
+            },
+            "onFailure": function(xhr) {
+                self.fire("failed", xhr.status, xhr.statusText);
+            }
+        });
+    }
+});
+
 /*
 Sahris.Menu = function() {
 
