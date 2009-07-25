@@ -59,9 +59,6 @@ Sahris.Menu = Ext.extend(Ext.util.Observable, {
     },
 
     onMenuLoaded: function(page) {
-        console.log("Menu loaded...");
-        console.log(page);
-
         var menu = $("#menu");
         menu.empty();
 
@@ -82,8 +79,6 @@ Sahris.Menu = Ext.extend(Ext.util.Observable, {
     },
 
     onMenuFailed: function(page) {
-        console.log("Menu failed...");
-        console.log(page);
     }
 });
 
@@ -177,10 +172,7 @@ Sahris.Template = Ext.extend(Ext.util.Observable, {
     },
     
     load: function() {
-        console.log("Loading template " + this.url);
-
         var callback = function() {
-            console.log("Template " + this.url + " loaded");
             this.fireEvent("loaded", this);
         };
 
@@ -228,7 +220,6 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
     },
     
     load: function() {
-        console.log("Loading UI...");
         this.tpl.load();
         this.tpl.on("loaded", function(tpl) {
             this.fireEvent("loaded", tpl);
@@ -272,9 +263,6 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
 
     save: function() {
         if (this.viewing) return;
-
-        console.log("Saving...");
-        console.log(this.page);
 
         var data = {
             name: this.page.name,
