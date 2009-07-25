@@ -479,12 +479,11 @@ class Wiki(Controller):
 
         text = "\n".join(lines)
 
-        data = {"success": True,
-                "page": {"name": "", "text": text},
-                "meta": {"rev": 0, "date": 0, "author": "", "comment": ""},
-                "readonly": True,
-                "title": "Index of all pargs"
-                }
+        data = {"success": True, "data": {
+            "name": "",  "text": text,
+            "rev": 0, "date": 0, "author": "", "comment": "",
+            "readonly": True,
+            "title": "Index of all pargs"}}
 
         self.response.headers["Content-Type"] = "application/javascript"
         return dumps(data)
@@ -514,12 +513,11 @@ class Wiki(Controller):
                 out(comment)
             text = "\n".join(lines)
 
-        data = {"success": True,
-                "page": {"name": "", "text": text},
-                "meta": {"rev": 0, "date": 0, "author": "", "comment": ""},
+        data = {"success": True, "data": {
+                "name": "", "text": text,
+                "rev": 0, "date": 0, "author": "", "comment": "",
                 "readonly": True,
-                "title":  title
-            }
+                "title":  title}}
 
         self.response.headers["Content-Type"] = "application/javascript"
         return dumps(data)
@@ -529,18 +527,9 @@ class Wiki(Controller):
             text = self.storage.page_text(name)
             rev, date, author, comment = self.storage.page_meta(name)
 
-            data = {"success": True,
-                    "page": {
-                        "name": name,
-                        "text": text
-                        },
-                    "meta": {
-                        "rev": rev,
-                        "date": date,
-                        "author": author,
-                        "comment": comment
-                        }
-                    }
+            data = {"success": True, "data": {
+                "name": name, "text": text
+                "rev": rev, "date": date, "author": author, "comment": comment}}
         else:
             data = {"success": False, "message": "Page not found"}
 
