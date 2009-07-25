@@ -439,10 +439,11 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
 
         $("#ctxnav a#history").attr("href", "#History/" + name);
 
-        $("#status").empty().append(this.templates.meta, {
+        this.setStatus(this.templates.meta, {
                 author: page.author,
                 rev: page.rev,
-                date: prettyDate(page.date * 1000)});
+                date: prettyDate(page.date * 1000)
+        });
 
         this.viewing = true;
     },
