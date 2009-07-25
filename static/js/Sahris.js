@@ -309,6 +309,17 @@ Sahris.UI = Ext.extend(Ext.util.Observable, {
         this.pageEl.append(this.templates.error, {message: message});
     },
 
+    setStatus: function() {
+        var args = arguments;
+        $("#status").fadeOut("slow", function() {
+            if (args.length == 2) {
+                $("#status").empty().append(args[0], args[1]).fadeIn("slow");
+            } else {
+                $("#status").empty().append(args[0]).fadeIn("slow");
+            }
+        });
+    },
+
     setTitle: function(title) {
         console.log("Setting title...");
         $("#title").html(title);
