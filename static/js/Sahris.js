@@ -210,7 +210,7 @@ Sahris.Menu = new Class({
             "failed": this.onFailed.bind(this)
         });
 
-        var page = new Sahris.Page(this.el, "/wiki", this.defaultPage);
+        this.page = new Sahris.Page(this.el, "/wiki", this.defaultPage);
         this.page.on("loaded", this._onPageLoaded.bind(this));
         this.page.on("failed", this._onPageFailed.bind(this));
 
