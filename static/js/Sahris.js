@@ -165,15 +165,16 @@ Sahris.Page = new Class({
             name: name
         });
 
+        var self = this;
         var jsonRequest = new Request.JSON({
             url: url,
             onSuccess: function(responseJSON, responseText) {
                 var o = responseJSON;
                 if (o.success) {
-                    $extend(this, o.data);
-                    this.fireEvent("loaded", this);
+                    $extend(self, o.data);
+                    self.fireEvent("loaded", self);
                 } else {
-                    this.fireEvent("failed", o.message);
+                    self.fireEvent("failed", o.message);
                 }
             },
             "onFailure": function(xhr) {
