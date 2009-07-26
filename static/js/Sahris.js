@@ -241,6 +241,12 @@ Sahris.Menu = new Class({
         this.page.load(this.defaultPage);
     },
 
+    setActive: function(name) {
+        this.el.getElement("li.active").removeClass("active");
+        this.el.getElement("li a[href=\"{name}\"".substitute(
+            {name: name})).addClass("active");
+    },
+
     onLoaded: function() {
         console.log("Menu loaded");
     },
