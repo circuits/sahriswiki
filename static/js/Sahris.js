@@ -91,6 +91,12 @@ Sahris.Template = new Class({
 Sahris.UI = new Class({
     Extends: Component,
 
+    templates: {
+        error: "<h1>Error</h1><p class=\"message\">{message}</p>",
+        meta: "<p>Last edited by {author} (Revision: {rev}) " +
+            "about {date}</p>"
+    },
+
     initialize: function() {
         this.addEvents({
             "loaded": this.onLoaded.bind(this),
