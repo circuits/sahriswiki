@@ -522,7 +522,7 @@ class Wiki(Controller):
         self.response.headers["Content-Type"] = "application/javascript"
         return dumps(data)
 
-    def GET(self, name="FrontPage", _dc=None):
+    def GET(self, name="FrontPage"):
         if name in self.storage:
             text = self.storage.page_text(name)
             rev, date, author, comment = self.storage.page_meta(name)
