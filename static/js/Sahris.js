@@ -108,9 +108,6 @@ Sahris.Template = new Class({
     },
 
     onFailed: function(status, statusText) {
-            status: status,
-            statusText: statusText
-        }));
     }
 });
 
@@ -343,9 +340,6 @@ Sahris.UI = new Class({
     },
 
     onFailed: function(status, statusText) {
-            status: status,
-            statusText: statusText
-        }));
     }
 });
 
@@ -456,18 +450,12 @@ Sahris.Page = new Class({
     },
 
     onFailed: function(status, statusText) {
-            status: status,
-            statusText: statusText
-        }));
     },
 
     onSaved: function() {
     },
 
     onError: function(status, statusText) {
-            status: status,
-            statusText: statusText
-        }));
     }
 });
 
@@ -525,9 +513,6 @@ Sahris.Menu = new Class({
     },
 
     onFailed: function(status, statusText) {
-            status: status,
-            statusText: statusText
-        }));
     }
 });
 
