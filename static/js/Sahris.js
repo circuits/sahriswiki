@@ -530,9 +530,15 @@ Sahris.Menu = new Class({
     },
 
     setActive: function(name) {
-        this.el.getElements("li.active").removeClass("active");
+        console.log("Setting active menu item: " + name);
+        console.log(this.el);
+        var el = this.el.getElement("li.active");
+        console.log(el);
+        if ($defined(el)) {
+            el.removeClass("active");
+        }
 
-        var el = this.el.getElement("li a[href=\"{name}\"".substitute(
+        var el = this.el.getElement("li a[href$=\"{name}\"]".substitute(
             {name: name}));
         console.log(el);
         if ($defined(el)) {
