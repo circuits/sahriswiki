@@ -13,7 +13,9 @@
  * @author		Harald Kirschner <mail [at] digitarald.de>
  * @copyright	2007 Author
  */
-var HistoryManager = {
+var HistoryManagerX = new Class ({
+
+  Implements: [Options, Events],
 
 	/**
 	 * Default options - Can be overridden with setOptions
@@ -198,7 +200,7 @@ var HistoryManager = {
 		if (this.timeout) return;
 		var state = this.getState();
 		if (this.state == state) return;
-		if ((window.ie || window.webkit419) && (this.state !== null)) this.setState(state, true);
+		if ((Browser.Engine.trident || Browser.Engine.webkit) && (this.state !== null)) this.setState(state, true);
 		else this.state = state;
 		this.modules.each(function(data, key) {
 			var bits = state.match(data.regexp);
@@ -251,7 +253,7 @@ var HistoryManager = {
 				this.istateOld = true;
 			} else return this.istate;
 		}
-		if (window.webkit419 && history.length != this.count) {
+		if (Browser.Engine.webkit && history.length != this.count) {
 			this.count = history.length;
 			return $pick(this.states[this.count - 1], state);
 		}
@@ -260,18 +262,18 @@ var HistoryManager = {
 
 	setState: function(state, fix) {
 		state = $pick(state, '');
-		if (window.webkit419) {
+		if (Browser.Engine.webkit) {
 			if (!this.form) this.form = new Element('form', {method: 'get'}).injectInside(document.body);
 			this.count = history.length;
 			this.states[this.count] = state;
 			this.observeTimeout();
 			this.form.setProperty('action', '#' + state).submit();
 		} else top.location.hash = state || '#';
-		if (window.ie && (!fix || this.istateOld)) {
+		if (Browser.Engine.trident && (!fix || this.istateOld)) {
 			if (!this.iframe) {
 				this.iframe = new Element('iframe', {
 					src: this.options.iframeSrc,
-					styles: 'visibility: hidden;'
+					style: 'visibility: hidden;height:1px;'
 				}).injectInside(document.body);
 				this.istate = this.state;
 			}
@@ -287,17 +289,13 @@ var HistoryManager = {
 	},
 
 	extend: $extend
-};
-
-HistoryManager.extend(Events.prototype);
-HistoryManager.extend(Options.prototype);
-
+});
 
 /**
  * Extends Array with 2 helpers: isSimilar(array) and complement(array)
  * 
  */
-Array.extend({
+Array.implement( {
 
 	/**
 	 * isSimilar - Returns true for similar arrays, type-insensitive
@@ -326,5 +324,35 @@ Array.extend({
 	complement: function(array) {
 		for (var i = 0, j = this.length; i < j; i++) this[i] = $pick(this[i], array[i] || null);
 		return this;
-	}
+	}, 
+	
+  /*
+  Property: copy
+    returns a copy of the array.
+ 
+  Returns:
+    a new array which is a copy of the current one.
+ 
+  Arguments:
+    start - integer; optional; the index where to start the copy, default is 0. If negative, it is taken as the offset from the end of the array.
+    length - integer; optional; the number of elements to copy. By default, copies all elements from start to the end of the array.
+ 
+  Example:
+    >var letters = ["a","b","c"];
+    >var copy = letters.copy();    // ["a","b","c"] (new instance)
+  */
+ 
+  copy: function(start, length){
+    start = start || 0;
+    if (start < 0) start = this.length + start;
+    length = length || (this.length - start);
+    var newArray = [];
+    for (var i = 0; i < length; i++) newArray[i] = this[start++];
+    return newArray;
+  }
+});
+
+var HistoryManager;
+window.addEvent('domready', function(){
+	HistoryManager = new HistoryManagerX();
 });
