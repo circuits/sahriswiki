@@ -134,6 +134,15 @@ Sahris.UI = new Class({
         this.menu = null;
     },
 
+    _onLinkClicked: function(e) {
+        var hash = e.target.href;
+        if (hash && hash[0] == "#") {
+            hash = hash.replace(/^.*#/, "");
+            this.history.setValue(0, hash);
+            return false;
+        }
+    },
+
     _onTplLoaded: function() {
         this.fire("loaded");
     },
