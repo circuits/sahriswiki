@@ -190,11 +190,132 @@ Sahris.UI = new Class({
     },
 
     _onTplFailed: function(status, statusText) {
-        this.fire("failed", status, statusText);
+        this.fire("failed", [status, statusText]);
+    },
+
+    _onPageLoaded: function() {
+        this.page.render();
+        this.setTitle(this.page.name || this.page.title);
+        if (this.page.name) {
+            this.menu.setActive(this.page.name);
+        }
+        if (this.page.name) {
+            this.el.getElement("#ctxnav a#history").set("href",
+                "#History/" + this.page.name);
+        }
+    },
+
+    _onPageFailed: function(status, statusText) {
+        if (($type(status) == "boolean") && !(status)) {
+            console.log(status);
+            console.log(statusText);
+            this.setError(statusText);
+            this.setTitle(this.page.name);
+            this.menu.setActive(this.page.name);
+        } else {
+            this.setError("{status} {statusText}".substitute({
+                status: status,
+                statusText: statusText
+            }));
+        }
     },
 
     load: function() {
         this.tpl.load();
+    },
+
+    /* FIXME: Port to mootools
+    edit: function(flag) {
+        if (flag) {
+            if (this.editing) return;
+            this.viewing = false;
+            this.editing = true;
+
+            $("#page").hide();
+            $("#editor").show();
+
+            $("#editor #fields input[name=comment]").val("");
+
+            $("#title").html("Editing: " + this.page.name);
+            $("#editor textarea").val(this.page.text);
+
+            $("#buttons a#a").text("Save");
+            $("#buttons a#b").text("Cancel");
+        } else {
+            if (this.viewing) return;
+            this.viewing = true;
+            this.editing = false;
+            $("#page").show();
+            $("#editor").hide();
+            $("#buttons a#a").text("Edit");
+            $("#buttons a#b").text("More...");
+
+            this.displayPage(this.page.name);
+        }
+    },
+
+    save: function() {
+        if (this.viewing) return;
+
+        var data = {
+            name: this.page.name,
+            text: $("#editor #text textarea").val(),
+            comment: $("#editor #fields input[name=comment]").val(),
+            author: $("#editor #fields input[name=author]").val()
+        };
+
+
+        var callback = function(o) {
+            this.setStatus(o.message);
+            if (this.page.name == "SiteMenu") {
+                this.menu.load();
+            }
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/wiki/" + this.page.name,
+            data: $.json.encode(data),
+            dataType: "json",
+            contentType: "application/javascript",
+            success: callback.createDelegate(this)
+        });
+
+        this.edit(false);
+    },
+    */
+
+    clearError: function() {
+        if (this.el.getElement("#content").hasClass("error")) {
+            this.el.getElement("#content").removeClass("error");
+            this.el.getElement("#content").addClass("content");
+            this.el.getElement("#page").addClass("wiki");
+        }
+    },
+
+    setError: function(message) {
+        if (this.el.getElement("#content").hasClass("content")) {
+            this.el.getElement("#content").removeClass("content");
+            this.el.getElement("#content").addClass("error");
+        }
+        this.page.el.set("html",
+            this.templates.error.substitute(
+                {message: message}));
+    },
+
+    setStatus: function(message) {
+        this.el.getElement("status").html(message);
+    },
+
+    setTitle: function(title) {
+        $("title").set("text", title);
+    },
+
+    displayPage: function(name) {
+        if (!$defined(name)) {
+            name = "FrontPage";
+        }
+        this.page.load(name);
     },
 
     onLoaded: function() {
@@ -203,6 +324,7 @@ Sahris.UI = new Class({
             this.menu = new Sahris.Menu($("menu"), "SiteMenu");
         }
         this.menu.load();
+        this.displayPage();
     },
 
     onFailed: function(status, statusText) {
@@ -229,6 +351,10 @@ Sahris.Page = new Class({
         this.parser = new Sahris.Parser();
 
         this.clear();
+    },
+
+    _onLinkClicked: function(e) {
+        this.fire("linkClicked", e);
     },
 
     clear: function() {
@@ -272,7 +398,8 @@ Sahris.Page = new Class({
     },
 
     onLoaded: function() {
-        console.log("Page loaded");
+        console.log("Page loaded:" + this.name);
+        this.el.getElements("a").on("click", this._onLinkClicked.bind(this));
     },
 
     onFailed: function(status, statusText) {
@@ -321,9 +448,14 @@ Sahris.Menu = new Class({
     },
 
     setActive: function(name) {
-        this.el.getElement("li.active").removeClass("active");
-        this.el.getElement("li a[href=\"{name}\"".substitute(
-            {name: name})).addClass("active");
+        this.el.getElements("li.active").removeClass("active");
+
+        var el = this.el.getElement("li a[href=\"{name}\"".substitute(
+            {name: name}));
+        console.log(el);
+        if ($defined(el)) {
+            el.getParent().addClass("active");
+        }
     },
 
     onLoaded: function() {
@@ -357,324 +489,6 @@ Sahris.Parser = new Class({
         this.creole.parse(el, text);
     }
 });
-
-/*
-Sahris.Menu = function() {
-
-    return {
-        init: function() {
-            this.addEvents(
-                "loaded",
-                "failed"
-            );
-
-            if (this.el == null) {
-                this.el = $("#menu");
-            }
-            this.loaded = false;
-    
-            this.page = new Sahris.Page("SiteMenu");
-            this.parser = new Sahris.Parser();
-    
-            this.page.on("loaded", this.onMenuLoaded, this);
-            this.page.on("failed", this.onMenuFailed, this);
-        },
-    
-        load: function() {
-            this.page.load("SiteMenu");
-        },
-
-        onMenuLoaded: function(page) {
-            var menu = $("#menu");
-            menu.empty();
-
-            this.parser.parse(menu[0], page.text);
-
-            $("#menu a").click(function(e) {
-                $("#menu li.first").removeClass("first active");
-                $(this).parent().addClass("first active");
-                var hash = this.href;
-                if (hash && hash[0] == "#") {
-                    hash = hash.replace(/^.*#/, '');
-                    $.history.load(hash);
-                    return false;
-                }
-            });
-    
-            $("#menu li:first").addClass("first active");
-        },
-
-        onMenuFailed: function(page) {
-        }
-    }
-}
-
-Sahris.UI = function() {
-    var tpl    = null;
-    var menu   = new Sahris.Menu();
-    var page   = new Sahris.Page();
-    var parser = new Sahris.Parser();
-
-    var editing = false;
-    var viewing = false;
-
-    var templates = {
-        error: $.template("<h1>Error</h1><p class=\"message\">${message}</p>"),
-        meta: $.template("<p>Last edited by ${author} (Revision: ${rev}) " +
-            "about ${date}</p>")
-    };
-
-    return {
-        init: function() {
-            this.addEvents(
-                "loaded",
-                "failed"
-            );
-
-            this.on("loaded", this.onLoaded, this);
-            this.on("failed", this.onFailed, this);
-            this.page.on("loaded", this.onPageLoaded, this);
-            this.page.on("failed", this.onPageFailed, this);
-
-            this.el = $("body");
-
-            this.loaded = false;
-            this.tpl = new Sahris.Template({
-                url: "/templates/base.xhtml"
-            });
-        },
-    
-        load: function() {
-            tpl.load();
-            this.tpl.on("loaded", function(tpl) {
-                this.fireEvent("loaded", tpl);
-            }, this);
-            this.tpl.on("failed", function(tpl) {
-                this.fireEvent("failed", tpl);
-            }, this);
-        },
-
-        edit: function(flag) {
-            if (flag) {
-                if (this.editing) return;
-                this.viewing = false;
-                this.editing = true;
-
-                $("#page").hide();
-                $("#editor").show();
-
-                $("#editor #fields input[name=comment]").val("");
-
-                $("#title").html("Editing: " + this.page.name);
-                $("#editor textarea").val(this.page.text);
-
-                $("#buttons a#a").text("Save");
-                $("#buttons a#b").text("Cancel");
-            } else {
-                if (this.viewing) return;
-                this.viewing = true;
-                this.editing = false;
-                $("#page").show();
-                $("#editor").hide();
-                $("#buttons a#a").text("Edit");
-                $("#buttons a#b").text("More...");
-
-                this.displayPage(this.page.name);
-            }
-        },
-
-        save: function() {
-            if (this.viewing) return;
-
-            var data = {
-                name: this.page.name,
-                text: $("#editor #text textarea").val(),
-                comment: $("#editor #fields input[name=comment]").val(),
-                author: $("#editor #fields input[name=author]").val()
-            };
-
-
-            var callback = function(o) {
-                this.setStatus(o.message);
-                if (this.page.name == "SiteMenu") {
-                    this.menu.load();
-                }
-            };
-
-            $.ajax({
-                type: "POST",
-                url: "/wiki/" + this.page.name,
-                data: $.json.encode(data),
-                dataType: "json",
-                contentType: "application/javascript",
-                success: callback.createDelegate(this)
-            });
-
-            this.edit(false);
-        },
-
-        displayPage: function(name) {
-            this.page.load(name);
-            this.pageEl.empty();
-        },
-
-        clearError: function() {
-            if ($("#content").attr("class") == "error") {
-                $("#content").switchClass("error", "content");
-                $("#page").addClass("wiki");
-            }
-        },
-
-        setError: function(message) {
-            if ($("#content").attr("class") == "content") {
-                $("#content").switchClass("content", "error");
-            }
-            this.pageEl.append(this.templates.error, {message: message});
-        },
-
-        setStatus: function() {
-            var args = arguments;
-            $("#status").fadeOut("slow", function() {
-                if (args.length == 2) {
-                    $("#status").empty().append(args[0], args[1]).fadeIn("slow");
-                } else {
-                    $("#status").empty().append(args[0]).fadeIn("slow");
-                }
-            });
-        },
-
-        setTitle: function(title) {
-            $("#title").html(title);
-        },
-
-        onKeyPressed: function(e) {
-            if (e.keyCode == 27) {
-                if (this.editing) {
-                    this.edit(false);
-                }
-            }
-        },
-
-        onButton: function(e) {
-            var action = $(e.target).text();
-            if (action == "Save") {
-                this.save();
-            } else if (action == "Cancel") {
-                this.edit(false);
-            } else if (action == "Edit") {
-                this.edit(true);
-            }
-        },
-
-        onHistory: function(hash) {
-            var name = "";
-            if (hash) {
-                name = hash;
-            } else {
-                name = "FrontPage";
-            }
-            this.displayPage(name);
-        },
-
-        onLoaded: function(tpl) {
-            this.el.html(tpl.text);
-
-            this.pageEl = $("#content > #page");
-
-            this.menu.load();
-
-            $("#editor textarea").markItUp(mySettings);
-            $("#editor textarea").width($("#content").width());
-            $("#editor textarea").height($("#content").height() * 0.8);
-
-            $.ajax({
-                type: "GET",
-                url: "/getip",
-                dataType: "json",
-                success: function(data) {
-                    $("#editor #fields input[name=author]").val(data);
-                }
-            });
-
-            $("#metanav a").click(function(e) {
-                $("#menu li.first").removeClass("first active");
-                var hash = this.href;
-                if (hash && hash[0] == "#") {
-                    hash = hash.replace(/^.*#/, '');
-                    $.history.load(hash);
-                    return false;
-                }
-            });
-
-            $("#ctxnav a").click(function(e) {
-                $("#menu li.first").removeClass("first active");
-                var hash = this.href;
-                if (hash && hash[0] == "#") {
-                    hash = hash.replace(/^.*#/, '');
-                    $.history.load(hash);
-                    return false;
-                }
-            });
-
-            var buttonCallback = function(e) {
-                e.preventDefault();
-                this.onButton(e);
-            };
-            $("#buttons a").click(buttonCallback.createDelegate(this));
-
-            var dblclickCallback = function() {
-                this.edit(true);
-            };
-            $("#content").dblclick(dblclickCallback.createDelegate(this));
-
-            var keypressCallback = function(e) {
-                this.onKeyPressed(e)
-            };
-            $(document).keypress(keypressCallback.createDelegate(this));
-
-            var callback = function(hash) {
-                this.onHistory(hash);
-            };
-            $.history.init(callback.createDelegate(this));
-        },
-
-        onFailed: function() {
-        },
-
-        onPageLoaded: function(page) {
-            this.parser.parse(this.pageEl[0], page.text);
-
-            $("#content > #page a").click(function(e) {
-                $("#menu li.first").removeClass("first active");
-                var hash = this.href;
-                if (hash && hash[0] == "#") {
-                    hash = hash.replace(/^.*#/, '');
-                    $.history.load(hash);
-                    return false;
-                }
-            });
-
-            if (page.name) {
-                $("#ctxnav a#history").attr("href", "#History/" + page.name);
-            }
-
-            this.setTitle(page.name || page.title);
-
-            this.setStatus(this.templates.meta, {
-                    author: page.author,
-                    rev: page.rev,
-                    date: prettyDate(page.date * 1000)
-            });
-
-            this.viewing = true;
-        },
-
-        onPageFailed: function(page) {
-            this.setError(page.message);
-        }
-    }
-}
-*/
 
 $(document).on("domready", function() {
     console.log("Ready!");
