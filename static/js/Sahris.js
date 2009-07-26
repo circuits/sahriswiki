@@ -30,24 +30,6 @@ var Component = new Class({
     Extends: Events,
 });
 
-var Foo = new Class({
-    Extends: Component,
-
-    initialize: function() {
-        this.foo = "Hello World!";
-    },
-
-    hello: function() {
-        console.log(this.foo);
-        this.fire("hello");
-    },
-});
-
-var foo = new Foo();
-foo.on("hello", function() {
-    alert("Hello World!");
-});
-
 //
 // Sahris
 //
