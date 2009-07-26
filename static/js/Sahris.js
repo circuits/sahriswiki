@@ -230,7 +230,7 @@ Sahris.Menu = new Class({
     },
 
     load: function() {
-        this.page.load();
+        this.page.load(this.defaultPage);
     },
 
     onLoaded: function() {
