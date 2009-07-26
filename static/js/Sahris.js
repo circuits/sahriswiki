@@ -134,6 +134,16 @@ Sahris.UI = new Class({
         this.menu = null;
     },
 
+    _onButtonClicked: function(e) {
+        console.log("Button Cliekd");
+        console.log(e);
+    },
+
+    _onKeyPressed: function(e) {
+        console.log("Key Pressed");
+        console.log(e);
+    },
+
     _onLinkClicked: function(e) {
         var hash = e.target.href;
         if (hash && hash[0] == "#") {
@@ -150,36 +160,29 @@ Sahris.UI = new Class({
         this.el.getElements("#ctxnav a").on("click",
             this._onLinkClicked.bind(this));
 
-        /* FIXME: Port to mootools
+        $$("#editor textarea").set("width", this.el.getWidth());
+        $$("#editor textarea").set("height", this.el.getHeight() * 0.8);
 
-        $("#editor textarea").width($("#content").width());
-        $("#editor textarea").height($("#content").height() * 0.8);
-
-        $.ajax({
-            type: "GET",
+        var jsonRequest = new Request.JSON({
             url: "/getip",
-            dataType: "json",
-            success: function(data) {
-                $("#editor #fields input[name=author]").val(data);
-            }
+            onSuccess: function(responseJSON, responseText) {
+                var o = responseJSON;
+                $$("#editor #fields input[name=author]").set("text", o);
+            }.bind(this),
         });
+        jsonRequest.get();
 
         var buttonCallback = function(e) {
             e.preventDefault();
             this.onButton(e);
         };
-        $("#buttons a").click(buttonCallback.createDelegate(this));
+        $$("#buttons a").on("click", this._onButtonClicked.bind(this))
 
-        var dblclickCallback = function() {
+        $$("#content").on("dblclick", function() {
             this.edit(true);
-        };
-        $("#content").dblclick(dblclickCallback.createDelegate(this));
+        }.bind(this));
 
-        var keypressCallback = function(e) {
-            this.onKeyPressed(e)
-        };
-        $(document).keypress(keypressCallback.createDelegate(this));
-        */
+        $(document).on("keypress", this._onKeyPressed.bind(this));
 
         var pageEl = this.el.getElement("#content > #page");
         this.page = new Sahris.Page(pageEl, "/wiki", "FrontPage");
