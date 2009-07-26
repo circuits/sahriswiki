@@ -109,6 +109,28 @@ Sahris.UI = new Class({
         this.tpl.on("loaded", this._onTplLoaded.bind(this));
         this.tpl.on("failed", this._onTplFailed.bind(this));
 
+        this.historyKey = "Sahris.UI";
+        this.history = HistoryManager.register(this.historyKey, [1],
+            function(values) {
+                console.log("History: onMatch");
+                console.log(values);
+                if ($defined(this.page)) {
+                    if (values && values[0]) {
+                        this.displayPage(values[0]);
+                    } else {
+                        this.displayPage("FrontPage");
+                    }
+                }
+            }.bind(this),
+            function(values) {
+                console.log("History: onGenerate");
+                console.log(values);
+                return [this.historyKey, "(", values[0], ")"].join("");
+
+            }.bind(this),
+            "(.*)");
+        HistoryManager.start();
+
         this.menu = null;
     },
 
