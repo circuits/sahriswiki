@@ -273,10 +273,6 @@ Sahris.Parser = new Class({
 });
 
 /*
->>> var pageEl = $$("#content > #page");
->>> var page = new Sahris.Page(pageEl, "/wiki", "FrontPage");
->>> page.load("SiteMenu");
-
 Sahris.Menu = function() {
 
     return {
@@ -323,70 +319,6 @@ Sahris.Menu = function() {
         },
 
         onMenuFailed: function(page) {
-        }
-    }
-}
-
-Sahris.Page = function() {
-
-    return {
-        init: function() {
-            this.addEvents(
-                "loaded",
-                "failed"
-            );
-
-            this.clear();
-        },
-
-        clear: function() {
-            this.name = "";
-            this.text = "";
-            this.rev = 0;
-            this.author = "";
-            this.comment = "";
-        },
-
-        load: function(name) {
-            this.clear();
-            this.name = name;
-
-            var callback = function(o) {
-                this.success = o.success;
-                if (o.success) {
-                    $.extend(this, o.data);
-                    this.fireEvent("loaded", this);
-                } else {
-                    this.message = o.message;
-                    this.fireEvent("failed", this);
-                }
-            }
-
-            $.getJSON("/wiki/" + name, callback.createDelegate(this));
-        }
-    }
-}
-
-Sahris.Parser = function() {
-
-    var interwiki =  {
-        MeatBall: "http://www.usemod.com/cgi-bin/mb.pl?"
-    };
-
-    var linkFormat = "#";
-
-    return {
-        init: function() {
-            this.addEvents(
-                "parsed"
-            );
-
-            this.creole = new Parse.Simple.Creole(this);
-        },
-    
-        parse: function(el, text) {
-            this.creole.parse(el, text);
-            this.fireEvent("parsed");
         }
     }
 }
