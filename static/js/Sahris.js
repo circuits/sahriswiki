@@ -26,6 +26,36 @@ Native.implement([Events, Element, Window, Document], {
     }
 });
 
+Element.implement({
+
+    isDisplayed: function(){
+        return this.getStyle('display') != 'none';
+    },
+
+    toggle: function(){
+        return this[this.isDisplayed() ? 'hide' : 'show']();
+    },
+
+    hide: function(){
+        var d;
+        try {
+            //IE fails here if the element is not in the dom
+            if ('none' != this.getStyle('display')) d = this.getStyle('display');
+        } catch(e){}
+
+        return this.store('originalDisplay', d || 'block').setStyle('display', 'none');
+    },
+
+    show: function(display){
+        return this.setStyle('display', display || this.retrieve('originalDisplay') || 'block');
+    },
+
+    swapClass: function(remove, add){
+        return this.removeClass(remove).addClass(add);
+    }
+
+});
+
 var Component = new Class({
     Extends: Events,
 });
@@ -113,36 +143,20 @@ Sahris.UI = new Class({
         this.tpl.on("failed", this._onTplFailed.bind(this));
 
         this.historyKey = "Sahris.UI";
-        this.history = HistoryManager.register(this.historyKey, [1],
-            function(values) {
-                console.log("History: onMatch");
-                console.log(values);
-                if ($defined(this.page)) {
-                    if (values && values[0]) {
-                        this.displayPage(values[0]);
-                    } else {
-                        this.displayPage("FrontPage");
-                    }
-                }
-            }.bind(this),
-            function(values) {
-                console.log("History: onGenerate");
-                console.log(values);
-                return values;
-
-            }.bind(this),
-            "(.*)");
-        HistoryManager.start();
 
         this.menu = null;
     },
 
     _onButtonClicked: function(e) {
-        var hash = e.target.href;
-        if (hash && hash[0] == "#") {
-            hash = hash.replace(/^.*#/, "");
-            this.history.setValue(0, hash);
-            return false;
+        if (this.editing) {
+            this.doSave();
+        } else {
+            var hash = e.target.href;
+            if (hash && hash[0] == "#") {
+                hash = hash.replace(/^.*#/, "");
+                this.history.setValue(0, hash);
+                return false;
+            }
         }
     },
 
@@ -174,7 +188,7 @@ Sahris.UI = new Class({
             this._onButtonClicked.bind(this));
 
         this.el.getElements("#content").on("dblclick", function() {
-            this.history.setValue(0, "#{name}?action=edit".substitute(
+            this.history.setValue(0, "#{name}/edit".substitute(
                 {name: this.page.name}));
             this.doEdit(true);
         }.bind(this));
@@ -182,14 +196,53 @@ Sahris.UI = new Class({
         $(document).on("keypress", this._onKeyPressed.bind(this));
 
         this.editor = new Sahris.Editor(this.el.getElement("#editor"));
-        this.editor.setWidth(this.el.getWidth());
-        this.editor.setHeight(this.el.getWidth() * 0.8);
 
         var pageEl = this.el.getElement("#content > #page");
         this.page = new Sahris.Page(pageEl, "/wiki", "FrontPage");
         this.page.on("loaded", this._onPageLoaded.bind(this));
-        this.page.on("failed", this._onPageFailed.bind(this));
+        this.page.on("error", this._onPageError.bind(this));
+        this.page.on("saved", this._onPageSaved.bind(this));
         this.page.on("linkClicked", this._onLinkClicked.bind(this));
+
+        this.history = HistoryManager.register(this.historyKey, [1],
+            function(values) {
+                console.log("History: onMatch");
+                console.log(values);
+                if ($defined(this.page)) {
+                    if (values && values[0]) {
+                        var parts = values[0].split("/");
+                        console.log(parts);
+                        if (parts.length == 2) {
+                            var name = parts[0], action = parts[1];
+                        } else {
+                            var name = parts[0], action = "view";
+                        }
+                    } else {
+                        var name = "FrontPage", action = "view";
+                    }
+
+                    if (action == "edit") {
+                        this.editing = true;
+                        this.viewing = false;
+                    } else {
+                        this.viewing = true;
+                        this.editing = false;
+                    }
+
+                    console.log("Action: " + action);
+                    console.log("Name:   " + name);
+                    this.page.load(name);
+                }
+            }.bind(this),
+            function(values) {
+                console.log("History: onGenerate");
+                console.log(values);
+                return values;
+
+            }.bind(this),
+            "(.*)");
+        HistoryManager.start();
+
         this.fire("loaded");
     },
 
@@ -198,8 +251,14 @@ Sahris.UI = new Class({
     },
 
     _onPageLoaded: function() {
-        this.page.render();
-        this.setTitle(this.page.name || this.page.title);
+        if (this.viewing) {
+            this.page.render();
+            this.setTitle(this.page.name || this.page.title);
+        } else {
+            this.doEdit(true);
+            this.setTitle("Editing {name}".substitute({name: this.page.name}));
+        }
+
         if (this.page.name) {
             this.menu.setActive(this.page.name);
         }
@@ -207,11 +266,11 @@ Sahris.UI = new Class({
             this.el.getElement("#ctxnav a#history").set("href",
                 "#History/" + this.page.name);
             this.el.getElements("#buttons a:first-child").set("href",
-                "#{name}?action=edit".substitute({name: this.page.name}));
+                "#{name}/edit".substitute({name: this.page.name}));
         }
     },
 
-    _onPageFailed: function(status, statusText) {
+    _onPageError: function(status, statusText) {
         if (($type(status) == "boolean") && !(status)) {
             console.log(status);
             console.log(statusText);
@@ -226,13 +285,34 @@ Sahris.UI = new Class({
         }
     },
 
+    _onPageSaved: function(message) {
+        this.doEdit(false);
+        this.setStatus(message);
+
+        var hash = "#{name}".substitute({name: this.page.name});
+        this.history.setValue(0, hash);
+
+        this.page.fire("loaded");
+    },
+
     load: function() {
         this.tpl.load();
     },
 
     doEdit: function(flag) {
-        this.editor.load(this.page);
-        this.editor.show();
+        if (($type(flag) == "boolean") && !(flag)) {
+            this.editing = false;
+            this.viewing = true;
+            this.editor.hide();
+            this.page.show();
+            this.setTitle(this.page.name);
+            this.el.getElement("#buttons a:first-child").set("text", "Edit");
+        } else {
+            this.page.hide();
+            this.editor.load(this.page);
+            this.editor.show();
+            this.el.getElement("#buttons a:first-child").set("text", "Save");
+        }
     },
 
     doSave: function() {
@@ -266,13 +346,6 @@ Sahris.UI = new Class({
         this.el.getElement("#title").set("html", title);
     },
 
-    displayPage: function(name) {
-        if (!$defined(name)) {
-            name = "FrontPage";
-        }
-        this.page.load(name);
-    },
-
     onLoaded: function() {
         console.log("UI loaded");
         if (this.menu == null) {
@@ -281,7 +354,6 @@ Sahris.UI = new Class({
                 "SiteMenu");
         }
         this.menu.load();
-        this.displayPage();
     },
 
     onFailed: function(status, statusText) {
@@ -302,7 +374,8 @@ Sahris.Page = new Class({
 
         this.addEvents({
             "loaded": this.onLoaded.bind(this),
-            "failed": this.onFailed.bind(this)
+            "saved": this.onSaved.bind(this),
+            "error": this.onError.bind(this),
         });
 
         this.parser = new Sahris.Parser();
@@ -312,6 +385,14 @@ Sahris.Page = new Class({
 
     _onLinkClicked: function(e) {
         this.fire("linkClicked", e);
+    },
+
+    hide: function() {
+        this.el.hide();
+    },
+
+    show: function() {
+        this.el.show();
     },
 
     clear: function() {
@@ -340,11 +421,11 @@ Sahris.Page = new Class({
                     $extend(this, o.data);
                     this.fire("loaded", this);
                 } else {
-                    this.fire("failed", [o.success, o.message]);
+                    this.fire("error", [o.success, o.message]);
                 }
             }.bind(this),
             "onFailure": function(xhr) {
-                this.fire("failed", [xhr.status, xhr.statusText]);
+                this.fire("error", [xhr.status, xhr.statusText]);
             }.bind(this)
         });
         jsonRequest.get();
@@ -352,6 +433,35 @@ Sahris.Page = new Class({
 
     save: function() {
         console.log("Saving page: " + this.naem);
+
+        var url = "{baseurl}/{name}".substitute({
+            baseurl: this.baseurl,
+            name: this.name
+        });
+
+        var data = {
+            text: this.text,
+            author: this.author,
+            comment: this.comment
+        };
+
+        var jsonRequest = new Request.JSON({
+            url: url,
+            data: JSON.encode(data),
+            urlEncoded: false,
+            onSuccess: function(responseJSON, responseText) {
+                var o = responseJSON;
+                if (o.success) {
+                    this.fire("saved", o.message);
+                } else {
+                    this.fire("error", [true, o.message]);
+                }
+            }.bind(this),
+            "onFailure": function(xhr) {
+                this.fire("error", [xhr.status, xhr.statusText]);
+            }.bind(this)
+        });
+        jsonRequest.post();
     },
 
     render: function() {
@@ -365,6 +475,17 @@ Sahris.Page = new Class({
 
     onFailed: function(status, statusText) {
         console.log("Page failed: {status} {statusText}".substitute({
+            status: status,
+            statusText: statusText
+        }));
+    },
+
+    onSaved: function() {
+        console.log("Page saved: " + this.name);
+    },
+
+    onError: function(status, statusText) {
+        console.log("Page saving error: {status} {statusText}".substitute({
             status: status,
             statusText: statusText
         }));
@@ -385,7 +506,7 @@ Sahris.Menu = new Class({
 
         this.page = new Sahris.Page(this.el, "/wiki", this.defaultPage);
         this.page.on("loaded", this._onPageLoaded.bind(this));
-        this.page.on("failed", this._onPageFailed.bind(this));
+        this.page.on("failed", this._onPageError.bind(this));
 
         this.clear();
     },
@@ -395,7 +516,7 @@ Sahris.Menu = new Class({
         this.fire("loaded");
     },
 
-    _onPageFailed: function(status, statusText) {
+    _onPageError: function(status, statusText) {
         this.fire("failed", [status, statusText]);
     },
 
@@ -456,26 +577,27 @@ Sahris.Editor = new Class({
 
     initialize: function(el) {
         this.el = el;
+        this.textEl = this.el.getElement("#editor-content textarea");
+        this.commentEl = this.el.getElements("#editor-fields [name=comment]");
     },
 
     load: function(page) {
-        console.log("Editor loading page: " + page.naem);
+        console.log("Editor loading page: " + page.name);
+        this.textEl.set("value", page.text);
     },
 
     update: function(page) {
-        console.log("Editor updating page: " + page.naem);
+        console.log("Editor updating page: " + page.name);
+        page.text = this.textEl.get("value");
+        page.comment = this.commentEl.get("value")[0];
+    },
+
+    hide: function() {
+        this.el.hide();
     },
 
     show: function() {
         this.el.show();
-    },
-
-    setWidth: function (width) {
-        this.el.set("width", width);
-    },
-
-    setHeight: function (height) {
-        this.el.set("height", height);
     }
 });
 
