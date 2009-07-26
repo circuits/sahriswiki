@@ -144,6 +144,48 @@ Sahris.UI = new Class({
     },
 
     _onTplLoaded: function() {
+        this.el.getElements("#metanav a").on("click",
+            this._onLinkClicked.bind(this));
+
+        this.el.getElements("#ctxnav a").on("click",
+            this._onLinkClicked.bind(this));
+
+        /* FIXME: Port to mootools
+
+        $("#editor textarea").width($("#content").width());
+        $("#editor textarea").height($("#content").height() * 0.8);
+
+        $.ajax({
+            type: "GET",
+            url: "/getip",
+            dataType: "json",
+            success: function(data) {
+                $("#editor #fields input[name=author]").val(data);
+            }
+        });
+
+        var buttonCallback = function(e) {
+            e.preventDefault();
+            this.onButton(e);
+        };
+        $("#buttons a").click(buttonCallback.createDelegate(this));
+
+        var dblclickCallback = function() {
+            this.edit(true);
+        };
+        $("#content").dblclick(dblclickCallback.createDelegate(this));
+
+        var keypressCallback = function(e) {
+            this.onKeyPressed(e)
+        };
+        $(document).keypress(keypressCallback.createDelegate(this));
+        */
+
+        var pageEl = this.el.getElement("#content > #page");
+        this.page = new Sahris.Page(pageEl, "/wiki", "FrontPage");
+        this.page.on("loaded", this._onPageLoaded.bind(this));
+        this.page.on("failed", this._onPageFailed.bind(this));
+        this.page.on("linkClicked", this._onLinkClicked.bind(this));
         this.fire("loaded");
     },
 
