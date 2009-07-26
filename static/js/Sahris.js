@@ -56,6 +56,21 @@ Element.implement({
 
 });
 
+var Log = new Class({
+	
+	log: function(){
+		Log.logger.call(this, arguments);
+	}
+	
+});
+
+Log.logged = [];
+
+Log.logger = function(){
+	if(window.console && console.log) console.log.apply(console, arguments);
+	else Log.logged.push(arguments);
+};
+
 var Component = new Class({
     Extends: Events,
 });
@@ -72,12 +87,12 @@ Sahris.App = new Class({
     Extends: Component,
 
     initialize: function() {
-        console.log("Sahris.App initializing...");
+        logger.log("Sahris.App initializing...");
         this.ui = new Sahris.UI();
     },
 
     run: function() {
-        console.log("Sahris.App running...");
+        logger.log("Sahris.App running...");
         this.ui.load();
     }
 });
@@ -107,11 +122,11 @@ Sahris.Template = new Class({
     },
 
     onLoaded: function() {
-        console.log("Template loaded");
+        logger.log("Template loaded");
     },
 
     onFailed: function(status, statusText) {
-        console.log("Template failed: {status} {statusText}".substitute({
+        logger.log("Template failed: {status} {statusText}".substitute({
             status: status,
             statusText: statusText
         }));
@@ -206,12 +221,12 @@ Sahris.UI = new Class({
 
         this.history = HistoryManager.register(this.historyKey, [1],
             function(values) {
-                console.log("History: onMatch");
-                console.log(values);
+                logger.log("History: onMatch");
+                logger.log(values);
                 if ($defined(this.page)) {
                     if (values && values[0]) {
                         var parts = values[0].split("/");
-                        console.log(parts);
+                        logger.log(parts);
                         if (parts.length == 2) {
                             var name = parts[0], action = parts[1];
                         } else {
@@ -229,14 +244,14 @@ Sahris.UI = new Class({
                         this.editing = false;
                     }
 
-                    console.log("Action: " + action);
-                    console.log("Name:   " + name);
+                    logger.log("Action: " + action);
+                    logger.log("Name:   " + name);
                     this.page.load(name);
                 }
             }.bind(this),
             function(values) {
-                console.log("History: onGenerate");
-                console.log(values);
+                logger.log("History: onGenerate");
+                logger.log(values);
                 return values;
 
             }.bind(this),
@@ -272,8 +287,8 @@ Sahris.UI = new Class({
 
     _onPageError: function(status, statusText) {
         if (($type(status) == "boolean") && !(status)) {
-            console.log(status);
-            console.log(statusText);
+            logger.log(status);
+            logger.log(statusText);
             this.setError(statusText);
             this.setTitle(this.page.name);
             this.menu.setActive(this.page.name);
@@ -347,7 +362,7 @@ Sahris.UI = new Class({
     },
 
     onLoaded: function() {
-        console.log("UI loaded");
+        logger.log("UI loaded");
         if (this.menu == null) {
             this.menu = new Sahris.Menu(
                 this.el.getElement("#menu"),
@@ -357,7 +372,7 @@ Sahris.UI = new Class({
     },
 
     onFailed: function(status, statusText) {
-        console.log("UI failed: {status} {statusText}".substitute({
+        logger.log("UI failed: {status} {statusText}".substitute({
             status: status,
             statusText: statusText
         }));
@@ -432,7 +447,7 @@ Sahris.Page = new Class({
     },
 
     save: function() {
-        console.log("Saving page: " + this.naem);
+        logger.log("Saving page: " + this.naem);
 
         var url = "{baseurl}/{name}".substitute({
             baseurl: this.baseurl,
@@ -469,23 +484,23 @@ Sahris.Page = new Class({
     },
 
     onLoaded: function() {
-        console.log("Page loaded: " + this.name);
+        logger.log("Page loaded: " + this.name);
         this.el.getElements("a").on("click", this._onLinkClicked.bind(this));
     },
 
     onFailed: function(status, statusText) {
-        console.log("Page failed: {status} {statusText}".substitute({
+        logger.log("Page failed: {status} {statusText}".substitute({
             status: status,
             statusText: statusText
         }));
     },
 
     onSaved: function() {
-        console.log("Page saved: " + this.name);
+        logger.log("Page saved: " + this.name);
     },
 
     onError: function(status, statusText) {
-        console.log("Page saving error: {status} {statusText}".substitute({
+        logger.log("Page saving error: {status} {statusText}".substitute({
             status: status,
             statusText: statusText
         }));
@@ -530,28 +545,28 @@ Sahris.Menu = new Class({
     },
 
     setActive: function(name) {
-        console.log("Setting active menu item: " + name);
-        console.log(this.el);
+        logger.log("Setting active menu item: " + name);
+        logger.log(this.el);
         var el = this.el.getElement("li.active");
-        console.log(el);
+        logger.log(el);
         if ($defined(el)) {
             el.removeClass("active");
         }
 
         var el = this.el.getElement("li a[href$=\"{name}\"]".substitute(
             {name: name}));
-        console.log(el);
+        logger.log(el);
         if ($defined(el)) {
             el.getParent().addClass("active");
         }
     },
 
     onLoaded: function() {
-        console.log("Menu loaded");
+        logger.log("Menu loaded");
     },
 
     onFailed: function(status, statusText) {
-        console.log("Menu failed: {status} {statusText}".substitute({
+        logger.log("Menu failed: {status} {statusText}".substitute({
             status: status,
             statusText: statusText
         }));
@@ -588,12 +603,12 @@ Sahris.Editor = new Class({
     },
 
     load: function(page) {
-        console.log("Editor loading page: " + page.name);
+        logger.log("Editor loading page: " + page.name);
         this.textEl.set("value", page.text);
     },
 
     update: function(page) {
-        console.log("Editor updating page: " + page.name);
+        logger.log("Editor updating page: " + page.name);
         page.text = this.textEl.get("value");
         page.comment = this.commentEl.get("value")[0];
     },
@@ -607,7 +622,9 @@ Sahris.Editor = new Class({
     }
 });
 
+var logger = new Log();
+
 $(document).on("domready", function() {
-    console.log("Ready!");
+    logger.log("Ready!");
     new Sahris.App().run();
 });
