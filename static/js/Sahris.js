@@ -103,7 +103,7 @@ Sahris.UI = new Class({
         this.tpl.on("loaded", this._onTplLoaded.bind(this));
         this.tpl.on("failed", this._onTplFailed.bind(this));
 
-        this.menu = new Sahris.Menu($("menu"), "SiteMenu");
+        this.menu = null;
     },
 
     _onTplLoaded: function() {
@@ -120,6 +120,9 @@ Sahris.UI = new Class({
 
     onLoaded: function() {
         console.log("UI loaded");
+        if (this.menu == null) {
+            this.menu = new Sahris.Menu($("menu"), "SiteMenu");
+        }
         this.menu.load();
     },
 
