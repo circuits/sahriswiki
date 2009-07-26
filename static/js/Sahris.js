@@ -66,14 +66,13 @@ Sahris.Template = new Class({
     },
 
     load: function() {
-        var self = this;
         this.el.set("load", {
             "onSuccess": function(responseText, responseXML) {
-               self.fire("loaded");
-            },
+               this.fire("loaded");
+            }.bind(this),
             "onFailure": function(xhr) {
-                self.fire("failed", xhr.status, xhr.statusText);
-            }
+                this.fire("failed", xhr.status, xhr.statusText);
+            }.bind(this)
         }).load(this.url);
     },
 
@@ -165,21 +164,20 @@ Sahris.Page = new Class({
             name: name
         });
 
-        var self = this;
         var jsonRequest = new Request.JSON({
             url: url,
             onSuccess: function(responseJSON, responseText) {
                 var o = responseJSON;
                 if (o.success) {
-                    $extend(self, o.data);
-                    self.fireEvent("loaded", self);
+                    $extend(this, o.data);
+                    this.fireEvent("loaded", this);
                 } else {
-                    self.fireEvent("failed", o.message);
+                    this.fireEvent("failed", o.message);
                 }
-            },
+            }.bind(this),
             "onFailure": function(xhr) {
-                self.fire("failed", xhr.status, xhr.statusText);
-            }
+                this.fire("failed", xhr.status, xhr.statusText);
+            }.bind(this)
         });
         jsonRequest.get();
     },
