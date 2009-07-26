@@ -245,6 +245,26 @@ Sahris.Menu = new Class({
     }
 });
 
+Sahris.Parser = new Class({
+    Implements: Options,
+
+    options: {
+        interwiki: {
+            MeatBall: "http://www.usemod.com/cgi-bin/mb.pl?"
+        },
+        linkFormat: "#"
+    },
+
+    initialize: function(options) {
+        this.setOptions(options);
+        this.creole = new Parse.Simple.Creole(this.options);
+    },
+
+    parse: function(el, text) {
+        this.creole.parse(el, text);
+    }
+});
+
 /*
 >>> var pageEl = $$("#content > #page");
 >>> var page = new Sahris.Page(pageEl, "/wiki", "FrontPage");
