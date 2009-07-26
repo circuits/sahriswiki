@@ -147,6 +147,8 @@ Sahris.Page = new Class({
             "failed": this.onFailed.bind(this)
         });
 
+        this.parser = new Sahris.Parser();
+
         this.clear();
     },
 
@@ -184,6 +186,10 @@ Sahris.Page = new Class({
             }.bind(this)
         });
         jsonRequest.get();
+    },
+
+    render: function() {
+        this.parser.parse(this.el, this.text);
     },
 
     onLoaded: function() {
