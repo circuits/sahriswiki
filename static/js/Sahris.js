@@ -71,7 +71,7 @@ Sahris.Template = new Class({
                this.fire("loaded");
             }.bind(this),
             "onFailure": function(xhr) {
-                this.fire("failed", xhr.status, xhr.statusText);
+                this.fire("failed", [xhr.status, xhr.statusText]);
             }.bind(this)
         }).load(this.url);
     },
@@ -176,13 +176,13 @@ Sahris.Page = new Class({
                 var o = responseJSON;
                 if (o.success) {
                     $extend(this, o.data);
-                    this.fireEvent("loaded", this);
+                    this.fire("loaded", this);
                 } else {
-                    this.fireEvent("failed", o.message);
+                    this.fire("failed", [o.success, o.message]);
                 }
             }.bind(this),
             "onFailure": function(xhr) {
-                this.fire("failed", xhr.status, xhr.statusText);
+                this.fire("failed", [xhr.status, xhr.statusText]);
             }.bind(this)
         });
         jsonRequest.get();
@@ -229,7 +229,7 @@ Sahris.Menu = new Class({
     },
 
     _onPageFailed: function(status, statusText) {
-        this.fire("failed", status, statusText);
+        this.fire("failed", [status, statusText]);
     },
 
     clear: function() {
