@@ -99,11 +99,11 @@ Sahris.UI = new Class({
 
         this.el = $(document.body);
         this.url = "/templates/base.xhtml";
-
         this.tpl = new Sahris.Template(this.el, this.url);
-
         this.tpl.on("loaded", this._onTplLoaded.bind(this));
         this.tpl.on("failed", this._onTplFailed.bind(this));
+
+        this.menu = new Sahris.Menu($("menu"), "SiteMenu");
     },
 
     _onTplLoaded: function() {
@@ -120,6 +120,7 @@ Sahris.UI = new Class({
 
     onLoaded: function() {
         console.log("UI loaded");
+        this.menu.load();
     },
 
     onFailed: function(status, statusText) {
@@ -194,7 +195,58 @@ Sahris.Page = new Class({
     }
 });
 
+Sahris.Menu = new Class({
+    Extends: Component,
+
+    initialize: function(el, defaultPage) {
+        this.el = el;
+        this.defaultPage = defaultPage;
+
+        this.addEvents({
+            "loaded": this.onLoaded.bind(this),
+            "failed": this.onFailed.bind(this)
+        });
+
+        var page = new Sahris.Page(this.el, "/wiki", this.defaultPage);
+        this.page.on("loaded", this._onPageLoaded.bind(this));
+        this.page.on("failed", this._onPageFailed.bind(this));
+
+        this.clear();
+    },
+
+    _onPageLoaded: function() {
+        this.fire("loaded");
+    },
+
+    _onPageFailed: function(status, statusText) {
+        this.fire("failed", status, statusText);
+    },
+
+    clear: function() {
+        this.el.empty();
+    },
+
+    load: function() {
+        this.page.load();
+    },
+
+    onLoaded: function() {
+        console.log("Menu loaded");
+    },
+
+    onFailed: function(status, statusText) {
+        console.log("Menu failed: {status} {statusText}".substitute({
+            status: status,
+            statusText: statusText
+        }));
+    }
+});
+
 /*
+>>> var pageEl = $$("#content > #page");
+>>> var page = new Sahris.Page(pageEl, "/wiki", "FrontPage");
+>>> page.load("SiteMenu");
+
 Sahris.Menu = function() {
 
     return {
