@@ -237,6 +237,7 @@ Sahris.Menu = new Class({
     },
 
     load: function() {
+        this.clear();
         this.page.load(this.defaultPage);
     },
 
