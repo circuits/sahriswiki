@@ -7,40 +7,40 @@ var Creole = {};
 
 Creole.Rules = new Class({
     // For the inline elements:
-    proto: "http|https|ftp|nntp|news|mailto|telnet|file|irc",
-    link: "(\[\[(.+?) \s*([|] \s* (.+?) \s*)?]])",
-    image: "({{(.+?) \s*([|] \s* (.+?) \s*)?}})",
-    macro: "(<<( \w+)(\( ( .*?) \))? \s*([|] \s* ( .+?) \s* )?>>)",
-    code: "( {{{ (.*?) }}} )",
-    emph: "( (?<!:)// )", // there must be no : in front of the //
+    proto: new RegExp("http|https|ftp|nntp|news|mailto|telnet|file|irc"),
+    link: new RegExp("(\[\[(.+?) \s*([|] \s* (.+?) \s*)?]])"),
+    image: new RegExp("({{(.+?) \s*([|] \s* (.+?) \s*)?}})"),
+    macro: new RegExp("(<<( \w+)(\( ( .*?) \))? \s*([|] \s* ( .+?) \s* )?>>)"),
+    code: new RegExp("( {{{ (.*?) }}} )"),
+    emph: new RegExp("( (?<!:)// )"), // there must be no : in front of the //
                           // avoids italic rendering in urls with
                           // unknown protocols
-    strong: " \*\* )",
-    linebreak: " \\\\ )",
-    escape: "( ~ (\S) )",
-    char: "( . )",
+    strong: new RegExp(" \*\* )"),
+    linebreak: new RegExp(" \\\\ )"),
+    escape: new RegExp("( ~ (\S) )"),
+    char: new RegExp("( . )"),
 
     // For the block elements:
-    separator: "( ^ \s* ---- \s* $ )", // horizontal line
-    line: "( ^ \s* $ )", // empty line that separates paragraphs
-    head: "((=+) \s*( .*? ) \s*(=*) \s*$)",
-    text: "( .+ )",
+    separator: new RegExp("( ^ \s* ---- \s* $ )"), // horizontal line
+    line: new RegExp("( ^ \s* $ )"), // empty line that separates paragraphs
+    head: new RegExp("((=+) \s*( .*? ) \s*(=*) \s*$)"),
+    text: new RegExp("( .+ )"),
 
     // Matches the whole list, separate items are parsed later. The
     // list *must* start with a single bullet.
-    list: "(^ [ \t]* ([*][^*\#]|[\#][^\#*]).* $( \n[ \t]* [*\#]+.* $ )*)",
+    list: new RegExp("(^ [ \t]* ([*][^*\#]|[\#][^\#*]).* $( \n[ \t]* [*\#]+.* $ )*)"),
 
-    item: "(^ \s*( [\#*]+) \s*( .*?)$)", // Matches single list items
-    pre: "(^{{{ \s* $(\n)?(([\#]!(\w*?)(\s+.*)?$)?(.|\n)+?)(\n)?^}}} \s*$)",
-    pre_escape:  " ^(\s*) ~ ( \}\}\} \s*) $",
-    table: "(^ \s*[|].*? \s*[|]? \s*$)",
+    item: new RegExp("(^ \s*( [\#*]+) \s*( .*?)$)"), // Matches single list items
+    pre: new RegExp("(^{{{ \s* $(\n)?(([\#]!(\w*?)(\s+.*)?$)?(.|\n)+?)(\n)?^}}} \s*$)"),
+    pre_escape: new RegExp(" ^(\s*) ~ ( \}\}\} \s*) $"),
+    table: new RegExp("(^ \s*[|].*? \s*[|]? \s*$)"),
 
     initialize: function () {
         // For the inline elements:
-        this.url =  "((^ | (?<=\s | [.,:;!?()/=]))(~)?( ( / " + this.proto + " / ):\S+? )($ | (?=\s | [,.:;!?()] (\s | $))))";
+        this.url =  new RegExp("((^ | (?<=\s | [.,:;!?()/=]))(~)?( ( / " + this.proto + " / ):\S+? )($ | (?=\s | [,.:;!?()] (\s | $))))");
 
         // For splitting table cells:
-        this.cell = "\| \s*(( [=][^|]+ ) |( ( " + [this.link, this.macro, this.image, this.code].join("|") + " | [^|])+ )) \s*";
+        this.cell = new RegExp("\| \s*(( [=][^|]+ ) |( ( " + [this.link, this.macro, this.image, this.code].join("|") + " | [^|])+ )) \s*");
     }
 });
 
