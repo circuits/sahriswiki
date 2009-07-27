@@ -233,7 +233,9 @@ Sahris.UI = new Class({
                         this.editing = false;
                     }
 
-                    this.page.load(name);
+                    if (this.page.name != name) {
+                        this.page.load(name);
+                    }
                 }
             }.bind(this),
             function(values) {
