@@ -313,6 +313,7 @@ Creole.Parser = new Class({
         this.root = root;
         this.parse_block(this.raw);
         return this.root;
+    }
 });
 
 Creole.parser = new Creole.Parser();
