@@ -56,8 +56,18 @@ Element.implement({
 
 });
 
+Element.implement({
+    resize: function(w, h) {
+        this.setStyles({
+            "width": w,
+            "height": h
+        });
+        this.fireEvent("resize");
+    }
+});
+
 var Component = new Class({
-    Extends: Events,
+    Extends: Events
 });
 
 //
@@ -141,6 +151,8 @@ Sahris.UI = new Class({
     },
 
     _onButtonClicked: function(e) {
+        e.preventDefault();
+
         if (e.target.get("text") == "Save") {
             this.doSave();
         } else if (e.target.get("text") == "Cancel") {
@@ -156,7 +168,6 @@ Sahris.UI = new Class({
             if (hash && hash[0] == "#") {
                 hash = hash.replace(/^.*#/, "");
                 this.history.setValue(0, hash);
-                return false;
             }
         }
     },
@@ -176,11 +187,11 @@ Sahris.UI = new Class({
     },
 
     _onLinkClicked: function(e) {
+        e.preventDefault();
         var hash = e.target.href;
         if (hash && hash[0] == "#") {
             hash = hash.replace(/^.*#/, "");
             this.history.setValue(0, hash);
-            return false;
         }
     },
 
@@ -203,6 +214,15 @@ Sahris.UI = new Class({
         $(document).on("keypress", this._onKeyPressed.bind(this));
 
         this.editor = new Sahris.Editor(this.el.getElement("#editor"));
+        console.log("Resizing editor");
+
+        // Resize Editor appropriately
+        var contentEl = this.el.getElement("#content");
+        var dimensions = contentEl.getDimensions();
+        this.editor.el.resize(contentEl.getSize());
+        this.editor.textEl.resize(
+            dimensions.width - dimensions["padding-right"],
+            dimensions.height - dimensions["padding-bottom"]);
 
         var pageEl = this.el.getElement("#content > #page");
         this.page = new Sahris.Page(pageEl, "/wiki", "FrontPage");
@@ -374,7 +394,7 @@ Sahris.Page = new Class({
         this.addEvents({
             "loaded": this.onLoaded.bind(this),
             "saved": this.onSaved.bind(this),
-            "error": this.onError.bind(this),
+            "error": this.onError.bind(this)
         });
 
         this.parser = new Sahris.Parser();
@@ -572,6 +592,10 @@ Sahris.Editor = new Class({
     update: function(page) {
         page.text = this.textEl.get("value");
         page.comment = this.commentEl.get("value")[0];
+    },
+
+    resize: function(w, h) {
+        this.el.resize(w, h);
     },
 
     hide: function() {

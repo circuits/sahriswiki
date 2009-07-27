@@ -37,7 +37,6 @@ var HistoryManagerX = new Class ({
 		onStart: Class.empty,
 		onRegister: Class.empty,
 		onUnregister: Class.empty,
-		onStart: Class.empty,
 		onUpdate: Class.empty,
 		onStateChange: Class.empty,
 		onObserverChange: Class.empty

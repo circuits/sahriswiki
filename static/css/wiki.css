@@ -77,10 +77,6 @@ address { font-style: normal }
 .wiki pre {
  font-size: 90%;
     white-space: pre-wrap;
-    word-wrap: break-word;
-    white-space: -moz-pre-wrap;
-    white-space: -pre-wrap;
-    white-space: -o-pre-wrap;
     line-height: 1.2;
     color: #666;
     font-family: Droid Mono, DejaVu Mono, Lucida Console, Lucida Typewriter, monospace;
