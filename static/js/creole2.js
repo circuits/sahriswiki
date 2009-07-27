@@ -77,7 +77,7 @@ Creole.Parser = new Class({
             Rules.code, Rules.image, Rules.strong, Rules.emph, Rules.linebreak,
             Rules.escape, Rules.char]), re.X | re.U)
         */
-    }
+    },
 
     /*
     def _upto(self, node, kinds):
