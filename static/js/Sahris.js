@@ -192,8 +192,6 @@ Sahris.UI = new Class({
     },
 
     onLinkClicked: function (e) {
-        console.log("Link CLicked");
-        console.log(e);
         var hash = e.target.href;
         hash = hash.replace(/^.*#/, "");
         this.history.setValue(0, hash);
@@ -201,11 +199,9 @@ Sahris.UI = new Class({
     },
 
     onTplLoaded: function () {
-        console.log(this.el.getElements("#metanav a"));
         this.el.getElements("#metanav a").on("click",
             this.onLinkClicked.bind(this));
 
-        console.log(this.el.getElements("#ctxnav a"));
         this.el.getElements("#ctxnav a").on("click",
             this.onLinkClicked.bind(this));
 
