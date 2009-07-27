@@ -599,8 +599,8 @@ Sahris.Editor = new Class({
     },
 
     update: function(page) {
-        page.text = this.textEl.get("value");
-        page.comment = this.commentEl.get("value")[0];
+        page.text = this.textEl.get("value") || "";
+        page.comment = this.commentEl.get("value")[0] || "";
     },
 
     hide: function() {
