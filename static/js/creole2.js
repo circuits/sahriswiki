@@ -50,23 +50,9 @@ Creole.Parser = new Class({
     Extends: Events,
     Implements: Options,
 
-    options: {},
+    rules: Creole.rules,
 
-    /* FIXME: How do I deal with these ?
-     *
-    # For pre escaping, in creole 1.0 done with ~:
-    pre_escape_re = re.compile(Rules.pre_escape, re.M | re.X)
-    link_re = re.compile('|'.join([Rules.image, Rules.linebreak, Rules.char]), re.X | re.U) # for link descriptions
-    item_re = re.compile(Rules.item, re.X | re.U | re.M) # for list items
-    cell_re = re.compile(Rules.cell, re.X | re.U) # for table cells
-    # For block elements:
-    block_re = re.compile('|'.join([Rules.line, Rules.head, Rules.separator,
-        Rules.pre, Rules.list, Rules.table, Rules.text]), re.X | re.U | re.M)
-    # For inline elements:
-    inline_re = re.compile('|'.join([Rules.link, Rules.url, Rules.macro,
-        Rules.code, Rules.image, Rules.strong, Rules.emph, Rules.linebreak,
-        Rules.escape, Rules.char]), re.X | re.U)
-    */
+    options: {},
 
     initialize: function (options) {
         this.setOptions(options);
@@ -75,6 +61,22 @@ Creole.Parser = new Class({
         this.root = null;
         this.cur = this.root; // The most recent document node
         this.text = null;     // The node to add inline characters to
+
+        // For pre escaping, in creole 1.0 done with ~:
+        //pre_escape_re = re.compile(Rules.pre_escape, re.M | re.X)
+        //link_re = re.compile('|'.join([Rules.image, Rules.linebreak, Rules.char]), re.X | re.U) # for link descriptions
+        //item_re = re.compile(Rules.item, re.X | re.U | re.M) # for list items
+        //cell_re = re.compile(Rules.cell, re.X | re.U) # for table cells
+
+        // For block elements:
+        this.block_re = new RegExp([this.rules.line, this.rules.head, this.rules.separator, this.rules.pre, this.rules.list, this.rules.table, this.rules.text].join("|"), "m");
+
+        // For inline elements:
+        /*
+        inline_re = re.compile('|'.join([Rules.link, Rules.url, Rules.macro,
+            Rules.code, Rules.image, Rules.strong, Rules.emph, Rules.linebreak,
+            Rules.escape, Rules.char]), re.X | re.U)
+        */
     }
 
     /*
@@ -299,16 +301,18 @@ Creole.Parser = new Class({
         """Recognize inline elements inside blocks."""
 
         re.sub(self.inline_re, self._replace, raw)
+    */
 
     parse_block: function (raw) {
-        re.sub(self.block_re, self._replace, raw)
+        var match = this.block_re.search(raw);
+        console.log(match);
+    },
 
     parse: function(raw, root) {
         this.raw = raw;
         this.root = root;
         this.parse_block(this.raw);
         return this.root;
-    */
 });
 
 Creole.parser = new Creole.Parser();
