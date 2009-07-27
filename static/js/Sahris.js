@@ -152,10 +152,8 @@ Sahris.UI = new Class({
             this.doEdit(false);
             this.setStatus("Cancelled");
 
-            hash = "#{name}".substitute({name: this.page.name});
+            hash = "{name}".substitute({name: this.page.name});
             this.history.setValue(0, hash);
-
-            this.page.fire("loaded");
         } else {
             hash = e.target.href;
             hash = hash.replace(/^.*#/, "");
@@ -173,8 +171,6 @@ Sahris.UI = new Class({
 
                 var hash = "{name}".substitute({name: this.page.name});
                 this.history.setValue(0, hash);
-
-                this.page.fire("loaded");
             }
         }
     },
@@ -197,7 +193,7 @@ Sahris.UI = new Class({
             this.onButtonClicked.bind(this));
 
         this.el.getElements("#content").on("dblclick", function () {
-            this.history.setValue(0, "#{name}/edit".substitute(
+            this.history.setValue(0, "{name}/edit".substitute(
                 {name: this.page.name}));
         }.bind(this));
 
@@ -263,7 +259,11 @@ Sahris.UI = new Class({
                 this.editing = false;
             }
 
-            this.page.load(name);
+            if (this.page.name !== name) {
+                this.page.load(name);
+            } else {
+                this.page.fire("loaded");
+            }
         }
     },
 
@@ -314,7 +314,7 @@ Sahris.UI = new Class({
         this.doEdit(false);
         this.setStatus(message);
 
-        var hash = "#{name}".substitute({name: this.page.name});
+        var hash = "{name}".substitute({name: this.page.name});
         this.history.setValue(0, hash);
 
         this.page.fire("loaded");
