@@ -278,6 +278,11 @@ Sahris.UI = new Class({
         if (this.viewing) {
             this.page.render();
             this.setTitle(this.page.name || this.page.title);
+
+            this.setStatus(this.templates.meta.substitute({
+                author: this.page.author,
+                rev: this.page.rev,
+                date: new Date(this.page.data * 1000).pretty()}));
         } else {
             this.doEdit(true);
             this.setTitle("Editing {name}".substitute({name: this.page.name}));
