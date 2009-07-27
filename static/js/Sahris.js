@@ -79,9 +79,7 @@ var Component = new Class({
 // Sahris
 //
 
-var Sahris = {
-    version: "0.2"
-};
+var Sahris = {};
 
 Sahris.App = new Class({
     Extends: Component,
