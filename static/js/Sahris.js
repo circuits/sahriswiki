@@ -581,7 +581,9 @@ Sahris.Editor = new Class({
     initialize: function(el) {
         this.el = el;
         this.textEl = this.el.getElement("#editor-content textarea");
-        this.commentEl = this.el.getElements("#editor-fields [name=comment]");
+        this.commentEl = this.el.getElement("#editor-fields [name=comment]");
+
+        new OverText(this.commentEl).show();
     },
 
     load: function(page) {
