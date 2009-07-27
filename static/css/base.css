@@ -168,7 +168,7 @@ label.comment input {
 /* Context Navigation */
 
 #ctxtnav {
-    height: 1em
+    height: 1em;
     padding: 5px;
 }
 #ctxtnav li ul {
