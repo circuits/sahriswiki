@@ -183,6 +183,9 @@ Sahris.UI = new Class({
     },
 
     onTplLoaded: function () {
+        this.menu = new Sahris.Menu(this.el.getElement("#menu"), "SiteMenu");
+        this.menu.load();
+
         this.el.getElements("#metanav a").on("click",
             this.onLinkClicked.bind(this));
 
@@ -375,15 +378,6 @@ Sahris.UI = new Class({
 
     setTitle: function (title) {
         this.el.getElement("#title").set("html", title);
-    },
-
-    onLoaded: function () {
-        if (this.menu === null) {
-            this.menu = new Sahris.Menu(
-                this.el.getElement("#menu"),
-                "SiteMenu");
-        }
-        this.menu.load();
     }
 });
 
