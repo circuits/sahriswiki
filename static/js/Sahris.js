@@ -131,8 +131,7 @@ Sahris.UI = new Class({
 
     templates: {
         error: "<h1>Error</h1><p class=\"message\">{message}</p>",
-        meta: "<p>Last edited by {author} (Revision: {rev}) " +
-            "about {date}</p>"
+        meta: "<p>Last edited by {author} (Revision: {rev}) {date}</p>"
     },
 
     editing: false,
