@@ -141,8 +141,16 @@ Sahris.UI = new Class({
     },
 
     _onButtonClicked: function(e) {
-        if (this.editing) {
+        if (e.target.get("text") == "Save") {
             this.doSave();
+        } else if (e.target.get("text") == "Cancel") {
+            this.doEdit(false);
+            this.setStatus("Cancelled");
+
+            var hash = "#{name}".substitute({name: this.page.name});
+            this.history.setValue(0, hash);
+
+            this.page.fire("loaded");
         } else {
             var hash = e.target.href;
             if (hash && hash[0] == "#") {
@@ -157,6 +165,12 @@ Sahris.UI = new Class({
         if (e.code == 27) {
             if (this.editing) {
                 this.doEdit(false);
+                this.setStatus("Cancelled");
+
+                var hash = "#{name}".substitute({name: this.page.name});
+                this.history.setValue(0, hash);
+
+                this.page.fire("loaded");
             }
         }
     },
@@ -290,12 +304,16 @@ Sahris.UI = new Class({
             this.editor.hide();
             this.page.show();
             this.setTitle(this.page.name);
-            this.el.getElement("#buttons a:first-child").set("text", "Edit");
+            var buttons = this.el.getElements("#buttons a:first-child");
+            buttons[0].set("text", "Edit");
+            buttons[1].set("text", "More...");
         } else {
             this.page.hide();
             this.editor.load(this.page);
             this.editor.show();
-            this.el.getElement("#buttons a:first-child").set("text", "Save");
+            var buttons = this.el.getElements("#buttons a:first-child");
+            buttons[0].set("text", "Save");
+            buttons[1].set("text", "Cancel");
         }
     },
 
