@@ -140,7 +140,8 @@ Sahris.UI = new Class({
     initialize: function () {
         this.addEvents({
             "loaded": this.onLoaded.bind(this),
-            "failed": this.onFailed.bind(this)
+            "failed": this.onFailed.bind(this),
+            "historyChanged": this.onHistoryChanged.bind(this)
         });
 
         this.el = $(document.body);
@@ -155,9 +156,7 @@ Sahris.UI = new Class({
     },
 
     onButtonClicked: function (e) {
-        e.preventDefault();
-
-        var hash = "";
+        var hash;
 
         if (e.target.get("text") === "Save") {
             this.doSave();
@@ -171,11 +170,11 @@ Sahris.UI = new Class({
             this.page.fire("loaded");
         } else {
             hash = e.target.href;
-            if (hash && hash[0] === "#") {
-                hash = hash.replace(/^.*#/, "");
-                this.history.setValue(0, hash);
-            }
+            hash = hash.replace(/^.*#/, "");
+            this.history.setValue(0, hash);
         }
+
+        e.preventDefault();
     },
 
     onKeyPressed: function (e) {
@@ -193,18 +192,20 @@ Sahris.UI = new Class({
     },
 
     onLinkClicked: function (e) {
-        e.preventDefault();
+        console.log("Link CLicked");
+        console.log(e);
         var hash = e.target.href;
-        if (hash && hash[0] === "#") {
-            hash = hash.replace(/^.*#/, "");
-            this.history.setValue(0, hash);
-        }
+        hash = hash.replace(/^.*#/, "");
+        this.history.setValue(0, hash);
+        e.preventDefault();
     },
 
     onTplLoaded: function () {
+        console.log(this.el.getElements("#metanav a"));
         this.el.getElements("#metanav a").on("click",
             this.onLinkClicked.bind(this));
 
+        console.log(this.el.getElements("#ctxnav a"));
         this.el.getElements("#ctxnav a").on("click",
             this.onLinkClicked.bind(this));
 
@@ -239,46 +240,50 @@ Sahris.UI = new Class({
 
         this.history = HistoryManager.register(this.historyKey, [1],
             function (values) {
-                var parts, name, action;
-                if ($defined(this.page)) {
-                    if (values && values[0]) {
-                        parts = values[0].split("/");
-                        if (parts.length === 2) {
-                            name = parts[0];
-                            action = parts[1];
-                        } else {
-                            name = parts[0];
-                            action = "view";
-                        }
-                    } else {
-                        name = "FrontPage";
-                        action = "view";
-                    }
-
-                    if (action === "edit") {
-                        this.editing = true;
-                        this.viewing = false;
-                    } else {
-                        if (this.editing) {
-                            this.doEdit(false);
-                        }
-                        this.viewing = true;
-                        this.editing = false;
-                    }
-
-                    if (this.page.name !== name) {
-                        this.page.load(name);
-                    }
-                }
+                this.fire("historyChanged", [values]);
             }.bind(this),
             function (values) {
+                this.fire("historyChanged", [values]);
                 return values;
-
             }.bind(this),
             "(.*)");
         HistoryManager.start();
 
         this.fire("loaded");
+    },
+    
+    onHistoryChanged: function (values) {
+        var parts, name, action;
+        if ($defined(this.page)) {
+            if (values && values[0]) {
+                parts = values[0].split("/");
+                if (parts.length === 2) {
+                    name = parts[0];
+                    action = parts[1];
+                } else {
+                    name = parts[0];
+                    action = "view";
+                }
+            } else {
+                name = "FrontPage";
+                action = "view";
+            }
+
+            if (action === "edit") {
+                this.editing = true;
+                this.viewing = false;
+            } else {
+                if (this.editing) {
+                    this.doEdit(false);
+                }
+                this.viewing = true;
+                this.editing = false;
+            }
+
+            if (this.page.name !== name) {
+                this.page.load(name);
+            }
+        }
     },
 
     onTplFailed: function (status, statusText) {
