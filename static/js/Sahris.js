@@ -248,6 +248,9 @@ Sahris.UI = new Class({
                         this.editing = true;
                         this.viewing = false;
                     } else {
+                        if (this.editing) {
+                            this.doEdit(false);
+                        }
                         this.viewing = true;
                         this.editing = false;
                     }
