@@ -46,13 +46,14 @@ Creole.Rules = new Class({
 
 Creole.rules = new Creole.Rules();
 
-/*
-class Parser:
-    """
-    Parse the raw text and create a document object
-    that can be converted into output using Emitter.
-    """
+Creole.Parser = new Class({
+    Extends: Events,
+    Implements: Options,
 
+    options: {},
+
+    /* FIXME: How do I deal with these ?
+     *
     # For pre escaping, in creole 1.0 done with ~:
     pre_escape_re = re.compile(Rules.pre_escape, re.M | re.X)
     link_re = re.compile('|'.join([Rules.image, Rules.linebreak, Rules.char]), re.X | re.U) # for link descriptions
@@ -65,13 +66,18 @@ class Parser:
     inline_re = re.compile('|'.join([Rules.link, Rules.url, Rules.macro,
         Rules.code, Rules.image, Rules.strong, Rules.emph, Rules.linebreak,
         Rules.escape, Rules.char]), re.X | re.U)
+    */
 
-    def __init__(self, raw):
-        self.raw = raw
-        self.root = DocNode('document', None)
-        self.cur = self.root        # The most recent document node
-        self.text = None            # The node to add inline characters to
+    initialize: function (options) {
+        this.setOptions(options);
 
+        this.raw = null;
+        this.root = null;
+        this.cur = this.root; // The most recent document node
+        this.text = null;     // The node to add inline characters to
+    }
+
+    /*
     def _upto(self, node, kinds):
         """
         Look up the tree to the first occurence
@@ -294,14 +300,15 @@ class Parser:
 
         re.sub(self.inline_re, self._replace, raw)
 
-    def parse_block(self, raw):
-        """Recognize block elements."""
-
+    parse_block: function (raw) {
         re.sub(self.block_re, self._replace, raw)
 
-    def parse(self):
-        """Parse the text given as self.raw and return DOM tree."""
+    parse: function(raw, root) {
+        this.raw = raw;
+        this.root = root;
+        this.parse_block(this.raw);
+        return this.root;
+    */
+});
 
-        self.parse_block(self.raw)
-        return self.root
-*/
+Creole.parser = new Creole.Parser();
