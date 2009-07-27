@@ -214,12 +214,11 @@ Sahris.UI = new Class({
         $(document).on("keypress", this._onKeyPressed.bind(this));
 
         this.editor = new Sahris.Editor(this.el.getElement("#editor"));
-        console.log("Resizing editor");
 
         // Resize Editor appropriately
+        console.log("Resizing Editor");
         var contentEl = this.el.getElement("#content");
-        var dimensions = contentEl.getDimensions();
-        this.editor.el.resize(contentEl.getSize());
+        var dimensions = contentEl.getComputedSize();
         this.editor.textEl.resize(
             dimensions.width - dimensions["padding-right"],
             dimensions.height - dimensions["padding-bottom"]);
@@ -592,10 +591,6 @@ Sahris.Editor = new Class({
     update: function(page) {
         page.text = this.textEl.get("value");
         page.comment = this.commentEl.get("value")[0];
-    },
-
-    resize: function(w, h) {
-        this.el.resize(w, h);
     },
 
     hide: function() {
