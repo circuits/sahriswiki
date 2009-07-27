@@ -287,25 +287,27 @@ Creole.Parser = new Class({
             self.text = DocNode('text', self.cur, u'')
         self.text.content += groups.get('char', u'')
 
-    def _replace(self, match):
-        """Invoke appropriate _*_repl method. Called for every matched group."""
-
-        groups = match.groupdict()
-        for name, text in groups.iteritems():
-            if text is not None:
-                replace = getattr(self, '_%s_repl' % name)
-                replace(groups)
-                return
-
     def parse_inline(self, raw):
         """Recognize inline elements inside blocks."""
 
         re.sub(self.inline_re, self._replace, raw)
     */
 
-    parse_block: function (raw) {
-        var match = this.block_re.search(raw);
+    _replace: function (match) {
         console.log(match);
+        return "foo";
+        /*
+        groups = match.groupdict()
+        for name, text in groups.iteritems():
+            if text is not None:
+                replace = getattr(self, '_%s_repl' % name)
+                replace(groups)
+                return
+        */
+    },
+
+    parse_block: function (raw) {
+        raw.replace(this.block_re, this._replace);
     },
 
     parse: function(raw, root) {
