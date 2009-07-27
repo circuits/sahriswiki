@@ -126,7 +126,6 @@ Sahris.UI = new Class({
 
     initialize: function () {
         this.addEvents({
-            "loaded": this.onLoaded.bind(this),
             "historyChanged": this.onHistoryChanged.bind(this)
         });
 
