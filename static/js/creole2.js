@@ -8,15 +8,15 @@ var Creole = {};
 Creole.Rules = new Class({
     // For the inline elements:
     proto: new RegExp("http|https|ftp|nntp|news|mailto|telnet|file|irc"),
-    link: new RegExp("(\[\[(.+?) \s*([|] \s* (.+?) \s*)?]])"),
+    link: new RegExp("(\\[\\[(.+?) \s*([|] \s* (.+?) \s*)?]])"),
     image: new RegExp("({{(.+?) \s*([|] \s* (.+?) \s*)?}})"),
     macro: new RegExp("(<<( \w+)(\( ( .*?) \))? \s*([|] \s* ( .+?) \s* )?>>)"),
     code: new RegExp("( {{{ (.*?) }}} )"),
-    emph: new RegExp("( (?<!:)// )"), // there must be no : in front of the //
+    emph: new RegExp("( (?!:)// )"), // there must be no : in front of the //
                           // avoids italic rendering in urls with
                           // unknown protocols
-    strong: new RegExp(" \*\* )"),
-    linebreak: new RegExp(" \\\\ )"),
+    strong: new RegExp(" \\\\*\\\\* "),
+    linebreak: new RegExp(" \\\\\\\\ "),
     escape: new RegExp("( ~ (\S) )"),
     char: new RegExp("( . )"),
 
@@ -37,7 +37,7 @@ Creole.Rules = new Class({
 
     initialize: function () {
         // For the inline elements:
-        this.url =  new RegExp("((^ | (?<=\s | [.,:;!?()/=]))(~)?( ( / " + this.proto + " / ):\S+? )($ | (?=\s | [,.:;!?()] (\s | $))))");
+        this.url =  new RegExp("((^ | (?=\s | [.,:;!?()/=]))(~)?( ( / " + this.proto + " / ):\S+? )($ | (?=\s | [,.:;!?()] (\s | $))))");
 
         // For splitting table cells:
         this.cell = new RegExp("\| \s*(( [=][^|]+ ) |( ( " + [this.link, this.macro, this.image, this.code].join("|") + " | [^|])+ )) \s*");
