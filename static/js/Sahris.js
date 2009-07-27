@@ -101,11 +101,6 @@ Sahris.Template = new Class({
     initialize: function (el, url) {
         this.el = el;
         this.url = url;
-
-        this.addEvents({
-            "loaded": this.onLoaded.bind(this),
-            "failed": this.onFailed.bind(this)
-        });
     },
 
     load: function () {
@@ -134,7 +129,6 @@ Sahris.UI = new Class({
     initialize: function () {
         this.addEvents({
             "loaded": this.onLoaded.bind(this),
-            "failed": this.onFailed.bind(this),
             "historyChanged": this.onHistoryChanged.bind(this)
         });
 
@@ -177,7 +171,7 @@ Sahris.UI = new Class({
                 this.doEdit(false);
                 this.setStatus("Cancelled");
 
-                var hash = "#{name}".substitute({name: this.page.name});
+                var hash = "{name}".substitute({name: this.page.name});
                 this.history.setValue(0, hash);
 
                 this.page.fire("loaded");
@@ -402,9 +396,7 @@ Sahris.Page = new Class({
         this.defaultPage = defaultPage;
 
         this.addEvents({
-            "loaded": this.onLoaded.bind(this),
-            "saved": this.onSaved.bind(this),
-            "error": this.onError.bind(this)
+            "loaded": this.onLoaded.bind(this)
         });
 
         this.parser = new Sahris.Parser();
@@ -510,11 +502,6 @@ Sahris.Menu = new Class({
     initialize: function (el, defaultPage) {
         this.el = el;
         this.defaultPage = defaultPage;
-
-        this.addEvents({
-            "loaded": this.onLoaded.bind(this),
-            "failed": this.onFailed.bind(this)
-        });
 
         this.page = new Sahris.Page(this.el, "/wiki", this.defaultPage);
         this.page.on("loaded", this.onPageLoaded.bind(this));
