@@ -5,10 +5,9 @@
 
 var Creole = {};
 
-Creole.Rules = {
+Creole.Rules = new Class({
     // For the inline elements:
     proto: "http|https|ftp|nntp|news|mailto|telnet|file|irc",
-    url:  "((^ | (?<=\s | [.,:;!?()/=]))(~)?( ( / " + this.proto + " / ):\S+? )($ | (?=\s | [,.:;!?()] (\s | $))))",
     link: "(\[\[(.+?) \s*([|] \s* (.+?) \s*)?]])",
     image: "({{(.+?) \s*([|] \s* (.+?) \s*)?}})",
     macro: "(<<( \w+)(\( ( .*?) \))? \s*([|] \s* ( .+?) \s* )?>>)",
@@ -36,9 +35,16 @@ Creole.Rules = {
     pre_escape:  " ^(\s*) ~ ( \}\}\} \s*) $",
     table: "(^ \s*[|].*? \s*[|]? \s*$)",
 
-    // For splitting table cells:
-    cell: "\| \s*(( [=][^|]+ ) |( ( " + [this.link, this.macro, this.image, this.code].join("|") + " | [^|])+ )) \s*"
-};
+    initialize: function () {
+        // For the inline elements:
+        this.url =  "((^ | (?<=\s | [.,:;!?()/=]))(~)?( ( / " + this.proto + " / ):\S+? )($ | (?=\s | [,.:;!?()] (\s | $))))";
+
+        // For splitting table cells:
+        this.cell = "\| \s*(( [=][^|]+ ) |( ( " + [this.link, this.macro, this.image, this.code].join("|") + " | [^|])+ )) \s*";
+    }
+});
+
+Creole.rules = new Creole.Rules();
 
 /*
 class Parser:
