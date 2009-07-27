@@ -211,7 +211,6 @@ Sahris.UI = new Class({
         this.el.getElements("#content").on("dblclick", function () {
             this.history.setValue(0, "#{name}/edit".substitute(
                 {name: this.page.name}));
-            this.doEdit(true);
         }.bind(this));
 
         $(document).on("keypress", this.onKeyPressed.bind(this));
