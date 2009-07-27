@@ -304,14 +304,14 @@ Sahris.UI = new Class({
             this.editor.hide();
             this.page.show();
             this.setTitle(this.page.name);
-            var buttons = this.el.getElements("#buttons a:first-child");
+            var buttons = this.el.getElements("#buttons a");
             buttons[0].set("text", "Edit");
             buttons[1].set("text", "More...");
         } else {
             this.page.hide();
             this.editor.load(this.page);
             this.editor.show();
-            var buttons = this.el.getElements("#buttons a:first-child");
+            var buttons = this.el.getElements("#buttons a");
             buttons[0].set("text", "Save");
             buttons[1].set("text", "Cancel");
         }
