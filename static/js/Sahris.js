@@ -172,7 +172,7 @@ Sahris.UI = new Class({
         } else {
             hash = e.target.href;
             if (hash && hash[0] === "#") {
-                hash = hash.replace("/^.*#/", "");
+                hash = hash.replace(/^.*#/, "");
                 this.history.setValue(0, hash);
             }
         }
@@ -196,7 +196,7 @@ Sahris.UI = new Class({
         e.preventDefault();
         var hash = e.target.href;
         if (hash && hash[0] === "#") {
-            hash = hash.replace("/^.*#/", "");
+            hash = hash.replace(/^.*#/, "");
             this.history.setValue(0, hash);
         }
     },
