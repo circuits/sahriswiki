@@ -395,7 +395,6 @@ Sahris.Page = new Class({
     },
 
     clear: function() {
-        this.el.empty()
         this.name = "";
         this.text = "";
         this.rev = 0;
@@ -462,6 +461,7 @@ Sahris.Page = new Class({
     },
 
     render: function() {
+        this.el.empty()
         this.parser.parse(this.el, this.text);
     },
 
