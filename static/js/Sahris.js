@@ -377,6 +377,7 @@ Sahris.UI = new Class({
             this.el.getElement("#content").removeClass("content");
             this.el.getElement("#content").addClass("error");
         }
+        this.setStatus("");
         this.page.el.set("html",
             this.templates.error.substitute(
                 {message: message}));
