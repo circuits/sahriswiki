@@ -80,7 +80,7 @@ var Component = new Class({
 //
 
 var Sahris = {
-    version: "0.1"
+    version: "0.2"
 };
 
 Sahris.App = new Class({
@@ -117,12 +117,6 @@ Sahris.Template = new Class({
                 this.fire("failed", [xhr.status, xhr.statusText]);
             }.bind(this)
         }).load(this.url);
-    },
-
-    onLoaded: function () {
-    },
-
-    onFailed: function (status, statusText) {
     }
 });
 
@@ -396,9 +390,6 @@ Sahris.UI = new Class({
                 "SiteMenu");
         }
         this.menu.load();
-    },
-
-    onFailed: function (status, statusText) {
     }
 });
 
@@ -510,15 +501,6 @@ Sahris.Page = new Class({
 
     onLoaded: function () {
         this.el.getElements("a").on("click", this.onLinkClicked.bind(this));
-    },
-
-    onFailed: function (status, statusText) {
-    },
-
-    onSaved: function () {
-    },
-
-    onError: function (status, statusText) {
     }
 });
 
@@ -572,12 +554,6 @@ Sahris.Menu = new Class({
         if ($defined(el)) {
             el.getParent().addClass("active");
         }
-    },
-
-    onLoaded: function () {
-    },
-
-    onFailed: function (status, statusText) {
     }
 });
 
