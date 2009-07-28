@@ -24,7 +24,7 @@ Sahris.Plugins["html"] = new Class({
     }
 });
 
-var PREFERENCES_TPL = "<div id=\"preferences\" class=\"preferences\"><h2>User Preferences</h2><div class=\"system-message\" style=\"display: none;\" /><h3>Delete Account</h3><form method=\"post\" action=\"\" id=\"deleteAccountForm\"><div class=\"field\"><label>Password:<input type=\"password\" name=\"password\" class=\"textwidget\" size=\"20\" /></label></div><div class=\"buttons\"><input id=\"deleteBtn\" type=\"button\" value=\"Delete account\" /></div></form><h3>Change Password</h3><form method=\"post\" action=\"\" id=\"changePasswordForm\"><div class=\"field\"><label>Old Password:<input type=\"password\" name=\"oldPassword\" class=\"textwidget\" size=\"20\" /></label></div><div class=\"field\"><label>New Password:<input type=\"password\" name=\"newPassword\" class=\"textwidget\" size=\"20\" /></label></div><div class=\"field\"><label>Confirm Password:<input type=\"password\" name=\"newPasswordConfirm\" class=\"textwidget\" size=\"20\" /></label></div><div class=\"buttons\"><input id=\"changeBtn\" type=\"button\" value=\"Change password\" /></div></form></div>";
+var PREFERENCES_TPL = "<div id=\"preferences\" class=\"preferences\"><h2>Preferences</h2><div class=\"system-message\" style=\"display: none;\" /><form method=\"post\" action=\"\" id=\"preferencesForm\"><fieldset><legend>Required</legend><div><label>Signature: <input type=\"signature\" name=\"signature\" class=\"textwidget\" size=\"20\" value=\"AnonymousUser\" /></label></div></fieldset><div class=\"buttons\"><input id=\"saveBtn\" type=\"button\" value=\"Save\" /></div></form></div>";
 
 Sahris.Plugins["Preferences"] = new Class({
     Implements: Sahris.Plugin,
