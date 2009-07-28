@@ -85,16 +85,26 @@ Sahris.Plugin = new Class({
     Extends: Component,
 
     templates: {
-        error: "<h1>Error</h1><p class=\"message\">{message}</p>"
+        error: "<h1>Error</h1><div class=\"system-message\"><p class=\"error\">{error}</p></div>",
+        message: "<h1>Message</h1><div class=\"system-message\"><p class=\"message\">{message}</p></div>"
     },
 
     initialize: function (ui) {
         this.ui = ui;
     },
 
-    run: function (node, data) {
+    setError: function (node, error) {
         $(node).set("html", this.templates.error.substitute({
-            message: "Plugin " + name + " not implemented"}));
+            error: error}));
+    },
+
+    setMessage: function (node, message) {
+        $(node).set("html", this.templates.message.substitute({
+            message: message}));
+    },
+
+    run: function (node, data) {
+        this.setError(node, "Plugin " + name + " not implemented");
     }
 });
 
@@ -255,7 +265,7 @@ Sahris.UI = new Class({
             this.fire("plugin", arguments);
         }.bind(this));
 
-        var contentEl, pageEl, dimensions;
+        var uri, contentEl, pageEl, dimensions;
 
         // Resize Editor appropriately
         contentEl = this.el.getElement("#content");
@@ -285,6 +295,14 @@ Sahris.UI = new Class({
             }.bind(this),
             "(.*)");
         HistoryManager.start();
+
+        var uri = new URI(location.href);
+        if (Cookie.read("signature") === null) {
+            Cookie.write("signature", "AnonymousUser", {
+                domain: uri.parsed.host,
+                duration: 90
+            });
+        }
 
         this.fire("loaded");
     },
@@ -472,7 +490,7 @@ Sahris.Page = new Class({
         this.name = "";
         this.text = "";
         this.rev = 0;
-        this.author = "";
+        this.author = Cookie.read("signature") || "";
         this.comment = "";
     },
 
