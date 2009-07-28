@@ -149,7 +149,7 @@ var mooWMD={
 		startTag:'',
 		selection:'',
 		endTag:'',
-		prefixes: "(?:\\s{4,}|\\s*>|\\s*-\\s+|\\s*\\d+\\.|=|\\+|-|_|\\*|#|\\s*\\[[^\n]]+\\]:)",		// The markdown symbols - 4 spaces = code, > = blockquote, etc.
+		prefixes: "(?:\{\{\{|\\s*>|\\s*-\\s+|\\s*\\d+\\.|=|\\+|-|_|\\*|#|\\s*\\[[^\n]]+\\]:)",
 
 		/**
 		 * contains all the text in the input box AFTER the selection.
@@ -379,7 +379,7 @@ var mooWMD={
 			var codeButton = new Element("li");
 			codeButton.className = "wmd-button wmd-code-button";
 			codeButton.id = "wmd-code-button"+this.postfix;
-			codeButton.title = "Code Sample <pre><code> Ctrl+K";
+			codeButton.title = "Code Block <pre>{{{ Ctrl+K";
 			codeButton.XShift = "-80px";
 			codeButton.textOp = this.doCode;
 			this.setupButton(codeButton, true);
