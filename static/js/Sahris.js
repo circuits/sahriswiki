@@ -622,13 +622,14 @@ Sahris.Editor = new Class({
 
         this.commentOverText = new OverText(this.commentEl).show();
 
-        this.moowmdConfig = [{
-            input: "text",
-            postfix: "",
-            preview: "preview"
-        }];
-        this.moowmd = new mooWMD.WMD(this.moowmdConfig);
-        this.moowmd.start();
+        var config = {
+            preview: $("preview"),
+            output: null,
+            input: $("text")
+        };
+        this.wmdPreviewManager = new mooWMD.PreviewMgr(config);
+        this.wmdEditor = new mooWMD.Editor(config.input,
+            this.wmdPreviewManager.refresh.bind(this.wmdPreviewManager), "");
     },
 
     load: function (page) {
