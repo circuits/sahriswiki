@@ -504,7 +504,7 @@ class Wiki(Controller):
             for rev, date, author, comment in self.storage.page_history(name):
                 out(" * [[History/%s/%d|%s]]" % (name, rev,
                     strftime("%Y-%m-%d", gmtime(date))))
-                out("[ [[%s|%d]] ] by %s\\\\" % (
+                out("[ [[%s|%d]] ] by [[%s]]\\\\" % (
                     url(self.request, "/data/rev/%d" % rev), rev, author))
                 out(comment)
             text = "\n".join(lines)
@@ -514,7 +514,7 @@ class Wiki(Controller):
             for name, ver, date, rev, author, comment in self.storage.history():
                 out(" * [[History/%s/%d|%s]] [[%s]]" % (name, rev,
                     strftime("%Y-%m-%d", gmtime(date)), name))
-                out("[ [[%s|%d]] ] by %s\\\\" % (
+                out("[ [[%s|%d]] ] by [[%s]]\\\\" % (
                     url(self.request, "/data/rev/%d" % rev), rev, author))
                 out(comment)
             text = "\n".join(lines)
