@@ -24,14 +24,20 @@
  <div id="content" class="content">
   <div id="page" class="wiki"></div>
   <div id="editor" style="display: none">
+
    <form action="" method="post">
     <div id="editor-content">
-     <textarea name="text" rows="25" cols="40"></textarea>
+     <div id="wmd-editor" class="wmd-panel">
+      <div id="wmd-button-bar" class="wmd-button-bar"></div>
+      <textarea id="text" name="text" rows="25" cols="40"></textarea>
+     </div>
     </div>
     <div id="editor-fields">
      <input value="" name="comment" alt="Comment" />
     </div>
    </form>
+   <h1>Preview</h1>
+   <div id="preview" class="wmd-preview"></div>  
   </div>
  </div>
 
