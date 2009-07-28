@@ -694,7 +694,7 @@ var mooWMD={
 			// If we clicked the button with no selected text, we just
 			// make a level 2 hash header around some default text.
 			if(!chunk.selection){
-				chunk.startTag = "## ";
+				chunk.startTag = "== ";
 				chunk.selection = "Heading";
 				chunk.endTag = " ##";
 				return;
