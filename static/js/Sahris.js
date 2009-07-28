@@ -104,7 +104,7 @@ Sahris.Manager = new Class({
     Extends: Component,
 
     templates: {
-        error: "<h1>Error</h1><p class=\"message\">{message}</p>"
+        error: "<h1>Error</h1><div class=\"system-message\"><p class=\"message\">{message}</p></div>"
     },
 
     plugins: new Hash(),
@@ -125,7 +125,7 @@ Sahris.Manager = new Class({
             plugin.run(node, data);
         } else {
             $(node).set("html", this.templates.error.substitute({
-                message: "Plugin " + name + " not found!"}));
+                message: "Plugin \"" + name + "\" not found!"}));
         }
     }
 });
