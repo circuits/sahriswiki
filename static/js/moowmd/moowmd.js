@@ -696,7 +696,7 @@ var mooWMD={
 			if(!chunk.selection){
 				chunk.startTag = "== ";
 				chunk.selection = "Heading";
-				chunk.endTag = " ##";
+				chunk.endTag = " ==";
 				return;
 			}
 			var headerLevel = 0;		// The existing header level of the selected text.
