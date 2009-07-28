@@ -19,9 +19,9 @@ var mooWMD={
 		/**
 		 * Some texts for the HELP link
 		 */
-		helpLink: "http://wmd-editor.com/",
-		helpHoverTitle: "WMD website",
-		helpTarget: "_blank",
+		helpLink: "#Help",
+		helpHoverTitle: "Help",
+		helpTarget: "_self",
 		/**
 		 * Intervals
 		 * Should be adjusted to tune editor load
