@@ -34,7 +34,8 @@ var mooWMD={
 		version:3,
 		output:"HTML",
 		lineLength:40,
-		delayLoad:false
+		delayLoad:false,
+        parser: null
 	},//EOF Config
 	
 	/**
@@ -1974,16 +1975,16 @@ var mooWMD={
 		panel: null,
 		poller: null,
 		oldInputText: '',
-		htmlOut: '',
-		converter: null,
+		parser: null,
 		timeout: null,
 		elapsedTime: 0,
 		maxDelay: 3000,
 		startType: "delayed",
 		isFirstTimeFilled: true,
 		
-		initialize: function(panel){
+		initialize: function(panel, parser) {
 			this.panel=panel;
+            this.parser = parser;
 			this.setupEvents();
 			this.makePreviewHtml();
 			if (this.panel.preview) {
@@ -2039,22 +2040,13 @@ var mooWMD={
 			}
 			
 			var prevTime = new Date().getTime();
-            /* FIXME
-			if (!this.converter && Attacklab.showdown) {
-				this.converter = new Attacklab.showdown.converter();
-			}
-            */
-			if (this.converter) {
-				text = this.converter.makeHtml(text);
-			}
-			
+
 			// Calculate the processing time of the HTML creation.
 			// It's used as the delay time in the event listener.
 			var currTime = new Date().getTime();
 			this.elapsedTime = currTime - prevTime;
 			
 			this.pushPreviewHtml(text);
-			this.htmlOut = text;
 		},//EOF mooWMD.PreviewMgr.makePreviewHtml
 		
 		/**
@@ -2120,13 +2112,6 @@ var mooWMD={
 		},//EOF mooWMD.PreviewMgr.processingTime
 		
 		/**
-		 * The output HTML
-		 */
-		output: function(){
-			return this.htmlOut;
-		},//EOF mooWMD.PreviewMgr.output
-		
-		/**
 		 * The mode can be "manual" or "delayed"
 		 */
 		setUpdateMode: function(mode){
@@ -2158,7 +2143,8 @@ var mooWMD={
 			}
 			
 			if (this.panel.preview) {
-				this.panel.preview.innerHTML = text;
+                this.panel.preview.empty();
+                this.parser.parse(this.panel.preview, text);
 			}
 			this.setPanelScrollTops();
 			if (this.isFirstTimeFilled) {
@@ -2183,54 +2169,7 @@ var mooWMD={
 				this.poller.destroy();
 			}
 		}//EOF mooWMD.PreviewMgr.destroy		
-	}),//EOF mooWMD.PreviewMgr
+	})//EOF mooWMD.PreviewMgr
 	
-	/**
-	 * WMD - the method that attaches a WMD to each input textarea
-	 */
-	
-	WMD: new Class({
-		json: {},
-		editors: [],//The editors (buttons + input + outputs) - the main object.
-		previewMgrs: [],
-		
-		initialize: function(WmdJSON){
-			this.json=WmdJSON;
-		},
-		
-		/**
-		 * Fired after the page has fully loaded.
-		 */
-		start: function(){
-			var len=this.json.length;
-			for(var i=0;i<len;i++){
-				var preview=(this.json[i].preview || 'wmd-preview'+this.json[i].postfix);
-				var output=(this.json[i].output || 'wmd-output'+this.json[i].postfix);
-				var input=this.cleanP($(this.json[i].input));//A bug with Hebrew, I will NOT dive into showdown. It seems <p></p>tags are making
-															 //a problem with hebrew. I will remove them.
-				var postfix=this.json[i].postfix;
-				var panel={
-						preview: $(preview),
-						output: $(output),
-						input: input
-				};
-				var idx=this.previewMgrs.push(new mooWMD.PreviewMgr(panel));
-				var previewRefreshCallback = this.previewMgrs[idx-1].refresh.bind(this.previewMgrs[idx-1]);
-				this.editors.push(new mooWMD.Editor(input,previewRefreshCallback,postfix));
-				this.previewMgrs[idx-1].refresh(true);
-			}
-		},
-		/**
-		 * A bug with Hebrew, I will NOT dive into showdown. It seems <p></p>tags are making
-		 * a problem with hebrew. I will remove them.
-		 */
-		cleanP: function(input){
-			var text=input.value;
-			text=text.replace(/<p>/g,'');
-			text=text.replace(/<\/p>/g,'\n');
-			input.value=text;
-			return input;
-		}
-	})//EOF mooWMD.WMD
 }//EOF NAME SPACE <mooWMD namespace>
 
