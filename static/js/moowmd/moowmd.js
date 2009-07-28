@@ -631,8 +631,8 @@ var mooWMD={
 		 * 
 		 */		
 		doCode: function(chunk, postProcessing, useDefaultText){
-			var hasTextBefore = /\S[ ]*$/.test(chunk.before);
-			var hasTextAfter = /^[ ]*\S/.test(chunk.after);
+			var hasTextBefore = /\{\{\{$/.test(chunk.before);
+			var hasTextAfter = /^\}\}\}$/.test(chunk.after);
 			
 			// Use 'four space' markdown if the selection is on its own
 			// line or is multiline.
@@ -652,8 +652,9 @@ var mooWMD={
 				}
 				chunk.addBlankLines(nLinesBefore, nLinesAfter);
 				if(!chunk.selection){
-					chunk.startTag = "    ";
+					chunk.startTag = "{{{\n";
 					chunk.selection = useDefaultText ? "enter code here" : "";
+					chunk.endTag = "\n}}}";
 				}
 				else {
 					if(/^[ ]{0,3}\S/m.test(chunk.selection)){
@@ -762,7 +763,7 @@ var mooWMD={
 			// The default bullet is a dash but others are possible.
 			// This has nothing to do with the particular HTML bullet,
 			// it's just a markdown bullet.
-			var bullet = "-";
+			var bullet = "*";
 			
 			// The number in a numbered list.
 			var num = 1;
@@ -771,11 +772,10 @@ var mooWMD={
 			var getItemPrefix = function(){
 				var prefix;
 				if(isNumberedList){
-					prefix = " " + num + ". ";
-					num++;
+					prefix = "#";
 				}
 				else{
-					prefix = " " + bullet + " ";
+					prefix = "*";
 				}
 				return prefix;
 			};
@@ -873,7 +873,7 @@ var mooWMD={
 					this.doBlockquote(chunk, postProcessing, useDefaultText);
 				}
 			}
-			if(/(\n|^)(\t|[ ]{4,}).*\n$/.test(chunk.before)){
+			if(/(\n|^)(\{\{\{).*\n(\}\}\})$/.test(chunk.before)){
 				if(this.doCode){
 					this.doCode(chunk, postProcessing, useDefaultText);
 				}
