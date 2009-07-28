@@ -100,7 +100,7 @@ Parse.Simple.Base.Rule.prototype = {
             if (this.replaceRegex) {
                 data = data.replace(this.replaceRegex, this.replaceString);
             }
-            this.apply(target, data, options);
+            this.apply(target, data, options, r);
         }
 
         if (this.attrs) {
@@ -212,7 +212,7 @@ Parse.Simple.Creole = function(options) {
         br: { tag: 'br', regex: /\\\\/ },
 
         preBlock: { tag: 'pre', capture: 2,
-            regex: /(^|\n)\{\{\{\n((.*\n)*?)\}\}\}(\n|$)/,
+            regex: /(^|\n)\{\{\{\n[^#]((.*\n)*?)\}\}\}(\n|$)/,
             replaceRegex: /^ ([ \t]*\}\}\})/gm,
             replaceString: '$1' },
         tt: { tag: 'tt',
@@ -263,9 +263,22 @@ Parse.Simple.Creole = function(options) {
         plugin: { regex: '\\<\\<((?!\\<)[^ >\\n]*(?:}(?!})[^|}\\n]*)*)>>',
             build: function(node, r, options) {
                 if (options && typeof(options.plugin) != "undefined") {
-                    options.plugin(node, r, options);
+                    options.plugin(r[1], node, null);
                 }
-            } },
+            }
+        },
+
+        preProcessor: { tag: 'div', capture: 3,
+            regex: /(^|\n)\{\{\{\n#[!]([^ \\n]*)\n((.*\n)*?)\}\}\}(\n|$)/,
+            replaceRegex: /^ ([ \t]*\}\}\})/gm,
+            replaceString: "$2",
+            apply: function (node, data, options, r) {
+                var plugin = r[2];
+                if (options && typeof(options.plugin) != "undefined") {
+                    options.plugin(plugin, node, data);
+                }
+            }
+        },
 
         namedUri: { regex: '\\[\\[(' + rx.uri + ')\\|(' + rx.linkText + ')\\]\\]',
             build: function(node, r, options) {
@@ -390,7 +403,7 @@ Parse.Simple.Creole = function(options) {
 
     g.root = {
         children: [ g.h1, g.h2, g.h3, g.h4, g.h5, g.h6,
-            g.hr, g.ulist, g.olist, g.preBlock, g.table ],
+            g.hr, g.ulist, g.olist, g.preProcessor, g.preBlock, g.table ],
         fallback: { children: [ g.paragraph ] }
     };
 

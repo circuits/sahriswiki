@@ -11,7 +11,15 @@
 Sahris.Plugins["HelloWorld"] = new Class({
     Implements: Plugin,
 
-    run: function (node, r, options) {
+    run: function (node, data) {
         $(node).set("html", "Hello World!");
+    }
+});
+
+Sahris.Plugins["html"] = new Class({
+    Implements: Plugin,
+
+    run: function (node, data) {
+        $(node).set("html", data);
     }
 });
