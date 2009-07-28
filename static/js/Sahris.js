@@ -621,6 +621,14 @@ Sahris.Editor = new Class({
         this.commentEl = this.el.getElement("#editor-fields [name=comment]");
 
         this.commentOverText = new OverText(this.commentEl).show();
+
+        this.moowmdConfig = [{
+            input: "text",
+            postfix: "",
+            preview: "preview"
+        }];
+        this.moowmd = new mooWMD.WMD(this.moowmdConfig);
+        this.moowmd.start();
     },
 
     load: function (page) {
