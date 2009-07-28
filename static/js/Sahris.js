@@ -81,14 +81,61 @@ var Component = new Class({
 
 var Sahris = {};
 
+Sahris.Plugin = new Class({
+    Extends: Component,
+
+    templates: {
+        error: "<h1>Error</h1><p class=\"message\">{message}</p>"
+    },
+
+    initialize: function (ui) {
+        this.ui = ui;
+    },
+
+    run: function (node, r, options) {
+        $(node).set("html", this.templates.error.substitute({
+            message: "Plugin " + r[1] + " not implemented"}));
+    }
+});
+
+Sahris.Plugins = {};
+
+Sahris.Manager = new Class({
+    Extends: Component,
+
+    plugins: new Hash(),
+
+    initialize: function (app) {
+        this.app = app;
+
+        this.app.on("plugin", this.onPlugin.bind(this));
+
+        for (name in Sahris.Plugins) {
+            this.plugins.set(name, new Sahris.Plugins[name](this.app.ui));
+        }
+    },
+
+    onPlugin: function (node, r, options) {
+        var name = r[1];
+        if ($defined(name) && ($type(name) === "string")) {
+            var plugin = this.plugins.get(name);
+            if (plugin) {
+                plugin.run(node, r, options);
+            }
+        }
+    }
+});
+
 Sahris.App = new Class({
     Extends: Component,
 
     initialize: function () {
         this.ui = new Sahris.UI();
-    },
 
-    run: function () {
+        this.ui.on("plugin", function () {
+            this.fire("plugin", arguments);
+        }.bind(this));
+
         this.ui.load();
     }
 });
@@ -216,6 +263,10 @@ Sahris.UI = new Class({
         this.page.on("error", this.onPageError.bind(this));
         this.page.on("saved", this.onPageSaved.bind(this));
         this.page.on("linkClicked", this.onLinkClicked.bind(this));
+
+        this.page.on("plugin", function () {
+            this.fire("plugin", arguments);
+        }.bind(this));
 
         this.history = HistoryManager.register(this.historyKey, [1],
             function (values) {
@@ -391,6 +442,9 @@ Sahris.Page = new Class({
         });
 
         this.parser = new Sahris.Parser();
+        this.parser.on("plugin", function () {
+            this.fire("plugin", arguments);
+        }.bind(this));
 
         this.clear();
     },
@@ -536,6 +590,7 @@ Sahris.Menu = new Class({
 });
 
 Sahris.Parser = new Class({
+    Extends: Component,
     Implements: Options,
 
     options: {
@@ -548,6 +603,11 @@ Sahris.Parser = new Class({
     initialize: function (options) {
         this.setOptions(options);
         this.creole = new Parse.Simple.Creole(this.options);
+        this.creole.options.plugin = this.plugin.bind(this);
+    },
+
+    plugin: function (node, r, options) {
+        this.fire("plugin", [node, r, options]);
     },
 
     parse: function (el, text) {
@@ -587,6 +647,9 @@ Sahris.Editor = new Class({
 });
 
 $(document).on("domready", function () {
-    var app = new Sahris.App();
-    app.run();
+    Sahris.app = new Sahris.App();
+    Sahris.manager = new Sahris.Manager(Sahris.app);
+    Sahris.app.on("plugin", function () {
+        Sahris.manager.fire("plugin", arguments);
+    });
 });
