@@ -244,6 +244,9 @@ Sahris.UI = new Class({
         $(document).on("keypress", this.onKeyPressed.bind(this));
 
         this.editor = new Sahris.Editor(this.el.getElement("#editor"));
+        this.editor.on("plugin", function () {
+            this.fire("plugin", arguments);
+        }.bind(this));
 
         var contentEl, pageEl, dimensions;
 
@@ -623,6 +626,9 @@ Sahris.Editor = new Class({
         this.commentOverText = new OverText(this.commentEl).show();
 
         this.parser = new Sahris.Parser();
+        this.parser.on("plugin", function () {
+            this.fire("plugin", arguments);
+        }.bind(this));
 
         var panel = {
             preview: $("preview"),
