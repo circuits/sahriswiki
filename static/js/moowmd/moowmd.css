@@ -19,7 +19,9 @@
 
 .wmd-preview 
 { 
-	background-color: LightSkyBlue; 
+    background: #f4f4f4 url(images/draft.png);
+    margin: 1em 0 2em;
+    overflow: auto;
 }
 
 .wmd-output 
