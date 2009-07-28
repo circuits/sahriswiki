@@ -92,9 +92,9 @@ Sahris.Plugin = new Class({
         this.ui = ui;
     },
 
-    run: function (node, r, options) {
+    run: function (node, data) {
         $(node).set("html", this.templates.error.substitute({
-            message: "Plugin " + r[1] + " not implemented"}));
+            message: "Plugin " + name + " not implemented"}));
     }
 });
 
@@ -115,13 +115,10 @@ Sahris.Manager = new Class({
         }
     },
 
-    onPlugin: function (node, r, options) {
-        var name = r[1];
-        if ($defined(name) && ($type(name) === "string")) {
-            var plugin = this.plugins.get(name);
-            if (plugin) {
-                plugin.run(node, r, options);
-            }
+    onPlugin: function (name, node, data) {
+        var plugin = this.plugins.get(name);
+        if (plugin) {
+            plugin.run(node, data);
         }
     }
 });
