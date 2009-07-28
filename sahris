@@ -568,7 +568,7 @@ def main():
     manager = Manager()
 
     if opts.debug:
-        manager += Debugger()
+        manager += Debugger(events=False)
 
     poller = opts.poller.lower()
     if poller == "poll":
