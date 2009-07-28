@@ -38,7 +38,6 @@ Sahris.Plugins["Preferences"] = new Class({
         this.el.getElement("[name=signature]").set("value",
             Cookie.read("signature") || "");
 
-        console.log(this.el);
         this.el.getElement("#saveBtn").on("click", function (e) {
             var uri = new URI(location.href);
             Cookie.write("signature",
