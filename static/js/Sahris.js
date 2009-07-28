@@ -490,7 +490,7 @@ Sahris.Page = new Class({
         this.name = "";
         this.text = "";
         this.rev = 0;
-        this.author = Cookie.read("signature") || "";
+        this.author = "";
         this.comment = "";
     },
 
@@ -671,9 +671,10 @@ Sahris.Editor = new Class({
 
     update: function (page) {
         page.text = this.textEl.get("value") || "";
-        page.comment = this.commentEl.get("value")[0] || "";
         page.rev += 1;
         page.date = Date.now();
+        page.author = Cookie.read("signature") || "AnonymousUser";
+        page.comment = this.commentEl.get("value")[0] || "";
     },
 
     hide: function () {
