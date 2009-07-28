@@ -622,13 +622,15 @@ Sahris.Editor = new Class({
 
         this.commentOverText = new OverText(this.commentEl).show();
 
-        var config = {
+        this.parser = new Sahris.Parser();
+
+        var panel = {
             preview: $("preview"),
             output: null,
             input: $("text")
         };
-        this.wmdPreviewManager = new mooWMD.PreviewMgr(config);
-        this.wmdEditor = new mooWMD.Editor(config.input,
+        this.wmdPreviewManager = new mooWMD.PreviewMgr(panel, this.parser);
+        this.wmdEditor = new mooWMD.Editor(panel.input,
             this.wmdPreviewManager.refresh.bind(this.wmdPreviewManager), "");
     },
 
