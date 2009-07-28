@@ -744,7 +744,7 @@ var mooWMD={
 		 * 
 		 */
 		doHorizontalRule: function(chunk, postProcessing, useDefaultText){
-			chunk.startTag = "----------\n";
+			chunk.startTag = "---\n";
 			chunk.selection = "";
 			chunk.addBlankLines(2, 1, true);
 		},//EOF mooWMD.SpritedButtonRow.doHorizontalRule
