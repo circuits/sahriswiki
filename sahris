@@ -564,7 +564,7 @@ class Wiki(Controller):
 
     def POST(self, name):
         data = loads(self.request.body.read())
-        text = FIXLINES.sub("\n", data.get("text", ""))
+        text = "%s\n" % FIXLINES.sub("\n", data.get("text", ""))
         author = data.get("author", "")
         comment = data.get("comment", "")
         self.storage.save_text(name, text, author, comment)
