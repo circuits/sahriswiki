@@ -106,10 +106,7 @@ def parse_options():
 
     return opts, args
 
-LINESEP = re.compile("\r?\n")
-
-def fixLineEndings(s):
-    return "\n".join([x.rstrip("\r\n") for x in LINESEP.split(s)])
+FIXLINES = re.compile("\r|\r\n")
 
 def locked_repo(func):
     """A decorator for locking the repository when calling a method."""
@@ -567,7 +564,7 @@ class Wiki(Controller):
 
     def POST(self, name):
         data = loads(self.request.body.read())
-        text = fixLineEndings(data.get("text", ""))
+        text = FIXLIENS.sub(data.get("text", ""), "\n")
         author = data.get("author", "")
         comment = data.get("comment", "")
         self.storage.save_text(name, text, author, comment)
