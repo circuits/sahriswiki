@@ -22,12 +22,14 @@ import mercurial.hg
 import mercurial.ui
 import mercurial.util
 import mercurial.revlog
+from mercurial.node import short
 from mercurial.hgweb import hgweb
 
 from circuits import Manager, Debugger
 from circuits.net.pollers import Select, Poll
 
 from circuits.web.wsgi import Gateway
+from circuits.web.tools import validate_etags
 from circuits.web.utils import url_quote, url_unquote
 from circuits.web import expose, url, Server, Controller, Logger, Static
 
@@ -348,6 +350,9 @@ class WikiStorage(object):
     def repo_revision(self):
         return self._changectx().rev()
 
+    def repo_node(self):
+        return self._changectx().node()
+
     def page_mime(self, title):
         """Guess page's mime type ased on corresponding file name."""
 
@@ -476,6 +481,12 @@ class Wiki(Controller):
         self.storage = WikiStorage(opts.data, opts.encoding)
 
     def Index(self):
+        node = short(self.storage.repo_node())
+        self.response.headers.add_header("ETag", node)
+        response = validate_etags(self.request, self.response)
+        if response:
+            return response
+
         lines = []
         out = lines.append
 
@@ -495,6 +506,12 @@ class Wiki(Controller):
         return dumps(data)
 
     def History(self, name=None, rev=None):
+        node = short(self.storage.repo_node())
+        self.response.headers.add_header("ETag", node)
+        response = validate_etags(self.request, self.response)
+        if response:
+            return response
+
         lines = []
         out = lines.append
 
@@ -529,6 +546,12 @@ class Wiki(Controller):
         return dumps(data)
 
     def GET(self, name="FrontPage"):
+        node = short(self.storage.repo_node())
+        self.response.headers.add_header("ETag", node)
+        response = validate_etags(self.request, self.response)
+        if response:
+            return response
+
         if name in self.storage:
             text = self.storage.page_text(name)
             rev, date, author, comment = self.storage.page_meta(name)
