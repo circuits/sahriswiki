@@ -212,7 +212,7 @@ Parse.Simple.Creole = function(options) {
         br: { tag: 'br', regex: /\\\\/ },
 
         preBlock: { tag: 'pre', capture: 2,
-            regex: /(^|\n)\{\{\{\n[^#]((.*\n)*?)\}\}\}(\n|$)/,
+            regex: /(^|\n)\{\{\{\n(?!\!\#)((.*\n)*?)\}\}\}(\n|$)/,
             replaceRegex: /^ ([ \t]*\}\}\})/gm,
             replaceString: '$1' },
         tt: { tag: 'tt',
