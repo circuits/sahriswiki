@@ -473,9 +473,9 @@ class Wiki(Controller):
 
     channel = "/wiki"
 
-    def __init__(self, opts):
+    def __init__(self, storage):
         super(Wiki, self).__init__()
-        self.storage = WikiStorage(opts.data, opts.encoding)
+        self.storage = storage
 
     def Index(self):
         node = short(self.storage.repo_node())
@@ -602,15 +602,17 @@ def main():
     else:
         Poller = Select
 
+    storage = WikiStorage(opts.data, opts.encoding)
+
     manager += (Server(bind, poller=Poller)
-        + Gateway(hgweb(opts.data), "/data")
+        + Gateway(hgweb(storage.repo_path), "/data")
         + Gateway(hgweb(os.getcwd()), "/source")
         + Static("/js",        docroot="static/js")
         + Static("/css",       docroot="static/css")
         + Static("/images",    docroot="static/images")
         + Static("/templates", docroot="static/templates")
         + Root()
-        + Wiki(opts)
+        + Wiki(storage)
         + Logger()
         )
 
