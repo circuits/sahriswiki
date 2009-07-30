@@ -113,6 +113,27 @@ label.comment input {
     width: 97%;
 }
 
+/* Search */
+
+#search {
+    float: left;
+    height: 1em;
+    padding: 5px;
+}
+
+#search input {
+    font-size 10px;
+    vertical-align: middle;
+    background-color: #CCCCCC;
+    border: 1px solid #666666; 
+}
+
+#search .button {
+    background: #f7f7f7 url(../images/find.png) 0 0;
+    height: 16px;
+    width: 16px;
+}
+
 /* Menu */
 
 #menu {
@@ -167,11 +188,11 @@ label.comment input {
 
 /* Context Navigation */
 
-#ctxtnav {
+#ctxnav {
     height: 1em;
     padding: 5px;
 }
-#ctxtnav li ul {
+#ctxnav li ul {
  background: #f7f7f7;
  color: #ccc;
  border: 1px solid;
@@ -179,9 +200,9 @@ label.comment input {
  display: inline;
  margin: 0;
 }
-#ctxtnav li li { padding: 0; }
-#ctxtnav li li :link, #ctxtnav li li :visited { padding: 0 1em }
-#ctxtnav li li :link:hover, #ctxtnav li li :visited:hover {
+#ctxnav li li { padding: 0; }
+#ctxnav li li :link, #ctxnav li li :visited { padding: 0 1em }
+#ctxnav li li :link:hover, #ctxnav li li :visited:hover {
  background: #bba;
  color: #fff;
 }
