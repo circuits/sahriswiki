@@ -496,7 +496,7 @@ class Wiki(Controller):
 
         data = {"success": True, "data": {
             "name": "",  "text": text,
-            "rev": 0, "date": 0, "author": "", "comment": "",
+            "rev": 0, "node": "", "date": 0, "author": "", "comment": "",
             "readonly": True,
             "title": "Index of all pargs"}}
 
@@ -536,7 +536,7 @@ class Wiki(Controller):
 
         data = {"success": True, "data": {
                 "name": "", "text": text,
-                "rev": 0, "date": 0, "author": "", "comment": "",
+                "rev": 0, "node": "", "date": 0, "author": "", "comment": "",
                 "readonly": True,
                 "title":  title}}
 
