@@ -24,7 +24,7 @@ Sahris.Plugins["html"] = new Class({
     }
 });
 
-var PREFERENCES_TPL = "<div id=\"preferences\" class=\"preferences\"><h2>Preferences</h2><div class=\"system-message\" style=\"display: none;\" /><form method=\"post\" action=\"\" id=\"preferencesForm\"><fieldset><legend>Required</legend><div><label>Signature: <input type=\"signature\" name=\"signature\" class=\"textwidget\" size=\"20\" /></label></div></fieldset><div class=\"buttons\"><input id=\"saveBtn\" type=\"button\" value=\"Save\" /></div></form></div>";
+var PREFERENCES_TPL = "<div id=\"preferences\" class=\"preferences\"><h2>Preferences</h2><div class=\"system-message\" style=\"display: none;\" /><form method=\"post\" action=\"\" id=\"preferencesForm\"><fieldset><legend>Required</legend><div><label>Signature: <input type=\"text\" name=\"signature\" class=\"textwidget\" size=\"20\" /></label></div></fieldset><div class=\"buttons\"><input id=\"saveBtn\" type=\"button\" value=\"Save\" /></div></form></div>";
 
 Sahris.Plugins["Preferences"] = new Class({
     Implements: Sahris.Plugin,
