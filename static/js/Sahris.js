@@ -57,11 +57,29 @@ Element.implement({
 
     swapClass: function (remove, add) {
         return this.removeClass(remove).addClass(add);
-    }
+    },
 
-});
+    setLabel: function(attr)    {
+        var attr = attr || "alt";
+        var label = this.getProperty(attr);
+        if ($defined(label)) {
+            this.addEvents({
+                "focus": function() {
+                    if (this.get("value").clean() == label) {
+                        this.set("value", "").removeClass("helpOn");
+                    }
+                },
+                "blur": function()  {
+                    var value = this.get("value").clean();
+                    if (value == "" || value == label) {
+                        this.set("value", label).addClass("helpOn");
+                    }
+                },
+            }).fireEvent("blur");
+        }
+        return this.removeProperty(attr);
+    },
 
-Element.implement({
     resize: function (w, h) {
         this.setStyles({
             "width": w,
