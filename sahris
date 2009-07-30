@@ -337,12 +337,13 @@ class WikiStorage(object):
         if filectx_tip is None:
             return None
         rev = filectx_tip.filerev()
+        node = filectx_tip.node()
         filectx = filectx_tip.filectx(rev)
         date = filectx.date()[0]
         author = unicode(filectx.user(), "utf-8",
                          'replace').split('<')[0].strip()
         comment = unicode(filectx.description(), "utf-8", 'replace')
-        return rev, date, author, comment
+        return rev, node, date, author, comment
 
     def repo_revision(self):
         return self._changectx().rev()
