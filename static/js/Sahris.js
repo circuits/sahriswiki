@@ -278,6 +278,11 @@ Sahris.UI = new Class({
 
         $(document).on("keypress", this.onKeyPressed.bind(this));
 
+        this.search = new Sahris.Search(this.el.getElement("#search"));
+        this.search.on("search", function (q) {
+            this.history.setValue(0, "Search?q=" + q);
+        }.bind(this));
+
         this.editor = new Sahris.Editor(this.el.getElement("#editor"));
         this.editor.on("plugin", function () {
             this.fire("plugin", arguments);
@@ -701,6 +706,30 @@ Sahris.Editor = new Class({
 
     show: function () {
         this.el.show();
+    }
+});
+
+Sahris.Search = new Class({
+    Extends: Component,
+
+    initialize: function (el) {
+        this.el = el;
+        this.qEl = this.el.getElement("#q");
+        this.qEl.setLabel();
+        this.searchBtnEl = this.el.getElement("#searchBtn");
+
+        this.el.getElement("#searchForm").on("submit", function (e) {
+            e.preventDefault();
+            this.search(this.qEl.get("value"));
+        }.bind(this));
+        this.el.getElement("#searchBtn").on("click", function (e) {
+            e.preventDefault();
+            this.search(this.qEl.get("value"));
+        }.bind(this));
+    },
+
+    search: function (q) {
+        this.fire("search", q);
     }
 });
 
