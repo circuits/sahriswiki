@@ -1,0 +1,18 @@
+= Development =
+
+*[[TestPlugins]]
+
+== TODO ==
+
+* Implement [[SubPages]]
+* Improve Status Bar and Behaviors
+* Improve CSS
+* Fix ugly fonts
+
+=== Features ===
+
+**Caching:**
+* [[SahrisWiki]]'s RESTFul/CRUD backend sends an ETag containing the current repository revision node allowing all AJAX Requests for page data to be cached by browsers speeding things up greatly.
+
+----
+
