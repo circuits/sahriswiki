@@ -503,6 +503,34 @@ class Wiki(Controller):
         self.response.headers["Content-Type"] = "application/javascript"
         return dumps(data)
 
+    def Search(self, q=None):
+        node = short(self.storage.repo_node())
+        self.response.headers.add_header("ETag", node)
+        response = validate_etags(self.request, self.response)
+        if response:
+            return response
+
+        lines = []
+        out = lines.append
+
+        if q:
+            out("= Search Results for '%s'" % q)
+            # TODO: ...
+        else:
+            out("No search results found.")
+
+        text = "\n".join(lines)
+
+        data = {"success": True, "data": {
+            "name": "",  "text": text,
+            "rev": 0, "node": "", "date": 0, "author": "", "comment": "",
+            "readonly": True,
+            "title": "Index of all pargs"}}
+
+        self.response.headers["Content-Type"] = "application/javascript"
+        return dumps(data)
+
+
     def History(self, name=None, rev=None):
         node = short(self.storage.repo_node())
         self.response.headers.add_header("ETag", node)
