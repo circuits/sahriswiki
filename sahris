@@ -815,8 +815,11 @@ class Wiki(Controller):
         self.response.headers["Content-Type"] = "application/javascript"
         return dumps(data)
 
-    def BackLinks(self, nem):
-        """Generate the page with backlinks."""
+    def BackLinks(self, *args, **kwargs):
+        if args:
+            name = "/".join(args)
+        else:
+            name = kwargs.get("name", None)
 
         node = short(self.storage.repo_node())
         self.response.headers.add_header("ETag", node)
@@ -829,17 +832,22 @@ class Wiki(Controller):
             for link in self.search.page_backlinks(name):
                 yield "* [[%s]]" % link
 
-        self.storage.reopen()
-        self.search.update()
+        if not name:
+            data = {"success": False, "message": "No page given"}
+        elif name not in self.storage:
+            data = {"success": False, "message": "Page '%s' not found" % name}
+        else:
+            self.storage.reopen()
+            self.search.update()
 
-        text = "\n".join(content())
-        title = "Backlinks for %s" % name
+            text = "\n".join(content())
+            title = "Backlinks for %s" % name
 
-        data = {"success": True, "data": {
-            "name": "",  "text": text,
-            "rev": 0, "node": "", "date": 0, "author": "", "comment": "",
-            "readonly": True,
-            "title": title}}
+            data = {"success": True, "data": {
+                "name": "",  "text": text,
+                "rev": 0, "node": "", "date": 0, "author": "", "comment": "",
+                "readonly": True,
+                "title": title}}
 
         self.response.headers["Content-Type"] = "application/javascript"
         return dumps(data)
@@ -919,6 +927,7 @@ class Wiki(Controller):
             name = "/".join(args)
         else:
             name = kwargs.get("name", self.opts.frontpage)
+
         if name in self.storage:
             text = self.storage.page_text(name)
             rev, node, date, author, comment = self.storage.page_meta(name)
