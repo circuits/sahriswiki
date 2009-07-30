@@ -1,0 +1,44 @@
+= Test Plugins =
+
+== HelloWorld ==
+A simple macro plugin that simply display "Hello World!"
+
+Example:
+{{{
+<<HelloWorld>>
+}}}
+
+Output:
+<<HelloWorld>>
+
+== HTML ==
+A processor plugin that allows for the output of raw HTML.
+
+Example:
+{{{
+ {{{
+ #!html
+ <pHello HTML!</p>
+ }}}
+}}}
+
+Output:
+{{{
+#!html
+<p>Hello HTML!</p>
+}}}
+
+Example:
+{{{
+ {{{
+ #!html
+ <img src="http://www.google.com/logos/Logo_40wht.gif" border="0" />
+ }}}
+}}}
+
+Output:
+{{{
+#!html
+<img src="http://www.google.com/logos/Logo_40wht.gif" border="0" />
+}}}
+----
