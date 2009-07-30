@@ -544,15 +544,14 @@ class Wiki(Controller):
         return dumps(data)
 
     def GET(self, name="FrontPage"):
-        node = short(self.storage.repo_node())
-        self.response.headers.add_header("ETag", node)
-        response = validate_etags(self.request, self.response)
-        if response:
-            return response
-
         if name in self.storage:
             text = self.storage.page_text(name)
-            rev, date, author, comment = self.storage.page_meta(name)
+            rev, node, date, author, comment = self.storage.page_meta(name)
+
+            self.response.headers.add_header("ETag", short(node))
+            response = validate_etags(self.request, self.response)
+            if response:
+                return response
 
             data = {"success": True, "data": {
                 "name": name, "text": text,
