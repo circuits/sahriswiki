@@ -391,8 +391,6 @@ Sahris.UI = new Class({
         if (this.page.name) {
             this.el.getElement("#ctxnav a#history").set("href",
                 "#History?name=" + this.page.name);
-            this.el.getElement("#ctxnav a#backlinks").set("href",
-                "#BackLinks?name=" + this.page.name);
             this.el.getElements("#buttons a:first-child").set("href",
                 "#{name}/edit".substitute({name: this.page.name}));
         }
@@ -475,7 +473,10 @@ Sahris.UI = new Class({
     },
 
     setTitle: function (title) {
-        this.el.getElement("#title").set("html", title);
+        var titleEl = this.el.getElement("#title ");
+        titleEl.getElement("#backlink").set("href",
+                "#BackLinks?name=" + title);
+        titleEl.getElement("#backlink").set("text", title);
     }
 });
 
