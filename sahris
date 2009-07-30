@@ -861,7 +861,7 @@ class Wiki(Controller):
             title = "History of \"%s\"" % name
             out("= %s =" % title)
             for rev, date, author, comment in self.storage.page_history(name):
-                out(" * [[History/%s/%d|%s]]" % (name, rev,
+                out(" * [[History?name=%s&rev=%d|%s]]" % (name, rev,
                     strftime("%Y-%m-%d", gmtime(date))))
                 out("[ [[%s|%d]] ] by [[%s]]\\\\" % (
                     url(self.request, "/data/rev/%d" % rev), rev, author))
@@ -871,7 +871,7 @@ class Wiki(Controller):
             title = "Recent Changes"
             out("= %s =" % title)
             for name, ver, date, rev, author, comment in self.storage.history():
-                out(" * [[History/%s/%d|%s]] [[%s]]" % (name, rev,
+                out(" * [[History?name=%s&rev=%d|%s]] [[%s]]" % (name, rev,
                     strftime("%Y-%m-%d", gmtime(date)), name))
                 out("[ [[%s|%d]] ] by [[%s]]\\\\" % (
                     url(self.request, "/data/rev/%d" % rev), rev, author))
