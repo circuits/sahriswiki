@@ -747,8 +747,9 @@ class Wiki(Controller):
 
     channel = "/wiki"
 
-    def __init__(self, storage, search):
+    def __init__(self, opts, storage, search):
         super(Wiki, self).__init__()
+        self.opts = opts
         self.storage = storage
         self.search = search
 
@@ -913,7 +914,11 @@ class Wiki(Controller):
         self.response.headers["Content-Type"] = "application/javascript"
         return dumps(data)
 
-    def GET(self, name="FrontPage"):
+    def GET(self, *args, **kwargs):
+        if args:
+            name = "/".join(args)
+        else:
+            name = kwargs.get("name", self.opts.frontpage)
         if name in self.storage:
             text = self.storage.page_text(name)
             rev, node, date, author, comment = self.storage.page_meta(name)
@@ -933,7 +938,11 @@ class Wiki(Controller):
         self.response.headers["Content-Type"] = "application/javascript"
         return dumps(data)
 
-    def POST(self, name):
+    def POST(self, *args, **kwargs):
+        if args:
+            name = "/".join(args)
+        else:
+            name = kwargs.get("name", self.opts.frontpage)
         self.storage.reopen()
         self.search.update()
         data = loads(self.request.body.read())
@@ -987,7 +996,7 @@ def main():
         + Static("/images",    docroot="static/images")
         + Static("/templates", docroot="static/templates")
         + Root()
-        + Wiki(storage, search)
+        + Wiki(opts, storage, search)
         + Logger()
         )
 
