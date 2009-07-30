@@ -64,6 +64,11 @@ a:focus, a:hover, a:active {
 	text-align: center;
 }
 
+#header h1 a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
 #footer {
     height: 20px;
 	padding: 5px 5px 5px 5px;
