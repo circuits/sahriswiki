@@ -555,7 +555,7 @@ class Wiki(Controller):
 
             data = {"success": True, "data": {
                 "name": name, "text": text,
-                "rev": rev, "node": node, "date": date,
+                "rev": rev, "node": short(node), "date": date,
                 "author": author, "comment": comment}}
         else:
             data = {"success": False, "message": "Page not found"}
