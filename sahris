@@ -794,7 +794,11 @@ class Wiki(Controller):
                 yield "* **[[%s]]** //(%d)// %s" % (title, score,
                         snippet(title, words))
 
-        query = q.strip()
+        if q is not None:
+            query = q.strip()
+        else:
+            query = None
+
         if not query:
             text = "\n".join(index())
             title = "Page index"
