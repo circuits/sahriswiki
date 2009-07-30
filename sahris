@@ -10,6 +10,7 @@ import optparse
 import mimetypes
 from os import mkdir
 from json import dumps, loads
+from difflib import unified_diff
 from traceback import format_exc
 from time import gmtime, strftime
 from os.path import join, dirname, exists, abspath
@@ -682,10 +683,8 @@ without would yet you your yours yourself yourselves""").split())
             self.set_last_revision(self.storage.repo_revision())
             self.reindex_page(title, cursor, text)
             self.con.commit()
-        except Exception, error:
-            print "ERROR: %s" % error
-            print format_exc()
-            cursor.execute('ROLLBACK;')
+        except:
+            self.con.rollback()
             raise
 
     def reindex(self, pages):
@@ -698,12 +697,9 @@ without would yet you your yours yourself yourselves""").split())
                 self.reindex_page(title, cursor)
             self.con.commit()
             self.empty = False
-        except Exception, error:
-            print "ERROR: %s" % error
-            print format_exc()
+        except:
+            self.con.rollback()
             raise
-            #cursor.execute('ROLLBACK;')
-            #raise
 
     def set_last_revision(self, rev):
         """Store the last indexed repository revision."""
@@ -858,20 +854,50 @@ class Wiki(Controller):
         out = lines.append
 
         if name:
-            title = "History of \"%s\"" % name
-            out("= %s =" % title)
-            for rev, date, author, comment in self.storage.page_history(name):
-                out(" * [[History?name=%s&rev=%d|%s]]" % (name, rev,
-                    strftime("%Y-%m-%d", gmtime(date))))
-                out("[ [[%s|%d]] ] by [[%s]]\\\\" % (
-                    url(self.request, "/data/rev/%d" % rev), rev, author))
-                out(comment)
+            if rev:
+                to_rev = int(rev)
+                from_rev = to_rev - 1
+                title = "History of \"%s\" from %d to %d" % (name, from_rev,
+                        to_rev)
+                out("= %s =" % title)
+
+                text = self.storage.revision_text(name, from_rev).split("\n")
+                other = self.storage.revision_text(name, to_rev).split("\n")
+
+                to_date = ""
+                from_date = ""
+                date_format = "%Y-%m-%dT%H:%M:%SZ"
+
+                for history in self.storage.page_history(name):
+                    if history[0] == to_rev:
+                        to_date = history[1]
+                    elif history[0] == from_rev:
+                        from_date = history[1]
+
+                out("{{{")
+                for line in unified_diff(text, other,
+                        "%s@%d" % (name, from_rev),
+                        "%s@%d" % (name, to_rev),
+                        strftime(date_format, gmtime(from_date)),
+                        strftime(date_format, gmtime(to_date))):
+                    out(line.rstrip("\n"))
+                out("}}}")
+            else:
+                title = "History of \"%s\"" % name
+                out("= %s =" % title)
+                for rev, date, author, cmnt in self.storage.page_history(name):
+                    out(" * [[History?name=%s&rev=%d|%s]]" % (name, rev,
+                        strftime("%Y-%m-%d", gmtime(date))))
+
+                    out("[ [[%s|%d]] ] by [[%s]]\\\\" % (
+                        url(self.request, "/data/rev/%d" % rev), rev, author))
+                    out(cmnt)
             text = "\n".join(lines)
         else:
             title = "Recent Changes"
             out("= %s =" % title)
             for name, ver, date, rev, author, comment in self.storage.history():
-                out(" * [[History?name=%s&rev=%d|%s]] [[%s]]" % (name, rev,
+                out(" * [[History?name=%s&rev=%d|%s]] [[%s]]" % (name, ver,
                     strftime("%Y-%m-%d", gmtime(date)), name))
                 out("[ [[%s|%d]] ] by [[%s]]\\\\" % (
                     url(self.request, "/data/rev/%d" % rev), rev, author))
@@ -908,7 +934,7 @@ class Wiki(Controller):
         return dumps(data)
 
     def POST(self, name):
-        sefl.storage.reopen()
+        self.storage.reopen()
         self.search.update()
         data = loads(self.request.body.read())
         text = "%s\n" % FIXLINES.sub("\n", data.get("text", ""))
