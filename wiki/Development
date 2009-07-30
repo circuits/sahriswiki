@@ -4,12 +4,14 @@
 
 == TODO ==
 
-* Implement [[BackLinks]]
 * Improve Status Bar and Behaviors
 * Improve CSS
 * Fix ugly fonts
 
 === Features ===
+
+**BackLinks:**
+* [[SahrisWiki]] includes support for displaying [[BackLinks]], pages that refer to the current page.
 
 **Searching:**
 * [[SahrisWiki]] includes a powerful cache-able full-text search thanks to [[http://hatta.sheep.art.pl/|Hatta]].
@@ -18,5 +20,6 @@
 * [[SahrisWiki]]'s RESTFul/CRUD backend sends an ETag containing the current repository revision node allowing all AJAX Requests for page data to be cached by browsers speeding things up greatly.
 
 ----
+
 
 
