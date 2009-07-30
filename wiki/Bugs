@@ -13,5 +13,8 @@ This bug occurs when I click on a link to a new page of a Wiki and is likely to 
 As mentioned before, I am not sure if this is a problem with my browser/computer settings or actually a problem with the wiki. It isn't a significant problem however and shouldn't be put first on the priority list for bug fixes ;).
 
 -[[Adam]]
+
+@[[Adamin]], I cannot reproduce this on the latest version of [[SahrisWiki]]. Could you please try to delete your browser's cache and try again ? Thanks -[[prologic]
 ----
+
 
