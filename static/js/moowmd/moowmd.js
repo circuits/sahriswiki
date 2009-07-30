@@ -772,10 +772,10 @@ var mooWMD={
 			var getItemPrefix = function(){
 				var prefix;
 				if(isNumberedList){
-					prefix = "#";
+					prefix = "# ";
 				}
 				else{
-					prefix = "*";
+					prefix = "* ";
 				}
 				return prefix;
 			};
