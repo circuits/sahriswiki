@@ -6,4 +6,13 @@ Welcome to [[SahrisWiki]]'s development wiki and development environment. [[Sahr
 * As well as bits and pieces borrowed from two great (//wiki//) projects, [[http://hatta-wiki.org/|Hatta]] and [[http://trac.edgewall.org/|Trac]]
 
 To try this wiki out for yourself, feel free to edit the [[SandBox]].
+
+[[SahrisWiki]] is:
+* a single python script (//with the exception of XHTML, CSS themes and the [[http://mootools.net/|MooTools UI]].
+* a 500K installation.
+* [[Themes|Themeable]]
+* [[Plugins|Plugable]]
+* [[Performance|Fast and Scalable]]
+* Fun!
+
 ----
