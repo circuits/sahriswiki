@@ -728,6 +728,7 @@ without would yet you your yours yourself yourselves""").split())
         self.reindex(changed)
         rev = self.storage.repo_revision()
         self.set_last_revision(rev)
+
 class Root(Controller):
 
     def index(self):
