@@ -117,7 +117,10 @@ a.logo { float: left; display: block; margin: 0.25em }
 }
 
 #search .button {
-    background: #f7f7f7 url(../images/find.png) 0 0;
+    display: inline;
+	background: url(../images/find.png) 0 0;
+    color: #CCCCCC;
+    border: none;
     height: 16px;
     width: 16px;
 }
