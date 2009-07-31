@@ -833,7 +833,7 @@ class Wiki(Controller):
             for link in self.search.page_backlinks(name):
                 yield "* [[%s]]" % link
 
-        if not name:
+        if name is None:
             data = {"success": False, "message": "No page given"}
         elif name not in self.storage:
             data = {"success": False, "message": "Page '%s' not found" % name}
