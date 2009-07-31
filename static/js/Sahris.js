@@ -272,7 +272,7 @@ Sahris.UI = new Class({
             this.onButtonClicked.bind(this));
 
         this.el.getElements("#content").on("dblclick", function () {
-            this.history.setValue(0, "{name}/edit".substitute(
+            this.history.setValue(0, "{name}?action=edit".substitute(
                 {name: this.page.name}));
         }.bind(this));
 
@@ -331,20 +331,19 @@ Sahris.UI = new Class({
     },
     
     onHistoryChanged: function (values) {
-        var parts, name, action;
+        var parts, name, query, action;
         if ($defined(this.page)) {
+            name = "FrontPage";
+            action = "view";
+            query = {};
+
             if (values && values[0]) {
-                parts = values[0].split("/");
-                if (parts.length === 2) {
-                    name = parts[0];
-                    action = parts[1];
-                } else {
-                    name = parts[0];
-                    action = "view";
+                parts = values[0].split("?");
+                name = parts[0];
+                if (parts.length == 2) {
+                    query = parts[1].parseQueryString();
                 }
-            } else {
-                name = "FrontPage";
-                action = "view";
+                action = query.action || "view";
             }
 
             if (action === "edit") {
@@ -359,7 +358,7 @@ Sahris.UI = new Class({
             }
 
             if (this.page.name !== name) {
-                this.page.load(name);
+                this.page.load(name, query);
             } else {
                 this.page.fire("loaded");
             }
@@ -392,7 +391,7 @@ Sahris.UI = new Class({
             this.el.getElement("#ctxnav a#history").set("href",
                 "#History?name=" + this.page.name);
             this.el.getElements("#buttons a:first-child").set("href",
-                "#{name}/edit".substitute({name: this.page.name}));
+                "#{name}?action=edit".substitute({name: this.page.name}));
         }
     },
 
@@ -520,7 +519,7 @@ Sahris.Page = new Class({
         this.comment = "";
     },
 
-    load: function (name) {
+    load: function (name, options) {
         var url, jsonRequest;
 
         this.clear();
@@ -546,7 +545,7 @@ Sahris.Page = new Class({
                 this.fire("error", [xhr.status, xhr.statusText]);
             }.bind(this)
         });
-        jsonRequest.get();
+        jsonRequest.get(options);
     },
 
     save: function () {
