@@ -73,10 +73,6 @@ a.logo { float: left; display: block; margin: 0.25em }
     text-decoration: none;
 }
 
-#header #search {
-    float: right
-}
-
 #footer {
     height: 20px;
 	padding: 5px 5px 5px 5px;
@@ -105,24 +101,30 @@ a.logo { float: left; display: block; margin: 0.25em }
 /* Search */
 
 #search {
-    height: 1em;
+    float: right;
+    height: 16px;
     padding: 5px;
 }
 
-#search input {
-    font-size 10px;
-    vertical-align: middle;
+#search .text {
+    display: inline;
+    cursor: text;
+    font-size: 10px;
     background-color: #CCCCCC;
-    border: 1px solid #666666; 
+    border: 1px medium #666666;
+    border: none;
+    outline: none;
 }
 
 #search .button {
     display: inline;
-	background: url(../images/find.png) 0 0;
+    cursor: pointer;
+	background: url(../images/find.png) no-repeat scroll 0 0;
     color: #CCCCCC;
     border: none;
-    height: 16px;
     width: 16px;
+    height: 16px;
+    outline: none;
 }
 
 /* Menu */
