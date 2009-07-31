@@ -890,6 +890,9 @@ class Wiki(Controller):
                     elif history[0] == from_rev:
                         from_date = history[1]
 
+                if not from_date:
+                    from_date = to_date
+
                 out("{{{")
                 for line in unified_diff(text, other,
                         "%s@%d" % (name, from_rev),
