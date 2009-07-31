@@ -12,6 +12,38 @@
 // mootools Enhancements
 //
 
+String.implement({
+    parseQueryString: function () {
+        var vars = this.split(/[&;]/), res = {};
+        if (vars.length) vars.each(function(val){
+            var index = val.indexOf("="),
+                keys = index < 0 ? [""] : val.substr(0,
+                    index).match(/[^\]\[]+/g),
+                value = decodeURIComponent(val.substr(index + 1)),
+                obj = res;
+            keys.each(function(key, i){
+                var current = obj[key];
+                if(i < keys.length - 1)
+                    obj = obj[key] = current || {};
+                else if($type(current) == "array")
+                    current.push(value);
+                else
+                    obj[key] = $defined(current) ? [current, value] : value;
+            });
+        });
+        return res;
+    },
+
+    cleanQueryString: function(method) {
+        return this.split("&").filter(function (val) {
+            var index = val.indexOf("="),
+            key = index < 0 ? "" : val.substr(0, index),
+            value = val.substr(index + 1);
+            return method ? method.run([key, value]) : $chk(value);
+        }).join("&");
+    }
+});
+
 Native.implement([Events, Element, Window, Document], {
     on: function (type, fn) {
         this.addEvent(type, fn);
@@ -289,14 +321,14 @@ Sahris.UI = new Class({
             this.fire("plugin", arguments);
         }.bind(this));
 
-        var uri, contentEl, pageEl, dimensions;
+        var uri, contentEl, pageEl;
 
         // Resize Editor appropriately
         contentEl = this.el.getElement("#content");
-        dimensions = contentEl.getComputedSize();
         this.editor.textEl.resize(
-            dimensions.width - dimensions["padding-right"],
-            dimensions.height - dimensions["padding-bottom"]);
+            contentEl.getWidth() - contentEl.getStyle("padding-right").toInt(),
+            contentEl.getHeight() - 
+            contentEl.getStyle("padding-bottom").toInt());
 
         pageEl = this.el.getElement("#content > #page");
         this.page = new Sahris.Page(pageEl, "/wiki", "FrontPage");
@@ -320,10 +352,9 @@ Sahris.UI = new Class({
             "(.*)");
         HistoryManager.start();
 
-        var uri = new URI(location.href);
         if (Cookie.read("signature") === null) {
             Cookie.write("signature", "AnonymousUser", {
-                domain: uri.parsed.host,
+                domain: location.host,
                 duration: 90
             });
         }
