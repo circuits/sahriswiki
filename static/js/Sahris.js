@@ -60,8 +60,9 @@ Element.implement({
     },
 
     setLabel: function(attr)    {
-        var attr = attr || "alt";
-        var label = this.getProperty(attr);
+        var label;
+        attr = attr || "alt";
+        label = this.getProperty(attr);
         if ($defined(label)) {
             this.addEvents({
                 "focus": function() {
@@ -74,7 +75,7 @@ Element.implement({
                     if (value == "" || value == label) {
                         this.set("value", label).addClass("helpOn");
                     }
-                },
+                }
             }).fireEvent("blur");
         }
         return this.removeProperty(attr);
