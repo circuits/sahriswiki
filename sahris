@@ -853,12 +853,18 @@ class Wiki(Controller):
         self.response.headers["Content-Type"] = "application/javascript"
         return dumps(data)
 
-    def History(self, name=None, rev=None):
+    def History(self, *args, **kwargs):
         node = short(self.storage.repo_node())
         self.response.headers.add_header("ETag", node)
         response = validate_etags(self.request, self.response)
         if response:
             return response
+
+        if args:
+            name = "/".join(args)
+        else:
+            name = kwargs.get("name", None)
+        rev = kwargs.get("rev", None)
 
         lines = []
         out = lines.append
