@@ -96,19 +96,7 @@ a.logo { float: left; display: block; margin: 0.25em }
 
 /* Editor */
 
-label.author {
-    display: block;
-    width: 97%;
-    margin: 0 auto;
-    text-align: right
-}
-
-label.author input {
-    width: 10em;
-    margin: 0.5em 0 0.5em 0.5em;
-}
-
-label.comment input { 
+#editor label.comment input { 
     display: block;
     margin: 0.5em auto;
     width: 97%;
