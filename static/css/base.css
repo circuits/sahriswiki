@@ -111,8 +111,7 @@ a.logo { float: left; display: block; margin: 0.25em }
     cursor: text;
     font-size: 10px;
     background-color: #CCCCCC;
-    border: 1px medium #666666;
-    border: none;
+    border: 1px solid #666666;
     outline: none;
 }
 
