@@ -1,0 +1,14 @@
+= Features =
+
+== Back Links ==
+* [[SahrisWiki]] includes support for displaying [[BackLinks]], pages that refer to the current page.
+
+== Searching ==
+* [[SahrisWiki]] includes a powerful cache-able full-text search thanks to [[http://hatta.sheep.art.pl/|Hatta]].
+
+== Caching ==
+* [[SahrisWiki]]'s RESTFul/CRUD backend sends an ETag containing the page's revision node allowing all AJAX Requests for page data to be cached by browser speeding things up greatly.
+** Auto Generated pages such as [[Index]], [[History]], and others; use the repository revision node.
+
+----
+
