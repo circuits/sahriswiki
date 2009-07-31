@@ -127,6 +127,12 @@ a.logo { float: left; display: block; margin: 0.25em }
     outline: none;
 }
 
+/* Meta Navigation */
+
+#metanav {
+    padding: 1px 0 1px 0;
+}
+
 /* Menu */
 
 #menu {
@@ -134,7 +140,6 @@ a.logo { float: left; display: block; margin: 0.25em }
  border: 1px solid #000;
  font-family: Droid Sans, DejaVu Sans, sans-serif;
  font-size: 10px;
- margin: .66em 0 .33em;
  padding: .2em 0;
 }
 
@@ -187,8 +192,10 @@ a.logo { float: left; display: block; margin: 0.25em }
 
 #ctxnav {
     height: 1em;
-    padding: 5px;
+    padding: 1px 0 1px 0;
+
 }
+
 #ctxnav li ul {
  background: #f7f7f7;
  color: #ccc;
