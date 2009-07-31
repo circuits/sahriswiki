@@ -728,7 +728,7 @@ Sahris.Editor = new Class({
     update: function (page) {
         page.text = this.textEl.get("value") || "";
         page.rev += 1;
-        page.date = Date.now();
+        page.date = $time();
         page.author = Cookie.read("signature") || "AnonymousUser";
         page.comment = this.commentEl.get("value")[0] || "";
     },
