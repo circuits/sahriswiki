@@ -129,7 +129,6 @@ label.comment input {
 /* Search */
 
 #search {
-    float: left;
     height: 1em;
     padding: 5px;
 }
