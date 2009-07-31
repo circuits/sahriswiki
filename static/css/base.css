@@ -94,18 +94,6 @@ a.logo { float: left; display: block; margin: 0.25em }
     clear: both;
 }
 
-.content h2 {
-	padding: 6px 0;
-}
-
-.content dt {
-	padding: 4px 0;
-}
-
-.content dd {
-	padding: 0 20px;
-}
-
 /* Editor */
 
 label.author {
