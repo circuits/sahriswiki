@@ -1,10 +1,11 @@
 /* Main Layout */
 
 * {
-	font-family: "Bitstream Vera Sans", "Verdana", sans-serif;
-	font-size: 10pt;
 	margin: 0;
 	padding: 0;
+    color: #2e3436;
+    font-family: Droid Sans, DejaVu Sans, sans-serif;
+    font-size: 96%
 }
 
 body {
@@ -13,23 +14,23 @@ body {
 }
 
 h1 {
-	font-size: 18pt;
+	font-size: 20pt;
 }
 
 h2 {
-	font-size: 16pt;
+	font-size: 18pt;
 }
 
 h3 {
-	font-size: 14pt;
+	font-size: 16pt;
 }
 
 h4 {
-	font-size: 12pt;
+	font-size: 14pt;
 }
 
 h5 {
-	font-size: 8pt;
+	font-size: 12pt;
 }
 
 a:link, a:visited {
@@ -41,6 +42,9 @@ a:link, a:visited {
 a:focus, a:hover, a:active {
 	border-bottom: 1px solid;
 }
+
+a img { border: none }
+a.logo { float: left; display: block; margin: 0.25em }
 
 #window {
 	position: relative;
@@ -67,6 +71,10 @@ a:focus, a:hover, a:active {
 #header h1 a {
     color: #FFFFFF;
     text-decoration: none;
+}
+
+#header #search {
+    float: right
 }
 
 #footer {
