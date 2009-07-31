@@ -133,7 +133,10 @@ a.logo { float: left; display: block; margin: 0.25em }
  padding: .2em 0;
 }
 
-#menu li { border-right: none; padding: .25em 0 }
+#menu li {
+    border-right: none;
+    padding: .25em 0;
+}
 
 #menu :link, #menu :visited {
  background: url(../images/dots.gif) 0 0 no-repeat;
