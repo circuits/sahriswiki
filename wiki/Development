@@ -4,8 +4,8 @@
 == TODO ==
 
 * Improve Status Bar and Behaviors
-* Improve CSS
-* Fix ugly fonts
+* --Improve CSS (//2009-08-01//)
+* --Fix ugly fonts (//2009-08-01//)
 
 === Features ===
 
@@ -20,6 +20,7 @@
 ** Auto Generated pages such as [[Index]], [[History]], and others; use the repository revision node.
 
 ----
+
 
 
 
