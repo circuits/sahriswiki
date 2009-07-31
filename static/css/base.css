@@ -127,7 +127,8 @@ a.logo { float: left; display: block; margin: 0.25em }
 #menu {
  background: #f7f7f7 url(../images/topbar_gradient.png) 0 0;
  border: 1px solid #000;
- font: normal 10px verdana,'Bitstream Vera Sans',helvetica,arial,sans-serif;
+ font-family: Droid Sans, DejaVu Sans, sans-serif;
+ font-size: 10px;
  margin: .66em 0 .33em;
  padding: .2em 0;
 }
