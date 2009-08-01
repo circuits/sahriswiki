@@ -733,16 +733,21 @@ class Root(Controller):
 
     def index(self):
         self.expires(2592000)
-        return self.serve_file(abspath("static/index.xhtml"))
+        if "msie" in self.request.headers["User-Agent"]:
+            self.redirect(url(self.request, "ieupdate"))
+        else:
+            return self.serve_file(abspath("static/index.xhtml"))
 
     @expose("favicon.ico")
     def favicon(self):
         self.expires(2592000)
         return self.serve_file(abspath("static/favicon.ico"))
 
-    def getip(self):
-        self.response.headers["Content-Type"] = "application/javascript"
-        return dumps(self.request.remote.ip)
+    def ieupdate(self, *args, **kwargs):
+        self.expires(2592000)
+        print "Serving IE Update..."
+        return self.serve_file(abspath("static/ieupdate.html"),
+                type="text/html")
 
 class Wiki(Controller):
 
