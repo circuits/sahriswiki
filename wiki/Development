@@ -5,10 +5,11 @@
 * [[Features]]
 
 == TODO ==
-
+* Fix [[Development/PageLinks|Page Links]] to not use # (//this should be used as TOC anchors//)
 * Improve Status Bar and Behaviors
 * --Improve CSS (//2009-08-01//)
 * --Fix ugly fonts (//2009-08-01//)
 
 ----
+
 
