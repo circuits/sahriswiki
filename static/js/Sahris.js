@@ -730,7 +730,7 @@ Sahris.Editor = new Class({
         page.rev += 1;
         page.date = $time();
         page.author = Cookie.read("signature") || "AnonymousUser";
-        page.comment = this.commentEl.get("value")[0] || "";
+        page.comment = this.commentEl.get("value") || "";
     },
 
     hide: function () {
