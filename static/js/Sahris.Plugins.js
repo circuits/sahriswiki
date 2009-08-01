@@ -32,10 +32,9 @@ Sahris.Plugins["Preferences"] = new Class({
     el: null,
 
     save: function() {
-        var uri = new URI(location.href);
         Cookie.write("signature",
             this.el.getElement("[name=signature]").get("value"), {
-            domain: uri.parsed.host,
+            domain: location.host,
             duration: 90
         });
         this.setMessage(this.el, "Preferences saved");
