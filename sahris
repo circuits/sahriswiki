@@ -30,7 +30,6 @@ import mercurial.revlog
 from mercurial.node import short
 from mercurial.hgweb import hgweb
 
-import circuits
 from circuits import Manager, Debugger
 from circuits.net.pollers import Select, Poll
 
@@ -56,8 +55,7 @@ var Sahris = {
     config: {
         sitename: "%(sitename)s",
         frontpage: "%(frontpage)s",
-        pages: %(pages)s,
-        circuits: "%(circuits)s"
+        pages: %(pages)s
     }
 }
 """
@@ -786,8 +784,7 @@ class Root(Controller):
                 "version": __version__(),
                 "sitename": self.opts.sitename,
                 "frontpage": self.opts.frontpage,
-                "pages": dumps(list(self.storage.all_pages())),
-                "circuits": circuits.__version__}
+                "pages": dumps(list(self.storage.all_pages()))}
 
     def ieupdate(self, *args, **kwargs):
         self.expires(2592000)

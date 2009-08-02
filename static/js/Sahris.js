@@ -364,12 +364,6 @@ Sahris.UI = new Class({
         this.el.getElement("#software #sahris span.version").set("text",
                 Sahris.version);
 
-        this.el.getElement("#software #circuits span.version").set("text",
-                Sahris.config.circuits);
-
-        this.el.getElement("#software #mootools span.version").set("text",
-                MooTools.version);
-
         this.fire("loaded");
     },
     
