@@ -130,7 +130,9 @@ var Component = new Class({
 // Sahris
 //
 
-var Sahris = {};
+var Sahris = {
+    version: "0.5"
+};
 
 Sahris.Plugin = new Class({
     Extends: Component,
@@ -358,6 +360,12 @@ Sahris.UI = new Class({
                 duration: 90
             });
         }
+
+        this.el.getElement("#software #sahris span.version").set("text",
+                Sahris.version);
+
+        this.el.getElement("#software #mootools span.version").set("text",
+                MooTools.version);
 
         this.fire("loaded");
     },
