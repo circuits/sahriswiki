@@ -210,6 +210,17 @@ a.logo { float: left; display: block; margin: 0.25em }
  color: #fff;
 }
 
+/* Software */
+
+#software {
+    float: left;
+	margin-top: 5px;
+}
+
+#software a:link, a:active, a:focus, a:visited, a:hover {
+	border: none;
+}
+
 /* validate icons */
 
 #icons {
