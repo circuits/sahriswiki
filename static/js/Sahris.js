@@ -333,7 +333,7 @@ Sahris.UI = new Class({
             contentEl.getStyle("padding-bottom").toInt());
 
         pageEl = this.el.getElement("#content > #page");
-        this.page = new Sahris.Page(pageEl, "/wiki", "FrontPage");
+        this.page = new Sahris.Page(pageEl, "/wiki", Sahris.config.frontpage);
         this.page.on("loaded", this.onPageLoaded.bind(this));
         this.page.on("error", this.onPageError.bind(this));
         this.page.on("saved", this.onPageSaved.bind(this));
@@ -364,13 +364,16 @@ Sahris.UI = new Class({
         this.el.getElement("#software #sahris span.version").set("text",
                 Sahris.version);
 
+        $(document.head).getElement("title").set(
+                "html", Sahris.config.sitename);
+
         this.fire("loaded");
     },
     
     onHistoryChanged: function (values) {
         var parts, name, query, action;
         if ($defined(this.page)) {
-            name = "FrontPage";
+            name = Sahris.config.frontpage;
             action = "view";
             query = {};
 
