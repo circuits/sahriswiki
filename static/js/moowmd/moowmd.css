@@ -1,6 +1,4 @@
-.wmd-panel
-{
-	background-color: Aquamarine;
+.wmd-panel {
 }
 
 .wmd-button-bar 
@@ -14,7 +12,7 @@
 	height: 500px;
 	width: 100%;
 	background-color: white;
-	border: 1px solid DarkGray;
+	border: 1px solid;
 }
 
 .wmd-preview 
@@ -24,9 +22,7 @@
     overflow: auto;
 }
 
-.wmd-output 
-{ 
-	background-color: Pink;
+.wmd-output  {
 }
 
 .wmd-button-row 
@@ -39,8 +35,7 @@
 	height: 20px;
 }
 
-.wmd-spacer
-{
+.wmd-spacer {
 	width: 1px; 
 	height: 20px; 
 	margin-left: 14px;
