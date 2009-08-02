@@ -30,6 +30,7 @@ import mercurial.revlog
 from mercurial.node import short
 from mercurial.hgweb import hgweb
 
+import circuits
 from circuits import Manager, Debugger
 from circuits.net.pollers import Select, Poll
 
@@ -47,6 +48,19 @@ from circuits import __version__ as systemVersion
 
 USAGE = "%prog [options]"
 VERSION = "%prog v" + systemVersion
+
+CONFIG = """\
+var Sahris = {
+    version: "%(version)s",
+
+    config: {
+        sitename: "%(sitename)s",
+        frontpage: "%(frontpage)s",
+        pages: %(pages)s,
+        circuits: "%(circuits)s"
+    }
+}
+"""
 
 def parse_options():
     """parse_options() -> opts, args
@@ -74,7 +88,7 @@ def parse_options():
 
     parser.add_option("-n", "--site-name",
             action="store", type="string", default="Test",
-            dest="name",
+            dest="sitename",
             help="Set site name")
 
     parser.add_option("-f", "--front-page",
@@ -115,6 +129,24 @@ def parse_options():
     opts, args = parser.parse_args()
 
     return opts, args
+
+def __version__():
+    version = None
+    if os.path.isdir(".hg"):
+		f = os.popen("hg identify")
+		ident = f.read()[:-1]
+		if not f.close() and ident:
+			ids = ident.split(' ', 1)
+			version = ids.pop(0)
+			if version[-1] == '+':
+				version = version[:-1]
+			if version.isalnum() and ids:
+				for tag in ids[0].split('/'):
+					# is a tag is suitable as a version number?
+					if re.match(r'^(\d+\.)+[\w.-]+$', tag):
+						version = tag
+						break
+    return version or "Unknown"
 
 FIXLINES = re.compile("\r|\r\n")
 
@@ -731,6 +763,12 @@ without would yet you your yours yourself yourselves""").split())
 
 class Root(Controller):
 
+    def __init__(self, opts, storage, search):
+        super(Root, self).__init__()
+        self.opts = opts
+        self.storage = storage
+        self.search = search
+
     def index(self):
         self.expires(2592000)
         if "msie" in self.request.headers["User-Agent"]:
@@ -742,6 +780,14 @@ class Root(Controller):
     def favicon(self):
         self.expires(2592000)
         return self.serve_file(abspath("static/favicon.ico"))
+
+    def config(self):
+        return CONFIG % {
+                "version": __version__(),
+                "sitename": self.opts.sitename,
+                "frontpage": self.opts.frontpage,
+                "pages": dumps(list(self.storage.all_pages())),
+                "circuits": circuits.__version__}
 
     def ieupdate(self, *args, **kwargs):
         self.expires(2592000)
@@ -1020,7 +1066,7 @@ def main():
         + Static("/css",       docroot="static/css")
         + Static("/images",    docroot="static/images")
         + Static("/templates", docroot="static/templates")
-        + Root()
+        + Root(opts, storage, search)
         + Wiki(opts, storage, search)
         + Logger()
         )
