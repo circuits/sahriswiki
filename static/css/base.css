@@ -237,7 +237,7 @@ a.logo { float: left; display: block; margin: 0.25em }
 
 #buttons {
     float: left;
-    border-right: 1px solid #d00;
+    border: none;
     font-family: Droid Sans, DejaVu Sans, sans-serif;
     font-size: 10px;
     padding: .2em 0;
@@ -265,6 +265,7 @@ a.logo { float: left; display: block; margin: 0.25em }
 	padding: 0px;
 	list-style-type: none;
 	padding-top: 10px;
+    background-color: #22AA22;
 }
 
 #buttons li ul li {
@@ -284,6 +285,8 @@ a.logo { float: left; display: block; margin: 0.25em }
 
 #status {
     float: left;
+    padding-left: 5px;
+    border-left: 1px dashed;
 }
 
 /* Styles for the error page (and rst errors) */
