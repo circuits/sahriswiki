@@ -385,8 +385,16 @@ Sahris.UI = new Class({
         if (this.page.name) {
             this.el.getElement("#ctxnav a#history").set("href",
                 "#History?name=" + this.page.name);
-            this.el.getElements("#buttons a:first-child").set("href",
-                "#{name}?action=edit".substitute({name: this.page.name}));
+            this.el.getElements("#buttons ul li.button a").each(
+                function (el) {
+                    el.set("href",
+                        "#{name}?action={action}".substitute({
+                            name: this.page.name,
+                            action: el.get("text")
+                        })
+                    );
+                }.bind(this)
+            );
         }
     },
 
