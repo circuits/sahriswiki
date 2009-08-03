@@ -12,38 +12,6 @@
 // mootools Enhancements
 //
 
-String.implement({
-    parseQueryString: function () {
-        var vars = this.split(/[&;]/), res = {};
-        if (vars.length) vars.each(function(val){
-            var index = val.indexOf("="),
-                keys = index < 0 ? [""] : val.substr(0,
-                    index).match(/[^\]\[]+/g),
-                value = decodeURIComponent(val.substr(index + 1)),
-                obj = res;
-            keys.each(function(key, i){
-                var current = obj[key];
-                if(i < keys.length - 1)
-                    obj = obj[key] = current || {};
-                else if($type(current) == "array")
-                    current.push(value);
-                else
-                    obj[key] = $defined(current) ? [current, value] : value;
-            });
-        });
-        return res;
-    },
-
-    cleanQueryString: function(method) {
-        return this.split("&").filter(function (val) {
-            var index = val.indexOf("="),
-            key = index < 0 ? "" : val.substr(0, index),
-            value = val.substr(index + 1);
-            return method ? method.run([key, value]) : $chk(value);
-        }).join("&");
-    }
-});
-
 Native.implement([Events, Element, Window, Document], {
     on: function (type, fn) {
         this.addEvent(type, fn);
@@ -59,38 +27,6 @@ Native.implement([Events, Element, Window, Document], {
 });
 
 Element.implement({
-
-    isDisplayed: function () {
-        return this.getStyle("display") !== "none";
-    },
-
-    toggle: function () {
-        return this[this.isDisplayed() ? "hide" : "show"]();
-    },
-
-    hide: function () {
-        var d;
-        try {
-            //IE fails here if the element is not in the dom
-            if ("none" !== this.getStyle("display")) {
-                d = this.getStyle("display");
-            }
-        } catch (e) {
-        }
-
-        return this.store("originalDisplay", d || "block").setStyle(
-            "display", "none");
-    },
-
-    show: function (display) {
-        return this.setStyle("display", display || this.retrieve(
-                    "originalDisplay") || "block");
-    },
-
-    swapClass: function (remove, add) {
-        return this.removeClass(remove).addClass(add);
-    },
-
     setLabel: function(attr)    {
         var label;
         attr = attr || "alt";
@@ -121,6 +57,7 @@ Element.implement({
         this.fireEvent("resize");
     }
 });
+
 
 var Component = new Class({
     Extends: Events
