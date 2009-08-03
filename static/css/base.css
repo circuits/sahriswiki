@@ -275,6 +275,7 @@ a.logo { float: left; display: block; margin: 0.25em }
 }
 
 #buttons li ul li a {
+    text-align: center;
 	color: #FFFFFF;
 	font-weight: normal;
 	text-decoration: none;
