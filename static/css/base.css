@@ -215,6 +215,7 @@ a.logo { float: left; display: block; margin: 0.25em }
 #software {
     float: left;
 	margin-top: 5px;
+	font-size: 8pt;
 }
 
 #software a:link, a:active, a:focus, a:visited, a:hover {
