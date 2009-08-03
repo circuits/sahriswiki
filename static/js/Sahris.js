@@ -244,7 +244,7 @@ Sahris.UI = new Class({
             this.onButtonClicked.bind(this));
 
         this.el.getElements("#content").on("dblclick", function () {
-            this.history.setValue(0, "{name}?action=edit".substitute(
+            this.history.setValue(0, "{name}?action=Edit".substitute(
                 {name: this.page.name}));
         }.bind(this));
 
@@ -304,6 +304,24 @@ Sahris.UI = new Class({
         $(document.head).getElement("title").set(
                 "html", Sahris.config.sitename);
 
+        this.el.getElement("#buttons").getElements("li.menu").each(
+            function(el) {
+                var list, fx;
+		        list = el.getElement("ul.links");
+		        fx = new Fx.Slide(list).hide();
+		        el.addEvents({
+			        "mouseenter" : function(){
+				        fx.cancel();
+				        fx.slideIn();
+			        },
+			        "mouseleave" : function(){
+				        fx.cancel();
+				        fx.slideOut();
+			        }
+		        });
+	        }
+        );
+
         this.fire("loaded");
     },
     
@@ -311,7 +329,7 @@ Sahris.UI = new Class({
         var parts, name, query, action;
         if ($defined(this.page)) {
             name = Sahris.config.frontpage;
-            action = "view";
+            action = "View";
             query = {};
 
             if (values && values[0]) {
@@ -320,10 +338,10 @@ Sahris.UI = new Class({
                 if (parts.length == 2) {
                     query = parts[1].parseQueryString();
                 }
-                action = query.action || "view";
+                action = query.action || "View";
             }
 
-            if (action === "edit") {
+            if (action === "Edit") {
                 this.editing = true;
                 this.viewing = false;
             } else {
@@ -409,7 +427,7 @@ Sahris.UI = new Class({
             this.setTitle(this.page.name);
             buttons = this.el.getElements("#buttons a");
             buttons[0].set("text", "Edit");
-            buttons[1].set("text", "More...");
+            buttons[1].set("text", "Print");
         } else {
             this.page.hide();
             this.editor.load(this.page);
