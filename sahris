@@ -4,6 +4,7 @@
 import os
 import re
 import sys
+import signal
 import sqlite3
 import tempfile
 import optparse
@@ -30,8 +31,8 @@ import mercurial.revlog
 from mercurial.node import short
 from mercurial.hgweb import hgweb
 
-from circuits import Manager, Debugger
 from circuits.net.pollers import Select, Poll
+from circuits import Component, Manager, Debugger
 
 from circuits.web.wsgi import Gateway
 from circuits.web.tools import validate_etags
@@ -759,6 +760,18 @@ without would yet you your yours yourself yourselves""").split())
         rev = self.storage.repo_revision()
         self.set_last_revision(rev)
 
+class Tools(Component):
+
+    def __init__(self, opts, storage, search):
+        super(Tools, self).__init__()
+        self.opts = opts
+        self.storage = storage
+        self.search = search
+
+    def signal(self, sig, stack):
+        if os.name == "posix" and sig == signal.SIGHUP:
+            self.storage.reopen()
+
 class Root(Controller):
 
     def __init__(self, opts, storage, search):
@@ -1065,6 +1078,7 @@ def main():
         + Static("/templates", docroot="static/templates")
         + Root(opts, storage, search)
         + Wiki(opts, storage, search)
+        + Tools(opts, storage, search)
         + Logger()
         )
 
