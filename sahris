@@ -125,6 +125,11 @@ def parse_options():
             dest="debug",
             help="Enable debug mode")
 
+    parser.add_option("", "--pid-file",
+            action="store", default=None,
+            dest="pidfile",
+            help="Write process id to pidfile")
+
     opts, args = parser.parse_args()
 
     return opts, args
@@ -1081,6 +1086,10 @@ def main():
         + Tools(opts, storage, search)
         + Logger()
         )
+
+    if opts.pidfile:
+        with open(opts.pidfile, "w") as f:
+            f.write(str(os.getpid()))
 
     manager.run()
 
