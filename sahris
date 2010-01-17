@@ -31,6 +31,7 @@ import mercurial.revlog
 from mercurial.node import short
 from mercurial.hgweb import hgweb
 
+from circuits.app import Daemon
 from circuits.net.pollers import Select, Poll
 from circuits import Component, Manager, Debugger
 
@@ -129,6 +130,11 @@ def parse_options():
             action="store", default=None,
             dest="pidfile",
             help="Write process id to pidfile")
+
+    parser.add_option("", "--daemon",
+            action="store_true", default=False,
+            dest="daemon",
+            help="Daemonize (fork into the background)")
 
     opts, args = parser.parse_args()
 
@@ -1087,9 +1093,8 @@ def main():
         + Logger()
         )
 
-    if opts.pidfile:
-        with open(opts.pidfile, "w") as f:
-            f.write(str(os.getpid()))
+    if opts.daemon:
+        manager += Daemon(opts.pidfile)
 
     manager.run()
 
