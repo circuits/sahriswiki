@@ -102,6 +102,11 @@ def parse_options():
             dest="readonly",
             help="Set wiki in read-only mode")
 
+    parser.add_option("-p", "--plugins",
+            action="store", default="plugins",
+            dest="plugins",
+            help="Set directory where plugins are located")
+
     parser.add_option("", "--jit",
             action="store_true", default=False,
             dest="jit",
@@ -767,6 +772,40 @@ without would yet you your yours yourself yourselves""").split())
         rev = self.storage.repo_revision()
         self.set_last_revision(rev)
 
+class BasePlugin(Component):
+
+    def __init__(self, opts, storage, search):
+        super(BasePlugin, self).__init__()
+        self.opts = opts
+        self.storage = storage
+
+class Plugins(Component):
+
+    def __init__(self, opts, storage, search):
+        super(Plugins, self).__init__()
+        self.opts = opts
+        self.storage = storage
+        self.search = search
+
+    def _loadPlugins(self):
+        for filaname in os.listdir(self.opts.plugins):
+            if not os.path.isfile(filaname):
+                continue
+
+                moduleName = "%s.%s" % (self.opts.plugins, filanem)
+                m = safe__import__(moduleName, globals(), locals())
+                p1 = lambda x: isclass(x) and issubclass(x, BasePlugin)
+                p2 = lambda x: x is not BasePlugin
+                predicate = lambda x: p1(x) and p2(x)
+                plugins = getmembers(m, predicate)
+
+                for name, Plugin in plugins:
+                    o = Plugin(self, self.opts, self.storage, self.search)
+                    o.register(self)
+
+    def started(self, component, mode):
+        self._loadPlugins()
+
 class Tools(Component):
 
     def __init__(self, opts, storage, search):
@@ -811,6 +850,10 @@ class Root(Controller):
         print "Serving IE Update..."
         return self.serve_file(os.path.abspath("static/ieupdate.html"),
                 type="text/html")
+
+    def graph(self):
+        from circuits.tools import graph
+        return graph(self.root)
 
 class Wiki(Controller):
 
@@ -1086,6 +1129,7 @@ def main():
         + Root(opts, storage, search)
         + Wiki(opts, storage, search)
         + Tools(opts, storage, search)
+        + Plugins(opts, storage, search)
         + Logger()
         )
 
