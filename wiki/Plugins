@@ -1,3 +1,7 @@
 = Plugins =
-Available plugins:
+
+Available client-side plugins:
 <<Plugins>>
+
+Available server-side plugins:
+<<@Plugins>>
