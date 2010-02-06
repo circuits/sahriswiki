@@ -3,6 +3,7 @@
 
 import os
 import re
+import sys
 import signal
 import sqlite3
 import tempfile
@@ -11,6 +12,7 @@ import mimetypes
 from json import dumps, loads
 from difflib import unified_diff
 from time import gmtime, strftime
+from inspect import getmembers, isclass
 
 try:
     import psyco
@@ -42,6 +44,8 @@ except ImportError:
     EPoll = None
 
 from circuits import __version__ as systemVersion
+
+from plugins import BasePlugin
 
 USAGE = "%prog [options]"
 VERSION = "%prog v" + systemVersion
@@ -772,40 +776,65 @@ without would yet you your yours yourself yourselves""").split())
         rev = self.storage.repo_revision()
         self.set_last_revision(rev)
 
-class BasePlugin(Component):
+def safe__import__(moduleName, globals=globals(),
+		locals=locals(), fromlist=[]):
+	"""Safe imports: rollback after a failed import.
+
+	Initially inspired from the RollbackImporter in PyUnit,
+	but it's now much simpler and works better for our needs.
+
+	See http://pyunit.sourceforge.net/notes/reloading.html
+	"""
+
+	alreadyImported = sys.modules.copy()
+	try:
+		return __import__(moduleName, globals, locals, fromlist)
+	except Exception, e:
+		raise
+		for name in sys.modules.copy():
+			if not name in alreadyImported:
+				del (sys.modules[name])
+
+class PluginManager(Component):
 
     def __init__(self, opts, storage, search):
-        super(BasePlugin, self).__init__()
-        self.opts = opts
-        self.storage = storage
+        super(PluginManager, self).__init__()
 
-class Plugins(Component):
-
-    def __init__(self, opts, storage, search):
-        super(Plugins, self).__init__()
         self.opts = opts
         self.storage = storage
         self.search = search
 
-    def _loadPlugins(self):
-        for filaname in os.listdir(self.opts.plugins):
-            if not os.path.isfile(filaname):
+    def _loadPlugins(self, path):
+        sys.path.append(path)
+        package = os.path.basename(path)
+        safe__import__(package, globals(), locals())
+
+        for filename in os.listdir(path):
+            if not os.path.isfile(os.path.join(path, filename)):
+                continue
+            elif not os.path.splitext(filename)[1] == ".py":
+                continue
+            elif filename == "__init__.py":
                 continue
 
-                moduleName = "%s.%s" % (self.opts.plugins, filanem)
-                m = safe__import__(moduleName, globals(), locals())
-                p1 = lambda x: isclass(x) and issubclass(x, BasePlugin)
-                p2 = lambda x: x is not BasePlugin
-                predicate = lambda x: p1(x) and p2(x)
-                plugins = getmembers(m, predicate)
+            module = os.path.splitext(filename)[0]
+            self._loadPlugin(package, module)
 
-                for name, Plugin in plugins:
-                    o = Plugin(self, self.opts, self.storage, self.search)
-                    o.register(self)
+    def _loadPlugin(self, package, module):
+        m = safe__import__("%s.%s" % (package, module), globals(), locals())
+        p1 = lambda x: isclass(x) and issubclass(x, BasePlugin)
+        p2 = lambda x: x is not BasePlugin
+        predicate = lambda x: p1(x) and p2(x)
+        plugins = getmembers(m, predicate)
+
+        for name, Plugin in plugins:
+            o = Plugin(self, self.opts, self.storage, self.search)
+            o.register(self)
 
     def started(self, component, mode):
-        self._loadPlugins()
+        self._loadPlugins(os.path.abspath(self.opts.plugins))
 
+    def 
 class Tools(Component):
 
     def __init__(self, opts, storage, search):
@@ -1129,7 +1158,7 @@ def main():
         + Root(opts, storage, search)
         + Wiki(opts, storage, search)
         + Tools(opts, storage, search)
-        + Plugins(opts, storage, search)
+        + PluginManager(opts, storage, search)
         + Logger()
         )
 
