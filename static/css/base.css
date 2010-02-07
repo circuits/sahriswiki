@@ -44,7 +44,6 @@ a:focus, a:hover, a:active {
 }
 
 a img { border: none }
-a.logo { float: left; display: block; margin: 0.25em }
 
 #window {
 	position: relative;
