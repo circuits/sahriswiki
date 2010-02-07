@@ -5,3 +5,6 @@ Available client-side plugins:
 
 Available server-side plugins:
 <<@Plugins>>
+
+<<@HelloWorld>>
+
