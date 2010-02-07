@@ -39,6 +39,7 @@ Example:
 Output:
 {{{
 #!html
-<img src="http://www.google.com/logos/Logo_40wht.gif" border="0" />
+<img src="http://www.google.com/logos/Logo_40wht.gif" border="0">Google</img>
 }}}
 ----
+
