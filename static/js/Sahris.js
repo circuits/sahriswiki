@@ -181,7 +181,7 @@ Sahris.UI = new Class({
         });
 
         this.el = $(document.body);
-        this.url = "/templates/base.xhtml";
+        this.url = "/templates/base.html";
         this.tpl = new Sahris.Template(this.el, this.url);
         this.tpl.on("loaded", this.onTplLoaded.bind(this));
         this.tpl.on("failed", this.onTplFailed.bind(this));
