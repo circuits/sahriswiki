@@ -856,10 +856,7 @@ class Root(Controller):
 
     def index(self):
         self.expires(2592000)
-        if "msie" in self.request.headers["User-Agent"]:
-            self.redirect(url(self.request, "ieupdate"))
-        else:
-            return self.serve_file(os.path.abspath("static/index.xhtml"))
+        return self.serve_file(os.path.abspath("static/index.html"))
 
     @expose("favicon.ico")
     def favicon(self):
@@ -872,16 +869,6 @@ class Root(Controller):
                 "sitename": self.opts.sitename,
                 "frontpage": self.opts.frontpage,
                 "pages": dumps(list(self.storage.all_pages()))}
-
-    def ieupdate(self, *args, **kwargs):
-        self.expires(2592000)
-        print "Serving IE Update..."
-        return self.serve_file(os.path.abspath("static/ieupdate.html"),
-                type="text/html")
-
-    def graph(self):
-        from circuits.tools import graph
-        return graph(self.root)
 
 class Wiki(Controller):
 
