@@ -1,32 +1,111 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
  <head>
   <title />
-  <meta http-equiv="content-type" content="application/xml+xhtml; charset=utf-8" />
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <link rel="stylesheet" title="default" media="screen" href="./css/base.css" type="text/css" />
   <link rel="stylesheet" href="./css/wiki.css" type="text/css" />
 
-  <link rel="stylesheet" href="./js/moowmd/moowmd.css" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="./js/markitup/skins/simple/style.css" />
+  <link rel="stylesheet" type="text/css" href="./js/markitup/sets/wiki/style.css" />
 
   <link type="image/x-icon" href="/favicon.ico" rel="shortcut icon" />
 
-  <script type="text/javascript" src="./js/mootools.js"></script>
-  <script type="text/javascript" src="./js/mootools-more.js"></script>
+  <script type="text/javascript" src="./js/jquery.js"></script>
+  <script type="text/javascript" src="./js/jquery.history.js"></script>
+  <script type="text/javascript" src="./js/jquery.json.js"></script>
+  <script type="text/javascript" src="./js/jquery.prettydate.js"></script>
+  <script type="text/javascript" src="./js/jquery.template.js"></script>
 
-  <script type="text/javascript" src="./js/moowmd/moowmd.js"></script>
+  <script type="text/javascript" src="./js/markitup/jquery.markitup.js"></script>
+  <script type="text/javascript" src="./js/markitup/sets/wiki/set.js"></script>
+
 
   <script type="text/javascript" src="./js/creole.js"></script>
-  <script type="text/javascript" src="./js/prettydate.js"></script>
-  <script type="text/javascript" src="./js/HistoryManager.js"></script>
 
-  <script type="text/javascript" src="./config"></script>
-  <script type="text/javascript" src="./js/Sahris.js"></script>
-  <script type="text/javascript" src="./js/Sahris.Plugins.js"></script>
+  <script type="text/javascript" src="./js/main.js"></script>
+  <script type="text/javascript">
+      $(document).ready(main);
+  </script>
 </head>
 <body>
+<div id="window">
+
+ <div id="header">
+  <div id="search" class="search">
+   <form id="searchForm" name="searchForm" action="" method="post">
+    <input id="q" class="text" type="text" name="q" alt="Search" size="20" />
+    <input id="searchBtn" class="button" type="submit" name="searchBtn" value="" />
+   </form>
+  </div>
+  <h1 id="title"><a id="backlink" href=""></a></h1>
+ </div>
+
+ <div id="metanav" class="nav">
+  <ul>
+   <li class="first last"><a href="#Preferences">Preferences</a></li>
+  </ul>
+ </div>
+
+ <div id="menu" class="nav"></div>
+ <div id="ctxnav" class="nav">
+  <ul>
+   <li class="first"><a href="#FrontPage">StartPage</a></li>
+   <li><a href="#Search">Index</a></li>
+   <li><a id="changes" href="#History">RecentChanges</a></li>
+   <li class="last"><a id="history" href="">History</a></li>
+  </ul>
+ </div>
+
+ <div id="content" class="content">
+  <div id="page" class="wiki"></div>
+  <div id="editor" style="display: none">
+
+   <form action="" method="post">
+    <div id="editor-content">
+     <div id="wmd-editor" class="wmd-panel">
+      <div id="wmd-button-bar" class="wmd-button-bar"></div>
+      <textarea id="text" name="text" rows="25" cols="40"></textarea>
+     </div>
+    </div>
+    <div id="editor-fields">
+     <input value="" name="comment" alt="Comment" />
+    </div>
+   </form>
+   <h2>Preview</h2>
+   <div id="preview" class="wmd-preview wiki"></div>  
+  </div>
+ </div>
+
+ <div id="footer" class="footer">
+  <div id="buttons" class="nav">
+   <ul>
+    <li class="button"><a href="">Edit</a></li>
+    <li class="button"><a href="">Print</a></li>
+    <li class="menu"><a href="#">Actions</a>
+     <ul id="actions" class="links">
+      <li class="action"><a href="#">View Source</a></li>
+      <li class="action"><a href="#">Delete Page</a></li>
+     </ul>
+    </li>
+   </ul>
+  </div>
+  <div id="status" class="status"></div>
+ </div>
+
+ <div id="software">
+  Powered by <a id="sahris" href="http:/sahriswiki.zapto.org/">SahrisWiki - <span class="version">Unknown</span></a>
+ </div>
+ <div id="icons">
+  <a href="http://validator.w3.org/check/referer">
+   <img src="/images/valid-xhtml10.png"  alt="Valid XHTML 1.0 Transitional" />
+  </a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer">
+   <img src="/images/valid-css.png" alt="Valid CSS" />
+  </a>
+ </div>
+</div>
 <noscript>
  <div id="content" class="content">
   <h1>Error</h1>
