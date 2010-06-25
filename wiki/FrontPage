@@ -2,7 +2,7 @@
 Welcome to [[SahrisWiki]]'s development wiki and development environment. [[SahrisWiki]] is a new wiki engine that uses the following libraries:
 * [[http://trac.softcircuit.com.au/circuits/|circuits]] and it's [[http://trac.softcircuit.com.au/circuits/wiki/docs/tutorials/circuits.web|circuits.web]] framework.
 * [[http://mercurial.selenic.com/|Mercurial]] //For it's data storage backend.//
-* [[http://mootools.net/|MooTools]] //For it's user interface.//
+* [[http://jquery.org/|jquery]] //For it's user interface.//
 * As well as bits and pieces borrowed from two great (//wiki//) projects, [[http://hatta-wiki.org/|Hatta]] and [[http://trac.edgewall.org/|Trac]]
 
 To try this wiki out for yourself, feel free to edit the [[SandBox]].
@@ -17,5 +17,6 @@ To try this wiki out for yourself, feel free to edit the [[SandBox]].
 * **Fun!**
 
 ----
+
 
 
