@@ -118,9 +118,9 @@ function doEdit() {
 
     $.getJSON("/wiki/" + pagename, function(data) {
         $("#title").html("Editing: " + pagename);
-        $("#editor textarea").val("");
+        $("#editor #text").val("");
         if (data.success) {
-            $("#editor #text textarea").val(data.data.text);
+            $("#editor #text").val(data.data.text);
         } else {
             console.log("Error while trying to edit: " + pagename);
             console.log(data)
@@ -136,7 +136,7 @@ function doSave() {
 
     var data = {
         name: pagename,
-        text: $("#editor #text textarea").val(),
+        text: $("#editor #text").val(),
         comment: $("#editor #fields input[name=comment]").val(),
         author: $("#editor #fields input[name=author]").val()
     };
@@ -187,9 +187,9 @@ function main() {
 
     loadMenu();
 
-    $("#editor textarea").markItUp(mySettings);
-    $("#editor textarea").width($("#content").width());
-    $("#editor textarea").height($("#content").height() * 0.8);
+    $("#editor #text").markItUp(mySettings);
+    $("#editor #text").width($("#content").width());
+    $("#editor #text").height($("#content").height() * 0.8);
 
     $("#metanav a").click(function(e) {
         $("#menu li.first").removeClass("first active");
