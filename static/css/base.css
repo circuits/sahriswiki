@@ -257,36 +257,12 @@ a img { border: none }
     background-color: rgb(100, 100, 100);
 }
 
-/* Buttons - Actions */
-
-#buttons li ul {
-	margin: 0px;
-	padding: 0px;
-	list-style-type: none;
-	padding-top: 10px;
-    background-color: #22AA22;
-}
-
-#buttons li ul li {
-	display: block;
-	float: none;
-	clear: both;
-}
-
-#buttons li ul li a {
-    text-align: center;
-	color: #FFFFFF;
-	font-weight: normal;
-	text-decoration: none;
-	display: block;
-}
-
 /* Status */
 
 #status {
     float: left;
     padding-left: 5px;
-    border-left: 1px dashed;
+    border-left: none;
 }
 
 /* Styles for the error page (and rst errors) */
