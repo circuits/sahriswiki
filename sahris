@@ -868,57 +868,56 @@ class Root(Controller):
                     "description": "", "keywords": "", "author": ""},
                 "stylesheets": []}
 
-    def _include(self, pagename, environ=None):
-        if pagename in self.storage:
-            return self.parser.generate(self.storage.page_text(pagename),
+    def _include(self, name, environ=None):
+        if name in self.storage:
+            return self.parser.generate(self.storage.page_text(name),
                     environ=environ)
         else:
             return self.parser.generate(
                     self.storage.page_text("NotFound") or "Page Not Found!",
                     environ=environ)
 
-    def _render(self, template, pagename, **kwargs):
+    def _render(self, template, name, **kwargs):
         data = self.data.copy()
         environ = self.environ.copy()
 
-        if pagename is not None:
-            if pagename in self.storage:
-                text = self.storage.page_text(pagename)
-                rev, node, date, author, comment = self.storage.page_meta(
-                        pagename)
+        if name is not None:
+            if name in self.storage:
+                text = self.storage.page_text(name)
+                rev, node, date, author, comment = self.storage.page_meta(name)
 
                 self.response.headers.add_header("ETag", short(node))
                 response = validate_etags(self.request, self.response)
                 if response:
                     return response
 
-                page = {"name": pagename, "text": text, "rev": rev,
+                page = {"name": name, "text": text, "rev": rev,
                         "node": short(node), "date": date, "author": author,
                         "comment": comment}
             else:
-                page = {"name": pagename,
+                page = {"name": name,
                         "text": self.storage.page_text("NotFound") or ""}
         else:
-            page = {"name": kwargs["pagename"], "text": kwargs["text"]}
+            page = {"name": kwargs["title"], "text": kwargs["text"]}
 
         data["page"] = page
         data["environ"] = environ
 
         data["actions"] = kwargs.get("actions",
-                [("Edit/%s" % page["name"], "Edit")])
+                [("/Edit/%s" % page["name"], "Edit")])
 
         t = self.loader.load(template)
         return t.generate(**data).render("xhtml", doctype="html")
 
     def GET(self, *args, **kwargs):
-        pagename = "/".join(args) if args else self.opts.frontpage
-        actions = [("Edit/%s" % pagename, "Edit"),
-                ("History/%s" % pagename, "History"),
-                ("BackLinks/%s" % pagename, "BackLinks")]
-        return self._render("view.html", pagename, actions=actions)
+        name = "/".join(args) if args else self.opts.frontpage
+        actions = [("/Edit/%s" % name, "Edit"),
+                ("/History/%s" % name, "History"),
+                ("/BackLinks/%s" % name, "BackLinks")]
+        return self._render("view.html", name, actions=actions)
 
     def POST(self, *args, **kwargs):
-        pagename = "/".join(args)
+        name = "/".join(args)
 
         self.storage.reopen()
         self.search.update()
@@ -927,14 +926,14 @@ class Root(Controller):
         author = kwargs.get("author", "")
         comment = kwargs.get("comment", "")
 
-        self.storage.save_text(pagename, text, author, comment)
-        self.search.update_page(pagename, text=text)
+        self.storage.save_text(name, text, author, comment)
+        self.search.update_page(name, text=text)
 
-        return self.redirect(pagename)
+        return self.redirect(name)
 
     def Edit(self, *args):
-        pagename = "/".join(args)
-        return self._render("edit.html", pagename, actions=[])
+        name = "/".join(args)
+        return self._render("edit.html", name, actions=[])
 
     def Search(self, q=None):
         node = short(self.storage.repo_node())
@@ -989,10 +988,11 @@ class Root(Controller):
             title = "Searching for '%s'" % " ".join(words)
             text = "\n".join(search(words))
 
-        actions = [("Search", "Index"), ("Search?t=orphanded", "Orphanded"),
-                ("Search?t=wanted", "Wanted")]
+        actions = [("/Search", "Index"), ("Search?t=orphanded", "Orphanded"),
+                ("/Search?t=wanted", "Wanted")]
 
-        return self._render(None, text=text, pagename="Search", actions=actions)
+        return self._render("view.html", None,
+                text=text, title="Search", actions=actions)
 
     def BackLinks(self, *args, **kwargs):
         if args:
@@ -1018,10 +1018,11 @@ class Root(Controller):
         text = "\n".join(content())
         title = "Backlinks for %s" % name
 
-        actions = [("Search", "Index"), ("Search?t=orphanded", "Orphanded"),
-                ("Search?t=wanted", "Wanted")]
+        actions = [("/Search", "Index"), ("Search?t=orphanded", "Orphanded"),
+                ("/Search?t=wanted", "Wanted")]
 
-        return self._render(None, text=text, pagename="Search", actions=actions)
+        return self._render("view.html", None,
+                text=text, title="BackLinks", actions=actions)
 
     def History(self, *args, **kwargs):
         node = short(self.storage.repo_node())
@@ -1093,10 +1094,11 @@ class Root(Controller):
                 out(comment)
             text = "\n".join(lines)
 
-        actions = [("Search", "Index"), ("Search?t=orphanded", "Orphanded"),
-                ("Search?t=wanted", "Wanted")]
+        actions = [("/Search", "Index"), ("Search?t=orphanded", "Orphanded"),
+                ("/Search?t=wanted", "Wanted")]
 
-        return self._render(None, text=text, pagename="Search", actions=actions)
+        return self._render("view.html", None,
+                text=text, title="History", actions=actions)
 
 def main():
     opts, args = parse_options()
