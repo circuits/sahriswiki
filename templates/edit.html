@@ -30,8 +30,10 @@
 		 </form>
   </div>
   <py:if test="defined('preview')">
-   <h1 py:if="preview">Preview</h1>
-   <div py:if="preview" id="preview" class="article">${parser.generate(page["text"], environ=environ)}</div>
+   <py:if test="preview">
+    <div id="preview"><h1>Preview</h1></div>
+    <div class="article">${parser.generate(page["text"], environ=environ)}</div>
+   </py:if>
   </py:if>
  </body>
 </html>
