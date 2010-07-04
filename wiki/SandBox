@@ -17,4 +17,3 @@ class Root(Controller):
 (Server(("0.0.0.0", 8000)) + Root()).run()
 <</code>>
 
-Test
