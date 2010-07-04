@@ -29,7 +29,13 @@ import mercurial.revlog
 from mercurial.node import short
 from mercurial.hgweb import hgweb
 
+import genshi
+from genshi.template import TemplateLoader
+
+from creoleparser import create_dialect, creole11_base, Parser
+
 from circuits.app import Daemon
+from circuits.core.utils import findcmp
 from circuits.net.pollers import Select, Poll
 from circuits import Component, Manager, Debugger
 
@@ -43,24 +49,31 @@ try:
 except ImportError:
     EPoll = None
 
-from circuits import __version__ as systemVersion
-
+import macros
 from plugins import BasePlugin
 
+FIXLINES = re.compile("\r|\r\n")
+
+def __version__():
+    version = None
+    if os.path.isdir(".hg"):
+		f = os.popen("hg identify")
+		ident = f.read()[:-1]
+		if not f.close() and ident:
+			ids = ident.split(' ', 1)
+			version = ids.pop(0)
+			if version[-1] == '+':
+				version = version[:-1]
+			if version.isalnum() and ids:
+				for tag in ids[0].split('/'):
+					# is a tag is suitable as a version number?
+					if re.match(r'^(\d+\.)+[\w.-]+$', tag):
+						version = tag
+						break
+    return version or "Unknown"
+
 USAGE = "%prog [options]"
-VERSION = "%prog v" + systemVersion
-
-CONFIG = """\
-var Sahris = {
-    version: "%(version)s",
-
-    config: {
-        sitename: "%(sitename)s",
-        frontpage: "%(frontpage)s",
-        pages: %(pages)s
-    }
-}
-"""
+VERSION = "%prog v" + __version__()
 
 def parse_options():
     """parse_options() -> opts, args
@@ -144,26 +157,6 @@ def parse_options():
     opts, args = parser.parse_args()
 
     return opts, args
-
-def __version__():
-    version = None
-    if os.path.isdir(".hg"):
-		f = os.popen("hg identify")
-		ident = f.read()[:-1]
-		if not f.close() and ident:
-			ids = ident.split(' ', 1)
-			version = ids.pop(0)
-			if version[-1] == '+':
-				version = version[:-1]
-			if version.isalnum() and ids:
-				for tag in ids[0].split('/'):
-					# is a tag is suitable as a version number?
-					if re.match(r'^(\d+\.)+[\w.-]+$', tag):
-						version = tag
-						break
-    return version or "Unknown"
-
-FIXLINES = re.compile("\r|\r\n")
 
 def locked_repo(func):
     """A decorator for locking the repository when calling a method."""
@@ -850,35 +843,98 @@ class Root(Controller):
 
     def __init__(self, opts, storage, search):
         super(Root, self).__init__()
+
         self.opts = opts
         self.storage = storage
         self.search = search
 
-    def index(self):
-        self.expires(2592000)
-        return self.serve_file(os.path.abspath("static/index.html"))
+        self.parser = Parser(create_dialect(creole11_base,
+            macro_func=macros.dispatcher, wiki_links_base_url="/"),
+            method="xhtml")
 
-    @expose("favicon.ico")
-    def favicon(self):
-        self.expires(2592000)
-        return self.serve_file(os.path.abspath("static/favicon.ico"))
+        self.loader = TemplateLoader(os.path.join(os.path.dirname(__file__),
+            "templates"), auto_reload=True)
 
-    def config(self):
-        return CONFIG % {
-                "version": __version__(),
-                "sitename": self.opts.sitename,
-                "frontpage": self.opts.frontpage,
-                "pages": dumps(list(self.storage.all_pages()))}
+        self.environ = {"opts": self.opts, "storage": self.storage,
+                "search": self.search, "macros": macros.loadMacros(),
+                "parser": self.parser}
 
-class Wiki(Controller):
+        self.data = {"version": __version__(),
+                "base": self.base,
+                "url": self.url,
+                "parser": self.parser,
+                "include": self._include,
+                "site": {"name": self.opts.sitename,
+                    "description": "", "keywords": "", "author": ""},
+                "stylesheets": []}
 
-    channel = "/wiki"
+    def _include(self, pagename, environ=None):
+        if pagename in self.storage:
+            return self.parser.generate(self.storage.page_text(pagename),
+                    environ=environ)
+        else:
+            return self.parser.generate(
+                    self.storage.page_text("NotFound") or "Page Not Found!",
+                    environ=environ)
 
-    def __init__(self, opts, storage, search):
-        super(Wiki, self).__init__()
-        self.opts = opts
-        self.storage = storage
-        self.search = search
+    def _render(self, template, pagename, **kwargs):
+        data = self.data.copy()
+        environ = self.environ.copy()
+
+        if pagename is not None:
+            if pagename in self.storage:
+                text = self.storage.page_text(pagename)
+                rev, node, date, author, comment = self.storage.page_meta(
+                        pagename)
+
+                self.response.headers.add_header("ETag", short(node))
+                response = validate_etags(self.request, self.response)
+                if response:
+                    return response
+
+                page = {"name": pagename, "text": text, "rev": rev,
+                        "node": short(node), "date": date, "author": author,
+                        "comment": comment}
+            else:
+                page = {"name": pagename,
+                        "text": self.storage.page_text("NotFound") or ""}
+        else:
+            page = {"name": kwargs["pagename"], "text": kwargs["text"]}
+
+        data["page"] = page
+        data["environ"] = environ
+
+        data["actions"] = kwargs.get("actions",
+                [("Edit/%s" % page["name"], "Edit")])
+
+        t = self.loader.load(template)
+        return t.generate(**data).render("xhtml", doctype="html")
+
+    def GET(self, *args, **kwargs):
+        pagename = "/".join(args) if args else self.opts.frontpage
+        actions = [("Edit/%s" % pagename, "Edit"),
+                ("History/%s" % pagename, "History"),
+                ("BackLinks/%s" % pagename, "BackLinks")]
+        return self._render("view.html", pagename, actions=actions)
+
+    def POST(self, *args, **kwargs):
+        pagename = "/".join(args)
+
+        self.storage.reopen()
+        self.search.update()
+
+        text = "%s\n" % FIXLINES.sub("\n", kwargs["text"])
+        author = kwargs.get("author", "")
+        comment = kwargs.get("comment", "")
+
+        self.storage.save_text(pagename, text, author, comment)
+        self.search.update_page(pagename, text=text)
+
+        return self.redirect(pagename)
+
+    def Edit(self, *args):
+        pagename = "/".join(args)
+        return self._render("edit.html", pagename, actions=[])
 
     def Search(self, q=None):
         node = short(self.storage.repo_node())
@@ -933,14 +989,10 @@ class Wiki(Controller):
             title = "Searching for '%s'" % " ".join(words)
             text = "\n".join(search(words))
 
-        data = {"success": True, "data": {
-            "name": "",  "text": text,
-            "rev": 0, "node": "", "date": 0, "author": "", "comment": "",
-            "readonly": True,
-            "title": title}}
+        actions = [("Search", "Index"), ("Search?t=orphanded", "Orphanded"),
+                ("Search?t=wanted", "Wanted")]
 
-        self.response.headers["Content-Type"] = "application/javascript"
-        return dumps(data)
+        return self._render(None, text=text, pagename="Search", actions=actions)
 
     def BackLinks(self, *args, **kwargs):
         if args:
@@ -960,25 +1012,16 @@ class Wiki(Controller):
             for link in self.search.page_backlinks(name):
                 yield "* [[%s]]" % link
 
-        if name is None:
-            data = {"success": False, "message": "No page given"}
-        elif name not in self.storage:
-            data = {"success": False, "message": "Page '%s' not found" % name}
-        else:
-            self.storage.reopen()
-            self.search.update()
+        self.storage.reopen()
+        self.search.update()
 
-            text = "\n".join(content())
-            title = "Backlinks for %s" % name
+        text = "\n".join(content())
+        title = "Backlinks for %s" % name
 
-            data = {"success": True, "data": {
-                "name": "",  "text": text,
-                "rev": 0, "node": "", "date": 0, "author": "", "comment": "",
-                "readonly": True,
-                "title": title}}
+        actions = [("Search", "Index"), ("Search?t=orphanded", "Orphanded"),
+                ("Search?t=wanted", "Wanted")]
 
-        self.response.headers["Content-Type"] = "application/javascript"
-        return dumps(data)
+        return self._render(None, text=text, pagename="Search", actions=actions)
 
     def History(self, *args, **kwargs):
         node = short(self.storage.repo_node())
@@ -1050,55 +1093,10 @@ class Wiki(Controller):
                 out(comment)
             text = "\n".join(lines)
 
-        data = {"success": True, "data": {
-                "name": "", "text": text,
-                "rev": 0, "node": "", "date": 0, "author": "", "comment": "",
-                "readonly": True,
-                "title":  title}}
+        actions = [("Search", "Index"), ("Search?t=orphanded", "Orphanded"),
+                ("Search?t=wanted", "Wanted")]
 
-        self.response.headers["Content-Type"] = "application/javascript"
-        return dumps(data)
-
-    def GET(self, *args, **kwargs):
-        if args:
-            name = "/".join(args)
-        else:
-            name = kwargs.get("name", self.opts.frontpage)
-
-        if name in self.storage:
-            text = self.storage.page_text(name)
-            rev, node, date, author, comment = self.storage.page_meta(name)
-
-            self.response.headers.add_header("ETag", short(node))
-            response = validate_etags(self.request, self.response)
-            if response:
-                return response
-
-            data = {"success": True, "data": {
-                "name": name, "text": text,
-                "rev": rev, "node": short(node), "date": date,
-                "author": author, "comment": comment}}
-        else:
-            data = {"success": False, "message": "Page not found"}
-
-        self.response.headers["Content-Type"] = "application/javascript"
-        return dumps(data)
-
-    def POST(self, *args, **kwargs):
-        if args:
-            name = "/".join(args)
-        else:
-            name = kwargs.get("name", self.opts.frontpage)
-        self.storage.reopen()
-        self.search.update()
-        data = loads(self.request.body.read())
-        text = "%s\n" % FIXLINES.sub("\n", data.get("text", ""))
-        author = data.get("author", "")
-        comment = data.get("comment", "")
-        self.storage.save_text(name, text, author, comment)
-        self.search.update_page(name, text=text)
-        data = {"success": True, "message": "Page saved successfully"}
-        return dumps(data)
+        return self._render(None, text=text, pagename="Search", actions=actions)
 
 def main():
     opts, args = parse_options()
@@ -1134,19 +1132,14 @@ def main():
     storage = WikiStorage(opts.data, opts.encoding)
     search = WikiSearch(opts.cache, storage)
 
-    manager += (Server(bind, poller=Poller)
-        + Gateway(hgweb(storage.repo_path), "/data")
-        + Gateway(hgweb(os.getcwd()), "/source")
-        + Static("/js",        docroot="static/js")
-        + Static("/css",       docroot="static/css")
-        + Static("/images",    docroot="static/images")
-        + Static("/templates", docroot="static/templates")
-        + Root(opts, storage, search)
-        + Wiki(opts, storage, search)
-        + Tools(opts, storage, search)
-        + PluginManager(opts, storage, search)
-        + Logger()
-        )
+    manager += (Poller()
+            + Server(bind)
+            + Gateway(hgweb(storage.repo_path), "/+hg")
+            + Static(docroot="static")
+            + Root(opts, storage, search)
+            + Tools(opts, storage, search)
+            + PluginManager(opts, storage, search)
+            + Logger())
 
     if opts.daemon:
         manager += Daemon(opts.pidfile)
