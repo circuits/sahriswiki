@@ -881,6 +881,10 @@ class Root(Controller):
         data = self.data.copy()
         environ = self.environ.copy()
 
+        data.update(kwargs)
+        data["environ"] = environ
+        data["request"] = self.request
+
         if name is not None:
             if name in self.storage:
                 text = self.storage.page_text(name)
@@ -901,11 +905,6 @@ class Root(Controller):
             page = {"name": kwargs["title"], "text": kwargs["text"]}
 
         data["page"] = page
-        data["environ"] = environ
-        data["request"] = self.request
-
-        data["actions"] = kwargs.get("actions",
-                [("/Edit/%s" % page["name"], "Edit")])
 
         t = self.loader.load(template)
         return t.generate(**data).render("xhtml", doctype="html")
@@ -919,18 +918,26 @@ class Root(Controller):
 
     def POST(self, *args, **kwargs):
         name = "/".join(args)
-
-        self.storage.reopen()
-        self.search.update()
-
-        text = "%s\n" % FIXLINES.sub("\n", kwargs["text"])
+        action = kwargs["action"]
         author = kwargs.get("author", "")
         comment = kwargs.get("comment", "")
+        text = "%s\n" % FIXLINES.sub("\n", kwargs["text"])
 
-        self.storage.save_text(name, text, author, comment)
-        self.search.update_page(name, text=text)
+        if action == "cancel":
+            return self.redirect(name)
+        elif action == "preview":
+            return self._render("edit.html", None, title=name, text=text,
+                    author=author, comment=comment, preview=True, actions=[])
+        elif action == "save":
+            self.storage.reopen()
+            self.search.update()
 
-        return self.redirect(name)
+            self.storage.save_text(name, text, author, comment)
+            self.search.update_page(name, text=text)
+
+            return self.redirect(name)
+        else:
+            raise Exception("Invalid action %r" % action)
 
     def Edit(self, *args):
         name = "/".join(args)
