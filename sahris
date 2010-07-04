@@ -52,7 +52,7 @@ except ImportError:
 import macros
 from plugins import BasePlugin
 
-FIXLINES = re.compile("\r|\r\n")
+FIXLINES = re.compile("(\r[^\n])|(\r\n)")
 
 def __version__():
     version = None
