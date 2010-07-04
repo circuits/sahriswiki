@@ -10,9 +10,7 @@
   <div id="editor" style="display: block">
    <form action="${url('/%s' % page['name'])}" method="post">
     <div id="editor-content">
-     <textarea id="text" name="text" rows="25" cols="80">
-      ${page["text"]}
-     </textarea>
+     <textarea id="text" name="text" rows="25" cols="80">${page["text"]}</textarea>
     </div>
     <div id="editor-buttons">
      <button type="submit" name="save" value="Save">Save</button>
