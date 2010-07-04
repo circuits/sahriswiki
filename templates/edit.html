@@ -7,23 +7,31 @@
   <title>Editing</title>
  </head>
  <body>
-  <form action="${url('/%s' % page['name'])}" method="post">
-			<p class="text">
-   <textarea id="text" name="text" rows="25">${page["text"]}</textarea>
-			</p>
-			<h4><label for="comment">Comment:</label></h4>
-			<p class="input">
-    <input id="comment" name="comment" />
-			</p>
-			<h4><label for="author">Author:</label></h4>
-			<p class="input">
-    <input id="author" name="author" value="${request.remote.ip}" />
-			</p>
-			<p class="button">
-    <button name="save" type="submit">Save</button>
-    <button name="preview" type="submit">Preview</button>
-    <button name="cancel" type="submit">Cancel</button>
-			</p>
-		</form>
+  <div id="editor">
+   <form action="${url('/%s' % page['name'])}" method="post">
+		 	<p class="text">
+    <textarea id="text" name="text" rows="25">${page["text"]}</textarea>
+		 	</p>
+		 	<h4><label for="comment">Comment:</label></h4>
+		 	<p class="input">
+    <input id="comment" name="comment"
+     value="${value_of('comment', '')}" />
+		 	</p>
+		 	<h4><label for="author">Author:</label></h4>
+		 	<p class="input">
+    <input id="author" name="author"
+     value="${value_of('author', request.remote.ip)}" />
+		 	</p>
+		 	<p class="button">
+     <button name="action" type="submit" value="save">Save</button>
+     <button name="action" type="submit" value="preview">Preview</button>
+     <button name="action" type="submit" value="cancel">Cancel</button>
+		 	</p>
+		 </form>
+  </div>
+  <py:if test="defined('preview')">
+   <h1 py:if="preview">Preview</h1>
+   <div py:if="preview" id="preview" class="article">${parser.generate(page["text"], environ=environ)}</div>
+  </py:if>
  </body>
 </html>
