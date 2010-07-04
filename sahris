@@ -902,6 +902,7 @@ class Root(Controller):
 
         data["page"] = page
         data["environ"] = environ
+        data["request"] = self.request
 
         data["actions"] = kwargs.get("actions",
                 [("/Edit/%s" % page["name"], "Edit")])
