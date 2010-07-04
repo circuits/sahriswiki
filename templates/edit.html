@@ -7,15 +7,23 @@
   <title>Editing</title>
  </head>
  <body>
-  <div id="editor" style="display: block">
-   <form action="${url('/%s' % page['name'])}" method="post">
-    <div id="editor-content">
-     <textarea id="text" name="text" rows="25" cols="80">${page["text"]}</textarea>
-    </div>
-    <div id="editor-buttons">
-     <button type="submit" name="save" value="Save">Save</button>
-    </div>
-   </form>
-  </div>
+  <form action="${url('/%s' % page['name'])}" method="post">
+			<p class="text">
+   <textarea id="text" name="text" rows="25">${page["text"]}</textarea>
+			</p>
+			<h4><label for="comment">Comment:</label></h4>
+			<p class="input">
+    <input id="comment" name="comment" />
+			</p>
+			<h4><label for="author">Author:</label></h4>
+			<p class="input">
+    <input id="author" name="author" value="${request.remote.ip}" />
+			</p>
+			<p class="button">
+    <button name="save" type="submit">Save</button>
+    <button name="preview" type="submit">Preview</button>
+    <button name="cancel" type="submit">Cancel</button>
+			</p>
+		</form>
  </body>
 </html>
