@@ -15,6 +15,18 @@
     href="${url('/css/screen.css')}" />
    <link py:for="stylesheet in stylesheets" rel="stylesheet" type="text/css"
     href="${url(stylesheet)}" />
+   <style type="text/css">
+    #menu li a[href="/${page['name']}"] {
+    	background : #ffffff;
+    	border : 1px solid #2b548c;
+    	border-bottom : 1px solid #ffffff;
+    	color : #437fda;
+    }
+    #menu li a[href="/${page['name']}"]:hover {
+    	background : #ffffff;
+    	color : #ba8f43;
+     }
+   </style>
    ${select('*[local-name()!="title"]')}
 	 </head>
  </py:match>
@@ -24,7 +36,9 @@
 	 		<div id="header">
      <h1>${page["name"]}</h1>
 	 		</div>
-    <div id="menu">${include("SiteMenu")}</div>
+    <div id="menu">
+     ${include("SiteMenu")}
+    </div>
 
     <div id="content">${select('*|text()')}</div>
 
