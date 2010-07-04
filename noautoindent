@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	<head>
+		<title>$pagename - Sahris Wiki</title>
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<meta name="author" content="" />
+		<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+		<link rel="stylesheet" title="Normal" type="text/css" media="screen" href="css/screen.css" />
+		<link rel="stylesheet" type="text/css" href="css/pygments.css" />
+	</head>
+	<body>
+		<div id="main">
+			<div id="header">
+				<h1>$pagename</h1>
+			</div>
+   <div id="menu">${environ["parser"].generate(environ["storage"].page_text("SiteMenu"), environ=environ)}</div>
+			<div id="content">
+    <div class="article">$text</div>
+    <div id="actions">
+     <a href="?action=edit">Edit</a>
+
+    </div>
+			</div>
+			<div id="footer">
+    <p>Powered by <a href="http://bitbucket.org/prologic/circuits/">circuits - $version</a></p>
+   </div>
+		</div>
+	</body>
+</html>

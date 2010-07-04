@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+ xmlns:py="http://genshi.edgewall.org/" py:strip="">
+ <py:match path="head" once="true">
+  <head py:attrs="select('@*')">
+   <title py:with="title = list(select('title/text()'))">
+    <py:if test="title">: ${title}</py:if> ${page["name"]} :: ${site["name"]}
+   </title>
+   <meta name="description" content="${site['description']}" />
+   <meta name="keywords" content="${site['keywords']}" />
+   <meta name="author" content="${site['author']}" />
+   <meta http-equiv="Content-Type"
+    content="application/xhtml+xml; charset=utf-8" />
+   <link rel="stylesheet" title="Normal" type="text/css" media="screen"
+    href="${url('/css/screen.css')}" />
+   <link py:for="stylesheet in stylesheets" rel="stylesheet" type="text/css"
+    href="${url(stylesheet)}" />
+   ${select('*[local-name()!="title"]')}
+	 </head>
+ </py:match>
+ <py:match path="body" once="true">
+  <body py:attrs="select('@*')">
+	 	<div id="main">
+	 		<div id="header">
+     <h1>${page["name"]}</h1>
+	 		</div>
+    <div id="menu">${include("SiteMenu")}</div>
+
+    <div id="content">${select('*|text()')}</div>
+
+    <div id="actions">
+     <ul>
+      <li py:for="(href, text) in actions"><a href="${href}">${text}</a></li>
+     </ul>
+    </div>
+
+	 		<div id="footer">
+     <p>Powered by <a href="http://bitbucket.org/prologic/circuits/">circuits - $version</a></p>
+    </div>
+	 	</div>
+	 </body>
+ </py:match>
+</html>
