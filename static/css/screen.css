@@ -153,16 +153,6 @@ table {
 #menu li a:hover {
 	background : #2b548c;
 }
-#menu li.selected a {
-	background : #ffffff;
-	border : 1px solid #2b548c;
-	border-bottom : 1px solid #ffffff;
-	color : #437fda;
-}
-#menu li.selected a:hover {
-	background : #ffffff;
-	color : #ba8f43;
-}
 
 #actions {
 	background : #437fda;
