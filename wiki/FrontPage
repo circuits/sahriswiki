@@ -8,6 +8,7 @@ Welcome to [[SahrisWiki]]'s development wiki and development environment.
 * [[http://mercurial.selenic.com/|Mercurial]] //data storage//
 * [[http://sqlite.org/|SQLite]] //search index storage//
 * [[http://code.google.com/p/creoleparser/|creoleparser]] //creole wiki parser//
+* [[http://genshi.edgewall.org/|genshi]] //templating//
 * [[http://www.oswd.org/design/preview/id/2945|Blue Rain]] //default theme//
 
 To try this wiki out for yourself, feel free to edit the [[SandBox]].
@@ -19,4 +20,5 @@ To try this wiki out for yourself, feel free to edit the [[SandBox]].
 * Compatible with many [[SupportedBrowers]]
 * **Fun!**
 ----
+
 
