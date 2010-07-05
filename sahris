@@ -943,7 +943,7 @@ class Root(Controller):
         name = "/".join(args)
         return self._render("edit.html", name, actions=[])
 
-    def Search(self, q=None):
+    def Search(self, *args, **kwargs):
         node = short(self.storage.repo_node())
         self.response.headers.add_header("ETag", node)
         response = validate_etags(self.request, self.response)
@@ -981,6 +981,8 @@ class Root(Controller):
                 yield "* **[[%s]]** //(%d)// %s" % (title, score,
                         snippet(title, words))
 
+        q = kwargs.get("q", None)
+
         if q is not None:
             query = q.strip()
         else:
@@ -996,11 +998,8 @@ class Root(Controller):
             title = "Searching for '%s'" % " ".join(words)
             text = "\n".join(search(words))
 
-        actions = [("/Search", "Index"), ("Search?t=orphanded", "Orphanded"),
-                ("/Search?t=wanted", "Wanted")]
-
         return self._render("view.html", None,
-                text=text, title="Search", actions=actions)
+                text=text, title="Search", actions=[])
 
     def BackLinks(self, *args, **kwargs):
         if args:
@@ -1026,11 +1025,8 @@ class Root(Controller):
         text = "\n".join(content())
         title = "Backlinks for %s" % name
 
-        actions = [("/Search", "Index"), ("Search?t=orphanded", "Orphanded"),
-                ("/Search?t=wanted", "Wanted")]
-
         return self._render("view.html", None,
-                text=text, title="BackLinks", actions=actions)
+                text=text, title="BackLinks", actions=[])
 
     def History(self, *args, **kwargs):
         node = short(self.storage.repo_node())
@@ -1102,11 +1098,8 @@ class Root(Controller):
                 out(comment)
             text = "\n".join(lines)
 
-        actions = [("/Search", "Index"), ("Search?t=orphanded", "Orphanded"),
-                ("/Search?t=wanted", "Wanted")]
-
         return self._render("view.html", None,
-                text=text, title="History", actions=actions)
+                text=text, title="History", actions=[])
 
 def main():
     opts, args = parse_options()
