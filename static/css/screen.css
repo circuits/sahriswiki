@@ -129,23 +129,35 @@ table {
 #header {
 	background : #2b548c url('../images/header_bg.png') repeat-x bottom left;
 	padding : 6em 4em 1em 4em;
+    overflow: auto;
 }
 #header h1 {
 	color : #ffffff;
 	font : italic 200% sans-serif;
     float: left;
     position: relative;
-    width: 60%;
 }
 
 #search {
-  float: left;
+  float: right;
   position: relative;
-  width: 40%;
+  text-align: right;
 }
 
-#search button {
-  float: right;
+#search form input {
+  width: 50%;
+  background : #ffffff;
+  border : 1px solid #cfcfcf;
+  padding : 0.35em;
+  margin : 0;
+}
+
+#search form button {
+  background : #ffffff;
+  border : 1px solid #cfcfcf;
+  padding : 0.35em;
+  margin : 0;
+  text-align: right;
 }
 
 #menu {
