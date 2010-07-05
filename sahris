@@ -916,6 +916,12 @@ class Root(Controller):
         return t.generate(**data).render("xhtml", doctype="html")
 
     def GET(self, *args, **kwargs):
+        node = short(self.storage.repo_node())
+        self.response.headers.add_header("ETag", node)
+        response = validate_etags(self.request, self.response)
+        if response:
+            return response
+
         name = "/".join(args) if args else self.opts.frontpage
         actions = [("/+edit/%s" % name, "Edit"),
                 ("/+history/%s" % name, "History"),
@@ -947,6 +953,12 @@ class Root(Controller):
 
     @expose("+edit")
     def edit(self, *args):
+        node = short(self.storage.repo_node())
+        self.response.headers.add_header("ETag", node)
+        response = validate_etags(self.request, self.response)
+        if response:
+            return response
+
         name = "/".join(args)
         return self._render("edit.html", name, actions=[])
 
@@ -1011,6 +1023,12 @@ class Root(Controller):
 
     @expose("+backlinks")
     def backlinks(self, *args, **kwargs):
+        node = short(self.storage.repo_node())
+        self.response.headers.add_header("ETag", node)
+        response = validate_etags(self.request, self.response)
+        if response:
+            return response
+
         if args:
             name = "/".join(args)
         else:
@@ -1163,6 +1181,12 @@ class Root(Controller):
 
     @expose("robots.txt")
     def robots(self, *args, **kwargs):
+        node = short(self.storage.repo_node())
+        self.response.headers.add_header("ETag", node)
+        response = validate_etags(self.request, self.response)
+        if response:
+            return response
+
         self.response.headers["Content-Type"] = "text/plain"
         if "robots.txt" in self.storage:
             return self.storage.page_text("robots.txt")
