@@ -930,11 +930,12 @@ class Root(Controller):
 
     @expose("+edit")
     def edit(self, *args, **kwargs):
-        node = short(self.storage.repo_node())
-        self.response.headers.add_header("ETag", node)
-        response = validate_etags(self.request, self.response)
-        if response:
-            return response
+        if not kwargs:
+            node = short(self.storage.repo_node())
+            self.response.headers.add_header("ETag", node)
+            response = validate_etags(self.request, self.response)
+            if response:
+                return response
 
         name = "/".join(args)
         if not kwargs:
