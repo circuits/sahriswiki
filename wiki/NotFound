@@ -1,5 +1,6 @@
 = Page: <<title>> Not Found =
 
-* <<edit "Create page">>
+* <<edit label="Create page">>
+
 
 
