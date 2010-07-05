@@ -1,18 +1,3 @@
-<<div float="right">>
-This is some content on the right-hand side.
-
-<<code lang="python">>
-from circuits.web import Server, Controller
-
-class Root(Controller):
-
-    def index(self):
-        return "Hello World!"
-
-(Server(8000) + Root()).run()
-<</code>>
-<</div>>
-
 = The SandBox =
 
 This is just a page to practice stuff and learn [[WikiFormatting]].
@@ -20,12 +5,4 @@ This is just a page to practice stuff and learn [[WikiFormatting]].
 Go ahead, edit it freely, yah editing stuff.
 
 ----
-good day wiki :_
-
-[[TestPage]] :)
-
-[[OtherPage|Some other page]]
-
-
-
 
