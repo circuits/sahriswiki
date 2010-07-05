@@ -907,7 +907,7 @@ class Root(Controller):
         else:
             page = {"name": kwargs["title"], "text": kwargs["text"]}
 
-        data["page"] = page
+        data["page"] = environ["page"] = page
 
         t = self.loader.load(template)
         return t.generate(**data).render("xhtml", doctype="html")
