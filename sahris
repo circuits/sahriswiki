@@ -1164,6 +1164,9 @@ class Root(Controller):
     @expose("robots.txt")
     def robots(self, *args, **kwargs):
         self.response.headers["Content-Type"] = "text/plain"
+        if "robots.txt" in self.storage:
+            return self.storage.page_text("robots.txt")
+
         s = []
         s.append("User-agent: *")
         s.append("Disallow: /+*")
