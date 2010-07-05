@@ -928,6 +928,7 @@ class Root(Controller):
                 ("/+backlinks/%s" % name, "BackLinks")]
         return self._render("view.html", name, actions=actions)
 
+    @expose("POST", priority=1.0)
     def POST(self, *args, **kwargs):
         name = "/".join(args)
         action = kwargs["action"]
