@@ -944,6 +944,7 @@ class Root(Controller):
         action = kwargs.get("action", None)
         author = kwargs.get("author", "")
         comment = kwargs.get("comment", "")
+        parent = kwargs.get("parent", None)
         text = "%s\n" % FIXLINES.sub("\n", kwargs["text"])
 
         if action == "cancel":
@@ -955,7 +956,7 @@ class Root(Controller):
             self.storage.reopen()
             self.search.update()
 
-            self.storage.save_text(name, text, author, comment)
+            self.storage.save_text(name, text, author, comment, parent=parent)
             self.search.update_page(name, text=text)
 
             return self.redirect(self.url("/%s" % name))
