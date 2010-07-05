@@ -1,14 +1,8 @@
 = Development =
-//You can follow [[SahrWiki]]'s development here.//
 
-* [[Bugs]]
-* [[Features]]
-
-== TODO ==
-* Fix [[Development/PageLinks|Page Links]] to not use # (//this should be used as TOC anchors//)
-* Improve Status Bar and Behaviors
-* --Improve CSS (//2009-08-01//)
-* --Fix ugly fonts (//2009-08-01//)
-
-----
-
+Please visit the bitbucket
+[[http://bitbucket.org/prologic/sahriswiki/|SahrisWiki Development Site]] to:
+* Follow Development
+* File a Bug Report
+* File a Feature Reuqest
+* Download the latest Source Code
