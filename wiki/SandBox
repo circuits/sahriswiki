@@ -1,7 +1,7 @@
 <<div float="right">>
 This is some content on the right-hand side.
 
-<<cide lang="python">>
+<<code lang="python">>
 from circuits.web import Server, Controller
 
 class Root(Controller):
@@ -25,6 +25,7 @@ good day wiki :_
 [[TestPage]] :)
 
 [[OtherPage|Some other page]]
+
 
 
 
