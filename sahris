@@ -900,7 +900,7 @@ class Root(Controller):
                         "node": short(node), "date": date, "author": author,
                         "comment": comment,
                         "url": self.url(name),
-                        "aggregate": self.url("/Aggregate/%s" % name)}
+                        "feed": self.url("/+feed/%s" % name)}
             else:
                 if template == "view.html":
                     text = self.storage.page_text("NotFound") or ""
@@ -917,9 +917,9 @@ class Root(Controller):
 
     def GET(self, *args, **kwargs):
         name = "/".join(args) if args else self.opts.frontpage
-        actions = [("/Edit/%s" % name, "Edit"),
-                ("/History/%s" % name, "History"),
-                ("/BackLinks/%s" % name, "BackLinks")]
+        actions = [("/+edit/%s" % name, "Edit"),
+                ("/+history/%s" % name, "History"),
+                ("/+backlinks/%s" % name, "BackLinks")]
         return self._render("view.html", name, actions=actions)
 
     def POST(self, *args, **kwargs):
@@ -945,11 +945,13 @@ class Root(Controller):
         else:
             raise Exception("Invalid action %r" % action)
 
-    def Edit(self, *args):
+    @expose("+edit")
+    def edit(self, *args):
         name = "/".join(args)
         return self._render("edit.html", name, actions=[])
 
-    def Search(self, *args, **kwargs):
+    @expose("+search")
+    def search(self, *args, **kwargs):
         node = short(self.storage.repo_node())
         self.response.headers.add_header("ETag", node)
         response = validate_etags(self.request, self.response)
@@ -1007,7 +1009,8 @@ class Root(Controller):
         return self._render("view.html", None,
                 text=text, title="Search", actions=[])
 
-    def BackLinks(self, *args, **kwargs):
+    @expose("+backlinks")
+    def backlinks(self, *args, **kwargs):
         if args:
             name = "/".join(args)
         else:
@@ -1034,7 +1037,8 @@ class Root(Controller):
         return self._render("view.html", None,
                 text=text, title="BackLinks", actions=[])
 
-    def Aggregate(self, *args, **kwargs):
+    @expose("+feed")
+    def feed(self, *args, **kwargs):
         node = short(self.storage.repo_node())
         self.response.headers.add_header("ETag", node)
         response = validate_etags(self.request, self.response)
@@ -1082,7 +1086,8 @@ class Root(Controller):
         self.response.headers["Content-Type"] = "application/xml"
         return getattr(feed, "format_%s_string" % format)()
 
-    def History(self, *args, **kwargs):
+    @expose("+history")
+    def history(self, *args, **kwargs):
         node = short(self.storage.repo_node())
         self.response.headers.add_header("ETag", node)
         response = validate_etags(self.request, self.response)
@@ -1131,27 +1136,27 @@ class Root(Controller):
                 title = "History of \"%s\"" % name
                 out("= %s =" % title)
                 for rev, date, author, cmnt in self.storage.page_history(name):
-                    out(" * [[History/%s?rev=%d|%s]]" % (name, rev,
+                    out(" * [[+history/%s?rev=%d|%s]]" % (name, rev,
                         strftime("%Y-%m-%d", gmtime(date))))
 
                     out("[ [[%s|%d]] ] by [[%s]]\\\\" % (
-                        url(self.request, "/hg/rev/%d" % rev), rev, author))
+                        url(self.request, "/+hg/rev/%d" % rev), rev, author))
                     out(cmnt)
             text = "\n".join(lines)
         else:
             title = "Recent Changes"
             out("= %s =" % title)
             for name, ver, date, rev, author, comment in self.storage.history():
-                out(" * [[History/%s?rev=%d|%s]] [[%s]]" % (name, ver,
+                out(" * [[+history/%s?rev=%d|%s]] [[%s]]" % (name, ver,
                     strftime("%Y-%m-%d", gmtime(date)), name))
                 out("[ [[%s|%d]] ] by [[%s]]\\\\" % (
-                    url(self.request, "/hg/rev/%d" % rev), rev, author))
+                    url(self.request, "/+hg/rev/%d" % rev), rev, author))
                 out(comment)
             text = "\n".join(lines)
 
-        actions = [("/Aggregate/%s" % name or "", "RSS 1.0"),
-                ("/Aggregate/%s?format=rss2" % name or "", "RSS 2.0"),
-                ("/Aggregate/%s?format=atom" % name or "", "Atom")]
+        actions = [("/+feed/%s" % name or "", "RSS 1.0"),
+                ("/+feed/%s?format=rss2" % name or "", "RSS 2.0"),
+                ("/+feed/%s?format=atom" % name or "", "Atom")]
 
         return self._render("view.html", None,
                 text=text, title="History", actions=actions)
@@ -1192,7 +1197,7 @@ def main():
 
     manager += (Poller()
             + Server(bind)
-            + Gateway(hgweb(storage.repo_path), "/hg")
+            + Gateway(hgweb(storage.repo_path), "/+hg")
             + Static(docroot="static")
             + Root(opts, storage, search)
             + Tools(opts, storage, search)
