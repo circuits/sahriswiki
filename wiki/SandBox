@@ -1,4 +1,4 @@
-<<div class="right">>
+<<div cls="right">>
 This is some content on the right-hand side.
 
 <<cide lang="python">>
@@ -25,4 +25,5 @@ good day wiki :_
 [[TestPage]] :)
 
 [[OtherPage|Some other page]]
+
 
