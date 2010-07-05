@@ -35,6 +35,16 @@
 	 	<div id="main">
 	 		<div id="header">
      <h1>${page["name"]}</h1>
+     <div id="search">
+      <form class="search" action="/Search">
+       <p class="input">
+        <input id="q" name="q" size="18" />
+       </p>
+		 	   <p class="button">
+        <button name="search" type="submit">Search</button>
+		 	   </p>
+		    </form>
+     </div>
 	 		</div>
     <div id="menu">
      ${include("SiteMenu")}

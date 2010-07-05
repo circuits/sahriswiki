@@ -133,6 +133,19 @@ table {
 #header h1 {
 	color : #ffffff;
 	font : italic 200% sans-serif;
+    float: left;
+    position: relative;
+    width: 60%;
+}
+
+#search {
+  float: left;
+  position: relative;
+  width: 40%;
+}
+
+#search button {
+  float: right;
 }
 
 #menu {
