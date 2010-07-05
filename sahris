@@ -948,9 +948,22 @@ class Root(Controller):
         author = kwargs.get("author", "")
         comment = kwargs.get("comment", "")
         parent = kwargs.get("parent", None)
-        text = "%s\n" % FIXLINES.sub("\n", kwargs["text"])
+        text = kwargs.get("text", "")
 
-        if action == "cancel":
+        if text:
+            text = "%s\n" % FIXLINES.sub("\n", text)
+        else:
+            action = "delete"
+
+        if action == "delete":
+            self.storage.reopen()
+            self.search.update()
+
+            self.storage.delete_page(name, author, comment)
+            self.search.update_page(name, text=text)
+
+            return self.redirect(self.url("/%s" % name))
+        elif action == "cancel":
             return self.redirect(self.url("/%s" % name))
         elif action == "preview":
             return self._render("edit.html", None, title=name, text=text,
