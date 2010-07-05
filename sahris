@@ -1136,7 +1136,7 @@ def main():
 
     manager += (Poller()
             + Server(bind)
-            + Gateway(hgweb(storage.repo_path), "/+hg")
+            + Gateway(hgweb(storage.repo_path), "/hg")
             + Static(docroot="static")
             + Root(opts, storage, search)
             + Tools(opts, storage, search)
