@@ -32,6 +32,8 @@ from mercurial.hgweb import hgweb
 import genshi
 from genshi.template import TemplateLoader
 
+from feedformatter import Feed
+
 from creoleparser import create_dialect, creole11_base, Parser
 
 from circuits.app import Daemon
@@ -896,7 +898,9 @@ class Root(Controller):
 
                 page = {"name": name, "text": text, "rev": rev,
                         "node": short(node), "date": date, "author": author,
-                        "comment": comment}
+                        "comment": comment,
+                        "url": self.url(name),
+                        "aggregate": self.url("/Aggregate/%s" % name)}
             else:
                 page = {"name": name,
                         "text": self.storage.page_text("NotFound") or ""}
@@ -1027,6 +1031,54 @@ class Root(Controller):
         return self._render("view.html", None,
                 text=text, title="BackLinks", actions=[])
 
+    def Aggregate(self, *args, **kwargs):
+        node = short(self.storage.repo_node())
+        self.response.headers.add_header("ETag", node)
+        response = validate_etags(self.request, self.response)
+        if response:
+            return response
+
+        name = "/".join(args) if args else None
+        format = kwargs.get("format", "rss1")
+
+        if not format in ("rss1", "rss2", "atom"):
+            raise Exception("Invalid format %r" % format)
+
+        feed = Feed()
+
+        if name is not None:
+            feed.feed["title"] = "%s :: %s" % (name, self.data["site"]["name"])
+        else:
+            feed.feed["title"] = self.data["site"]["name"]
+
+        feed.feed["link"] = self.request.server.base
+        feed.feed["author"] = self.data["site"]["author"]
+        feed.feed["description"] = self.data["site"]["description"]
+
+        if name is not None:
+            for rev, date, author, comment in self.storage.page_history(name):
+                item = {}
+                item["title"] = "%s by %s" % (name, author)
+                item["link"] = self.request.url(name)
+                item["description"] = comment
+                item["pubDate"] = date
+                item["guid"] = str(rev)
+
+                feed.items.append(item)
+        else:
+            for name, ver, date, rev, author, comment in self.storage.history():
+                item = {}
+                item["title"] = "%s by %s" % (name, author)
+                item["link"] = self.request.url(name)
+                item["description"] = comment
+                item["pubDate"] = date
+                item["guid"] = str(rev)
+
+                feed.items.append(item)
+
+        self.response.headers["Content-Type"] = "application/xml"
+        return getattr(feed, "format_%s_string" % format)()
+
     def History(self, *args, **kwargs):
         node = short(self.storage.repo_node())
         self.response.headers.add_header("ETag", node)
@@ -1034,17 +1086,14 @@ class Root(Controller):
         if response:
             return response
 
-        if args:
-            name = "/".join(args)
-        else:
-            name = kwargs.get("name", None)
+        name = "/".join(args) or None
         rev = kwargs.get("rev", None)
 
         lines = []
         out = lines.append
 
-        if name:
-            if rev:
+        if name is not None:
+            if rev is not None:
                 to_rev = int(rev)
                 from_rev = to_rev - 1
                 title = "History of \"%s\" from %d to %d" % (name, from_rev,
@@ -1097,8 +1146,12 @@ class Root(Controller):
                 out(comment)
             text = "\n".join(lines)
 
+        actions = [("/Aggregate/%s" % name or "", "RSS 1.0"),
+                ("/Aggregate/%s?format=rss2" % name or "", "RSS 2.0"),
+                ("/Aggregate/%s?format=atom" % name or "", "Atom")]
+
         return self._render("view.html", None,
-                text=text, title="History", actions=[])
+                text=text, title="History", actions=actions)
 
 def main():
     opts, args = parse_options()
