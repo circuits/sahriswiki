@@ -1131,21 +1131,21 @@ class Root(Controller):
                 title = "History of \"%s\"" % name
                 out("= %s =" % title)
                 for rev, date, author, cmnt in self.storage.page_history(name):
-                    out(" * [[History?name=%s&rev=%d|%s]]" % (name, rev,
+                    out(" * [[History/%s?rev=%d|%s]]" % (name, rev,
                         strftime("%Y-%m-%d", gmtime(date))))
 
                     out("[ [[%s|%d]] ] by [[%s]]\\\\" % (
-                        url(self.request, "/data/rev/%d" % rev), rev, author))
+                        url(self.request, "/hg/rev/%d" % rev), rev, author))
                     out(cmnt)
             text = "\n".join(lines)
         else:
             title = "Recent Changes"
             out("= %s =" % title)
             for name, ver, date, rev, author, comment in self.storage.history():
-                out(" * [[History?name=%s&rev=%d|%s]] [[%s]]" % (name, ver,
+                out(" * [[History/%s?rev=%d|%s]] [[%s]]" % (name, ver,
                     strftime("%Y-%m-%d", gmtime(date)), name))
                 out("[ [[%s|%d]] ] by [[%s]]\\\\" % (
-                    url(self.request, "/data/rev/%d" % rev), rev, author))
+                    url(self.request, "/hg/rev/%d" % rev), rev, author))
                 out(comment)
             text = "\n".join(lines)
 
