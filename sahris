@@ -1161,6 +1161,16 @@ class Root(Controller):
         return self._render("view.html", None,
                 text=text, title="History", actions=actions)
 
+    @expose("robots.txt")
+    def robots(self, *args, **kwargs):
+        self.response.headers["Content-Type"] = "text/plain"
+        s = []
+        s.append("User-agent: *")
+        s.append("Disallow: /+*")
+        s.append("Disallow: /%2b*")
+        s.append("Disallow: /%2B*")
+        return "\n".join(s)
+
 def main():
     opts, args = parse_options()
 
