@@ -928,9 +928,19 @@ class Root(Controller):
                 ("/+backlinks/%s" % name, "BackLinks")]
         return self._render("view.html", name, actions=actions)
 
-    def POST(self, *args, **kwargs):
+    @expose("+edit")
+    def edit(self, *args):
+        node = short(self.storage.repo_node())
+        self.response.headers.add_header("ETag", node)
+        response = validate_etags(self.request, self.response)
+        if response:
+            return response
+
         name = "/".join(args)
-        action = kwargs["action"]
+        if not kwargs:
+            return self._render("edit.html", name, actions=[])
+
+        action = kwargs.get("action", None)
         author = kwargs.get("author", "")
         comment = kwargs.get("comment", "")
         text = "%s\n" % FIXLINES.sub("\n", kwargs["text"])
@@ -950,17 +960,6 @@ class Root(Controller):
             return self.redirect(name)
         else:
             raise Exception("Invalid action %r" % action)
-
-    @expose("+edit")
-    def edit(self, *args):
-        node = short(self.storage.repo_node())
-        self.response.headers.add_header("ETag", node)
-        response = validate_etags(self.request, self.response)
-        if response:
-            return response
-
-        name = "/".join(args)
-        return self._render("edit.html", name, actions=[])
 
     @expose("+search")
     def search(self, *args, **kwargs):
