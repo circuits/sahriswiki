@@ -11,7 +11,7 @@
    <meta name="author" content="${site['author']}" />
    <meta http-equiv="Content-Type"
     content="application/xhtml+xml; charset=utf-8" />
-   <link rel="alternate" title="${page['name']}"
+   <link py:if="'aggregate' in page" rel="alternate" title="${page['name']}"
     href="${page['aggregate']}" type="application/xml" />
    <link rel="stylesheet" title="Normal" type="text/css" media="screen"
     href="${url('/css/screen.css')}" />
