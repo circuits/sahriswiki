@@ -947,7 +947,7 @@ class Root(Controller):
         text = "%s\n" % FIXLINES.sub("\n", kwargs["text"])
 
         if action == "cancel":
-            return self.redirect(name)
+            return self.redirect(self.url("/%s" % name))
         elif action == "preview":
             return self._render("edit.html", None, title=name, text=text,
                     author=author, comment=comment, preview=True, actions=[])
@@ -958,7 +958,7 @@ class Root(Controller):
             self.storage.save_text(name, text, author, comment)
             self.search.update_page(name, text=text)
 
-            return self.redirect(name)
+            return self.redirect(self.url("/%s" % name))
         else:
             raise Exception("Invalid action %r" % action)
 
