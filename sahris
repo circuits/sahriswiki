@@ -902,8 +902,11 @@ class Root(Controller):
                         "url": self.url(name),
                         "aggregate": self.url("/Aggregate/%s" % name)}
             else:
-                page = {"name": name,
-                        "text": self.storage.page_text("NotFound") or ""}
+                if template == "view.html":
+                    text = self.storage.page_text("NotFound") or ""
+                else:
+                    text = ""
+                page = {"name": name, "text": text}
         else:
             page = {"name": kwargs["title"], "text": kwargs["text"]}
 
