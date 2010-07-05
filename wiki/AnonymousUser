@@ -2,6 +2,6 @@
 An [[AnonymousUser]] is a user with no identity, or a user wishing to remain anonymous. We ask you to be as honest as you can be when using a wiki, but obviously some users feel compelled to use their real name.
 
 If you would like [[SahrisWiki]] to remember who you are, then click [[Preferences]] and enter in your first and last name in [[CamelCase]]. Example: **JamesMills**
-By doing so, changes you make to pages, and new pages you create will be logged under your name instead of {{{AnonymousUser}}}.
-----
+By doing so, changes you make to pages, and new pages you create will be logged under your name instead of AnonymousUser.
+
 
