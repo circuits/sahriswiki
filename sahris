@@ -860,7 +860,6 @@ class Root(Controller):
                 "parser": self.parser}
 
         self.data = {"version": __version__(),
-                "base": self.base,
                 "url": self.url,
                 "parser": self.parser,
                 "include": self._include,
