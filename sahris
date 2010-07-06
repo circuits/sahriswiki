@@ -102,7 +102,7 @@ def parse_options():
             help="Location of cache directory")
 
     parser.add_option("-n", "--site-name",
-            action="store", type="string", default="Test",
+            action="store", type="string", default="SahrisWiki",
             dest="sitename",
             help="Set site name")
 
