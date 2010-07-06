@@ -1150,28 +1150,30 @@ class Root(Controller):
         if response:
             return response
 
-        name = "/".join(args) or None
+        page_name = "/".join(args) or None
         rev = kwargs.get("rev", None)
 
         lines = []
         out = lines.append
 
-        if name is not None:
+        if page_name is not None:
             if rev is not None:
                 to_rev = int(rev)
                 from_rev = to_rev - 1
-                title = "History of \"%s\" from %d to %d" % (name, from_rev,
-                        to_rev)
+                title = "History of \"%s\" from %d to %d" % (page_name,
+                        from_rev, to_rev)
                 out("= %s =" % title)
 
-                text = self.storage.revision_text(name, from_rev).split("\n")
-                other = self.storage.revision_text(name, to_rev).split("\n")
+                text = self.storage.revision_text(page_name,
+                        from_rev).split("\n")
+                other = self.storage.revision_text(page_name,
+                        to_rev).split("\n")
 
                 to_date = ""
                 from_date = ""
                 date_format = "%Y-%m-%dT%H:%M:%SZ"
 
-                for history in self.storage.page_history(name):
+                for history in self.storage.page_history(page_name):
                     if history[0] == to_rev:
                         to_date = history[1]
                     elif history[0] == from_rev:
@@ -1182,22 +1184,23 @@ class Root(Controller):
 
                 out("{{{")
                 for line in unified_diff(text, other,
-                        "%s@%d" % (name, from_rev),
-                        "%s@%d" % (name, to_rev),
+                        "%s@%d" % (page_name, from_rev),
+                        "%s@%d" % (page_name, to_rev),
                         strftime(date_format, gmtime(from_date)),
                         strftime(date_format, gmtime(to_date))):
                     out(line.rstrip("\n"))
                 out("}}}")
             else:
-                title = "History of \"%s\"" % name
+                title = "History of \"%s\"" % page_name
                 out("= %s =" % title)
-                for rev, date, author, cmnt in self.storage.page_history(name):
-                    out(" * [[+history/%s?rev=%d|%s]]" % (name, rev,
+                for rev, date, author, comment in self.storage.page_history(
+                        page_name):
+                    out(" * [[+history/%s?rev=%d|%s]]" % (page_name, rev,
                         strftime("%Y-%m-%d", gmtime(date))))
 
                     out("[ [[%s|%d]] ] by [[%s]]\\\\" % (
                         url(self.request, "/+hg/rev/%d" % rev), rev, author))
-                    out(cmnt)
+                    out(comment)
             text = "\n".join(lines)
         else:
             title = "Recent Changes"
@@ -1210,9 +1213,9 @@ class Root(Controller):
                 out(comment)
             text = "\n".join(lines)
 
-        actions = [("/+feed/%s" % name or "", "RSS 1.0"),
-                ("/+feed/%s?format=rss2" % name or "", "RSS 2.0"),
-                ("/+feed/%s?format=atom" % name or "", "Atom")]
+        actions = [("/+feed/%s" % page_name or "", "RSS 1.0"),
+                ("/+feed/%s?format=rss2" % page_name or "", "RSS 2.0"),
+                ("/+feed/%s?format=atom" % page_name or "", "Atom")]
 
         return self._render("view.html", None,
                 text=text, title="History", actions=actions)
