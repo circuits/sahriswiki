@@ -19,7 +19,13 @@ How about this ?
 ==== Comment by 10.0.0.1 on Tue Jul  6 16:38:22 2010 ====
 another comment :)
 
+==== Comment by 10.0.0.1 on Tue Jul  6 16:52:08 2010 ====
+<<code lang="python">>
+print "Hello World!"
+<</code>>
+
 <<add-comment>>
+
 
 
 
