@@ -82,7 +82,8 @@ def add_comment(macro, environ, *args, **kwargs):
             tag.fieldset(
                 tag.legend("Add Comment"),
                 tag.p(
-                    tag.textarea((not action == "cancel" and comment or ""),
+                    tag.textarea(
+                        (not action in ("cancel", "save") and comment or ""),
                         id="comment",
                         name="comment",
                         cols=80, rows=5
