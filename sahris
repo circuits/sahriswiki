@@ -918,7 +918,7 @@ class Root(Controller):
         t = self.loader.load(template)
         return t.generate(**data).render("xhtml", doctype="html")
 
-    def GET(self, *args, **kwargs):
+    def index(self, *args, **kwargs):
         node = short(self.storage.repo_node())
         self.response.headers.add_header("ETag", node)
         response = validate_etags(self.request, self.response)
