@@ -883,11 +883,8 @@ class Root(Controller):
 
     def _render(self, template, name, **kwargs):
         data = self.data.copy()
-        environ = self.environ.copy()
-
         data.update(kwargs)
-        data["environ"] = environ
-        data["request"] = self.request
+        environ = self.environ.copy()
 
         if name is not None:
             if name in self.storage:
@@ -913,12 +910,14 @@ class Root(Controller):
         else:
             page = {"name": kwargs["title"], "text": kwargs["text"]}
 
+        data["request"] = environ["request"] = self.request
         data["page"] = environ["page"] = page
+        data["environ"] = environ
 
         t = self.loader.load(template)
         return t.generate(**data).render("xhtml", doctype="html")
 
-    def GET(self, *args, **kwargs):
+    def index(self, *args, **kwargs):
         node = short(self.storage.repo_node())
         self.response.headers.add_header("ETag", node)
         response = validate_etags(self.request, self.response)
@@ -930,6 +929,22 @@ class Root(Controller):
                 ("/+history/%s" % name, "History"),
                 ("/+backlinks/%s" % name, "BackLinks")]
         return self._render("view.html", name, actions=actions)
+
+    @expose("+download")
+    def download(self, *args, **kwargs):
+        node = short(self.storage.repo_node())
+        self.response.headers.add_header("ETag", node)
+        response = validate_etags(self.request, self.response)
+        if response:
+            return response
+
+        name = "/".join(args) if args else self.opts.frontpage
+        if name in self.storage:
+            mime = self.storage.page_mime(name)
+            self.response.headers["Content-Type"] = mime
+            return self.storage.open_page(name)
+        else:
+            return self.notfound(name)
 
     @expose("+edit")
     def edit(self, *args, **kwargs):
@@ -944,8 +959,14 @@ class Root(Controller):
         if not kwargs:
             return self._render("edit.html", name, actions=[])
 
+        author = self.cookie.get("username")
+        if author:
+            author = author.value
+        else:
+            author = self.request.headers.get("X-Forward-For",
+                    self.request.remote.ip or "AnonymousUser")
+
         action = kwargs.get("action", None)
-        author = kwargs.get("author", "")
         comment = kwargs.get("comment", "")
         parent = kwargs.get("parent", None)
         text = kwargs.get("text", "")
