@@ -959,11 +959,12 @@ class Root(Controller):
         if not kwargs:
             return self._render("edit.html", name, actions=[])
 
-        author = self.cookie.get("visited")
+        author = self.cookie.get("username")
         if author:
             author = author.value
         else:
-            author = self.request.remote.ip
+            author = self.request.headers.get("X-Forward-For",
+                    self.request.remote.ip or "AnonymousUser")
 
         action = kwargs.get("action", None)
         comment = kwargs.get("comment", "")
