@@ -1150,13 +1150,13 @@ class Root(Controller):
         if response:
             return response
 
-        page_name = "/".join(args) or None
+        page_name = "/".join(args) or ""
         rev = kwargs.get("rev", None)
 
         lines = []
         out = lines.append
 
-        if page_name is not None:
+        if page_name:
             if rev is not None:
                 to_rev = int(rev)
                 from_rev = to_rev - 1
