@@ -15,9 +15,9 @@ def add_comment(macro, environ, *args, **kwargs):
     """..."""
 
     # Prevent multiple inclusions - store a temp in environ
-    if "add_comment" in environ:
-        raise Exception("add_comment macro cannot be included twice.")
-    environ["add_comment"] = True
+    if "add-comment" in environ:
+        raise Exception("<<add-comment>> macro cannot be included twice.")
+    environ["add-comment"] = True
 
     # Setup info and defaults
     request = environ["request"]
@@ -36,9 +36,9 @@ def add_comment(macro, environ, *args, **kwargs):
     comment = request.kwargs.get("comment", "")
     action = request.kwargs.get("action", "")
     
-    # Ensure <<add_comment>> is not present in comment, so that infinite
+    # Ensure <<add-comment>> is not present in comment, so that infinite
     # recursion does not occur.
-    comment = re.sub("(^|[^!])(\<\<add_comment)", "\\1!\\2", comment)
+    comment = re.sub("(^|[^!])(\<\<add-comment)", "\\1!\\2", comment)
     
     print repr(comment)
 
@@ -55,7 +55,7 @@ def add_comment(macro, environ, *args, **kwargs):
     if comment and action == "save":
         new_text = ""
         for line in page_text.split("\n"):
-            if line.find("<<add_comment") == 0:
+            if line.find("<<add-comment") == 0:
                 new_text += "==== Comment by %s on %s ====\n%s\n\n" % (
                         user,
                         time.strftime('%c', time.localtime()),
