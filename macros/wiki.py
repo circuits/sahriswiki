@@ -31,13 +31,15 @@ def add_comment(macro, environ, *args, **kwargs):
     appendonly = ("appendonly" in args)
 
     # Get the data from the POST
-    comment = kwargs.get("comment", "")
-    action = kwargs.get("action", "")
+    comment = request.kwargs.get("comment", "")
+    action = request.kwargs.get("action", "")
     
-    # Ensure [[AddComment]] is not present in comment, so that infinite
+    # Ensure <<add_comment>> is not present in comment, so that infinite
     # recursion does not occur.
     comment = re.sub("(^|[^!])(\<\<add_comment)", "\\1!\\2", comment)
     
+    print repr(comment)
+
     the_preview = None
 
     # If we are submitting or previewing, inject comment as it should look
