@@ -1,0 +1,31 @@
+= [[SahrisWiki]] =
+
+Welcome to [[SahrisWiki]]'s development wiki and development environment. 
+
+[[SahrisWiki]] is a new wiki engine that uses the following libraries:
+* [[http://www.python.org|Python]] //d'uh!//
+* [[http://bitbucket.org/prologic/circuits/|circuits]] //web application server//
+* [[http://mercurial.selenic.com/|Mercurial]] //data storage//
+* [[http://sqlite.org/|SQLite]] //search index storage//
+* [[http://code.google.com/p/creoleparser/|creoleparser]] //creole wiki parser//
+* [[http://genshi.edgewall.org/|genshi]] //templating//
+* [[http://code.google.com/p/feedformatter/|feedformatter]] //aggregation//
+* [[http://www.oswd.org/design/preview/id/2945|Blue Rain]] //default theme//
+
+To try this wiki out for yourself, feel free to edit the [[SandBox]].
+
+[[SahrisWiki]] is:
+* a single python script (//with the exception of XHTML+CSS [[Themes]] and macros/plugins)
+* [[Themes|Themeable]]
+* [[Performance|Fast and Scalable]]
+* Compatible with many [[SupportedBrowers]]
+* **Fun!**
+----
+
+
+
+
+
+ 
+
+
