@@ -3,7 +3,7 @@
 Welcome to [[SahrisWiki]]'s development wiki and development environment. 
 
 [[SahrisWiki]] is a new wiki engine that uses the following libraries:
-* [[http://www.python.org|Python]] //d'uh!//
+* [[http://www.python.org|Python]]
 * [[http://bitbucket.org/prologic/circuits/|circuits]] //web application server//
 * [[http://mercurial.selenic.com/|Mercurial]] //data storage//
 * [[http://sqlite.org/|SQLite]] //search index storage//
@@ -27,5 +27,6 @@ To try this wiki out for yourself, feel free to edit the [[SandBox]].
 
 
  
+
 
 
