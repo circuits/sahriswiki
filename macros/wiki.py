@@ -2,9 +2,8 @@
 
 import re
 import time
-from StringIO import StringIO
 
-from genshi.builder import tag, Markup
+from genshi.builder import tag
 
 def title(macro, environ, *args, **kwargs):
     """Return the title of the current page."""
@@ -104,4 +103,4 @@ def add_comment(macro, environ, *args, **kwargs):
             method="post", action=""
     )
 
-    return Markup(the_preview, the_comment, the_form)
+    return tag(the_preview, the_comment, the_form)
