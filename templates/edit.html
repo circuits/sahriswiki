@@ -12,7 +12,8 @@
     <input py:if="'node' in page" type="hidden" name="parent"
      value="${page['node']}" />
 		 	<p class="text">
-    <textarea id="text" name="text" rows="25" cols="80">${page["text"]}</textarea>
+    <textarea id="text" name="text" rows="25"
+     cols="80">${page["text"]}</textarea>
 		 	</p>
 		 	<h4><label for="comment">Comment:</label></h4>
 		 	<p class="input">
@@ -25,11 +26,35 @@
      value="${value_of('author', request.remote.ip)}" />
 		 	</p>
 		 	<p class="button">
-     <button name="action" type="submit" value="save">Save</button>
      <button name="action" type="submit" value="preview">Preview</button>
+     <button name="action" type="submit" value="save">Save</button>
      <button name="action" type="submit" value="cancel">Cancel</button>
 		 	</p>
-		 </form>
+   </form>
+  </div>
+  <div id="editor-help">
+   <dl>
+    <dt>Emphasis</dt>
+    <dd>''<em>italics</em>''; '''<strong>bold</strong>''';
+    '''''<em><strong>bold italics</strong></em><strong></strong>''''';
+    ''<em>mixed </em>'''<em><strong>bold</strong>''' and italics</em>'';
+    ---- horizontal rule. </dd>
+    <dt>Headings</dt>
+    <dd>= Title 1 =; == Title 2 ==; === Title 3 ===; ==== Title 4 ====;
+    ===== Title 5 =====. </dd>
+    <dt>Lists</dt>
+    <dd>space and one of: * bullets; 1., a., A., i., I. numbered items;
+    1.#n start numbering at n; space alone indents. </dd>
+    <dt>Links</dt>
+    <dd>JoinCapitalizedWords; [[target|linktext]]. </dd>
+    <dt>Tables</dt>
+    <dd>|| cell text |||| cell text spanning 2 columns ||;
+    no trailing white space allowed after tables or titles. </dd>
+   </dl>
+   <img width="15" height="15" title="(!)"
+   src="${url('/images/emoticons/idea.png')}" alt="(!)" />For more help, see
+   <a href="${url('/HelpOnEditing')}">HelpOnEditing</a> or
+   <a href="${url('/WikiFormatting')}">WikiFormatting</a>.
   </div>
   <py:if test="defined('preview')">
    <py:if test="preview">
