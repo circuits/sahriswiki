@@ -1,0 +1,11 @@
+= Wiki Page Names =
+Wiki page names are written using [[CamelCase]]. Within a wiki page, any word written in [[CamelCase]] becomes a hyperlink to the wiki page with that same name. 
+
+The formatting rules for wiki page names on this engine are shown below. (//Other engines may use minor variations on these rules//).
+* The name must consist of alphabetic characters only.
+** No digits, spaces, punctuation, or underscores.
+* There must be at least two capital letters in the name.
+* The first character of the name must be capitalized.
+* Every capital letter must be followed by one or more lowercase letters.
+
+----

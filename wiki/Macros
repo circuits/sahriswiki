@@ -1,0 +1,21 @@
+= Available Macros =
+
+* [[SahrisWiki]] has full macro support (//thanks to the creoleparser//).
+
+To use any of the available macros below, just include the macro
+in your page with the macro syntax as follows:
+
+{{{
+<<macro arg="foo">>
+}}}
+
+or
+
+{{{
+<<macro arg="foo">>
+... body ...
+<</macro>>
+}}}
+
+<<macros>>
+
