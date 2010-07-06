@@ -75,6 +75,8 @@ def add_comment(macro, environ, *args, **kwargs):
 
         search.update_page(page_name, text=new_text)
 
+        page["text"] = new_text
+
     the_form = tag.form(
             tag.input(type="hidden", name="parent", value=page["node"]),
             tag.fieldset(
