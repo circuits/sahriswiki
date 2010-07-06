@@ -69,7 +69,7 @@ def add_comment(macro, environ, *args, **kwargs):
         storage.save_text(page_name, new_text, user,
                 "Comment added by %s" % user)
 
-        search.update_page(name, text=text)
+        search.update_page(page_name, text=new_text)
 
     the_form = tag.form(
             tag.input(type="hidden", name="parent", value=page["node"]),
