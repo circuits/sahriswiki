@@ -1,3 +1,4 @@
 = Page: <<title>> Not Found =
 
-* [[/Edit/<<title>>|Create <<title>>]]
+* [[/+edit/<<title>>|Create <<title>>]]
+
