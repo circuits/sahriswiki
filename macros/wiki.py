@@ -27,6 +27,8 @@ def add_comment(macro, environ, *args, **kwargs):
     page_text = page["text"]
     page_url = page["url"]
     
+    print repr(page_text)
+
     # Can this user add a comment to this page?
     appendonly = ("appendonly" in args)
 
@@ -59,6 +61,8 @@ def add_comment(macro, environ, *args, **kwargs):
                         time.strftime('%c', time.localtime()),
                         comment)
             new_text += line + "\n"
+
+        print repr(new_text)
 
         search = environ["search"]
         storage = environ["storage"]
