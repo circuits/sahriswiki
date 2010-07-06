@@ -963,7 +963,7 @@ class Root(Controller):
         if author:
             author = author.value
         else:
-            author = self.request.headers.get("X-Forward-For",
+            author = self.request.headers.get("X-Forwarded-For",
                     self.request.remote.ip or "AnonymousUser")
 
         action = kwargs.get("action", None)
