@@ -931,6 +931,22 @@ class Root(Controller):
                 ("/+backlinks/%s" % name, "BackLinks")]
         return self._render("view.html", name, actions=actions)
 
+    @expose("+download")
+    def download(self, *args, **kwargs):
+        node = short(self.storage.repo_node())
+        self.response.headers.add_header("ETag", node)
+        response = validate_etags(self.request, self.response)
+        if response:
+            return response
+
+        name = "/".join(args) if args else self.opts.frontpage
+        if name in self.storage:
+            mime = self.storage.page_mime(name)
+            self.response.headers["Content-Type"] = mime
+            return self.storage.open_page(name)
+        else:
+            return self.notfound(name)
+
     @expose("+edit")
     def edit(self, *args, **kwargs):
         if not kwargs:
