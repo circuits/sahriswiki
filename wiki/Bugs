@@ -1,0 +1,27 @@
+= Bugs =
+//Please report all bugs with [[SahrisWiki]] here.//
+
+----
+
+=== Link Bug ===
+This bug occurs when I click on a link to a new page of a Wiki and is likely to be a problem at my end but I'll put it here anyway:
+
+* When I click on a link, the http address changes and the page display changes appropriately, however the title in the tab appears to be that of the first page. The name in the tab doesnt change no matter how many links I click on.
+* When I attempt to edit a page (unless it is the first page), the http link up the top is still correct for the page that I should be on (plus /edit, of course), however the text in the edit box is that of the first page, according to the title in the tab.
+* The problem is easily resolved by returning to the page I was trying to edit and refreshing, upon which point the title in the tab adjusts itself to what it should be. Then I can click edit and the text in the edit box is that for the page that I am trying to edit.
+
+As mentioned before, I am not sure if this is a problem with my browser/computer settings or actually a problem with the wiki. It isn't a significant problem however and shouldn't be put first on the priority list for bug fixes ;).
+
+-[[Adam]]
+
+@[[Adamin]], I cannot reproduce this on the latest version of [[SahrisWiki]]. Could you please try to delete your browser's cache and try again ? Thanks -[[prologic]]
+
+Yeah I have a feeling its just something wrong with me. I've tried deleting the cache and it still doesn't work properly, however it isn't a big deal and I'll just live with it ;)
+Cheers [[Adam]]
+
+Does it happy on this version on this wiki ? -[[prologic]]
+
+@[[Adam]], if you cannot reproduce this anymore - I'm going to remove this as a bug :) -[[prologic]]
+----
+
+
