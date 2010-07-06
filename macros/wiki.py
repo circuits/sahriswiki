@@ -20,15 +20,16 @@ def add_comment(macro, environ, *args, **kwargs):
     environ["add-comment"] = True
 
     # Setup info and defaults
+    parser = environ["parser"]
     request = environ["request"]
+
     user = request.remote.ip
+
     page = environ["page"]
     page_name = page["name"]
     page_text = page["text"]
     page_url = page["url"]
     
-    print repr(page_text)
-
     # Can this user add a comment to this page?
     appendonly = ("appendonly" in args)
 
@@ -40,13 +41,11 @@ def add_comment(macro, environ, *args, **kwargs):
     # recursion does not occur.
     comment = re.sub("(^|[^!])(\<\<add-comment)", "\\1!\\2", comment)
     
-    print repr(comment)
-
     the_preview = None
+    the_comment = None
 
     # If we are submitting or previewing, inject comment as it should look
     if action == "preview":
-        parser = environ["parser"]
         the_preview = tag.div(tag.h1("Preview"), id="preview")
         the_preview += tag.div(parser.generate(comment, environ=environ),
                 class_="article")
@@ -54,15 +53,12 @@ def add_comment(macro, environ, *args, **kwargs):
     # When submitting, inject comment before macro
     if comment and action == "save":
         new_text = ""
+        comment_text = "==== Comment by %s on %s ====\n%s\n\n" % (
+                user, time.strftime('%c', time.localtime()), comment)
         for line in page_text.split("\n"):
             if line.find("<<add-comment") == 0:
-                new_text += "==== Comment by %s on %s ====\n%s\n\n" % (
-                        user,
-                        time.strftime('%c', time.localtime()),
-                        comment)
+                new_text += comment_text
             new_text += line + "\n"
-
-        print repr(new_text)
 
         search = environ["search"]
         storage = environ["storage"]
@@ -75,7 +71,7 @@ def add_comment(macro, environ, *args, **kwargs):
 
         search.update_page(page_name, text=new_text)
 
-        page["text"] = new_text
+        the_comment = parser.generate(comment_text, environ=environ)
 
     the_form = tag.form(
             tag.input(type="hidden", name="parent", value=page["node"]),
@@ -108,4 +104,4 @@ def add_comment(macro, environ, *args, **kwargs):
             method="post", action=""
     )
 
-    return tag.div(the_preview, the_form, id="comments")
+    return tag.div(the_preview, the_comment, the_form, id="comments")
