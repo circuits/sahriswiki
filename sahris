@@ -883,11 +883,8 @@ class Root(Controller):
 
     def _render(self, template, name, **kwargs):
         data = self.data.copy()
-        environ = self.environ.copy()
-
         data.update(kwargs)
-        data["environ"] = environ
-        data["request"] = environ["request"] = self.request
+        environ = self.environ.copy()
 
         if name is not None:
             if name in self.storage:
@@ -913,7 +910,9 @@ class Root(Controller):
         else:
             page = {"name": kwargs["title"], "text": kwargs["text"]}
 
+        data["request"] = environ["request"] = self.request
         data["page"] = environ["page"] = page
+        data["environ"] = environ
 
         t = self.loader.load(template)
         return t.generate(**data).render("xhtml", doctype="html")
