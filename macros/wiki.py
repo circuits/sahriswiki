@@ -51,14 +51,14 @@ def add_comment(macro, environ, *args, **kwargs):
 
     # When submitting, inject comment before macro
     if comment and action == "save":
-        newtext = ""
+        new_text = ""
         for line in page_text.split("\n"):
             if line.find("<<add_comment") == 0:
-                newtext += "==== Comment by %s on %s ====\n%s\n\n" % (
+                new_text += "==== Comment by %s on %s ====\n%s\n\n" % (
                         user,
                         time.strftime('%c', time.localtime()),
                         comment)
-            newtext += line + "\n"
+            new_text += line + "\n"
 
         search = environ["search"]
         storage = environ["storage"]
