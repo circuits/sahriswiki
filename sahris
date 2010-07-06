@@ -887,7 +887,7 @@ class Root(Controller):
 
         data.update(kwargs)
         data["environ"] = environ
-        data["request"] = self.request
+        data["request"] = environ["request"] = self.request
 
         if name is not None:
             if name in self.storage:
