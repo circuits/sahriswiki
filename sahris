@@ -960,8 +960,13 @@ class Root(Controller):
         if not kwargs:
             return self._render("edit.html", name, actions=[])
 
+        author = self.cookie.get("visited")
+        if author:
+            author = author.value
+        else:
+            author = self.request.remote.ip
+
         action = kwargs.get("action", None)
-        author = kwargs.get("author", "")
         comment = kwargs.get("comment", "")
         parent = kwargs.get("parent", None)
         text = kwargs.get("text", "")
