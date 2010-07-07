@@ -7,7 +7,7 @@
   <title>Upload</title>
  </head>
  <body>
-  <div py:test="defined('filename')" id="message">
+  <div py:if="defined('filename')" id="message">
    <a href="/${filename}">${filename}</a> uploaded successfully.
   </div>
   <div id="uploader">
