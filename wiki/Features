@@ -1,10 +1,7 @@
 = Features =
 //[[SahrisWiki]] Feature List//
 
-* [[BackLinks]]
-  [[SahrisWiki]] includes support for displaying [[BackLinks]],
-  pages that refer to the current page.
-* Searching
-  [[SahrisWiki]] includes a powerful cache-able full-text search
-  thanks to [[http://hatta.sheep.art.pl/|Hatta]].
+* **[[BackLinks]]** :: [[SahrisWiki]] includes support for displaying [[BackLinks]], pages that refer to the current page.
+* **Searching** :: [[SahrisWiki]] includes a powerful cache-able full-text search thanks to [[http://hatta.sheep.art.pl/|Hatta]].
+
 
