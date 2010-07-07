@@ -877,31 +877,29 @@ class PluginManager(Component):
         self.search = search
 
     def _loadPlugins(self, path):
-        sys.path.append(path)
-        package = os.path.basename(path)
-        safe__import__(package, globals(), locals())
+        if not path in sys.path:
+            sys.path.append(path)
 
-        for filename in os.listdir(path):
-            if not os.path.isfile(os.path.join(path, filename)):
-                continue
-            elif not os.path.splitext(filename)[1] == ".py":
-                continue
-            elif filename == "__init__.py":
-                continue
+        __package__ = os.path.basename(path)
 
-            module = os.path.splitext(filename)[0]
-            self._loadPlugin(package, module)
+        p = lambda x: os.path.splitext(x)[1] == ".py"
+        modules = [x for x in os.listdir(path)
+                if p(x) and not x == "__init__.py"]
 
-    def _loadPlugin(self, package, module):
-        m = safe__import__("%s.%s" % (package, module), globals(), locals())
-        p1 = lambda x: isclass(x) and issubclass(x, BasePlugin)
-        p2 = lambda x: x is not BasePlugin
-        predicate = lambda x: p1(x) and p2(x)
-        plugins = getmembers(m, predicate)
+        for module in modules:
+            name, _ = os.path.splitext(module)
 
-        for name, Plugin in plugins:
-            o = Plugin(self, self.opts, self.storage, self.search)
-            o.register(self)
+            moduleName = "%s.%s" % (__package__, name)
+            m = __import__(moduleName, globals(), locals(), __package__)
+
+            p1 = lambda x: isclass(x) and issubclass(x, BasePlugin)
+            p2 = lambda x: x is not BasePlugin
+            predicate = lambda x: p1(x) and p2(x)
+            plugins = getmembers(m, predicate)
+
+            for name, Plugin in plugins:
+                o = Plugin(self, self.opts, self.storage, self.search)
+                o.register(self)
 
     def started(self, component, mode):
         self._loadPlugins(os.path.abspath(self.opts.plugins))

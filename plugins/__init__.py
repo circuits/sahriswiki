@@ -7,9 +7,9 @@
 This package contains default SahrisWiki Plugins
 """
 
-from circuits import Component
+from circuits.web import Controller
 
-class BasePlugin(Component):
+class BasePlugin(Controller):
 
     def __init__(self, pluginmanager, opts, storage, search):
         super(BasePlugin, self).__init__()
@@ -18,8 +18,3 @@ class BasePlugin(Component):
         self.opts = opts
         self.storage = storage
         self.search = search
-
-class Plugins(BasePlugin):
-
-    def __call__(self):
-        return "Foobar!"
