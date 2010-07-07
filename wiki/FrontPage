@@ -1,3 +1,7 @@
+<<div float="right">>
+<<include "News">>
+<</div>>
+
 = [[SahrisWiki]] =
 
 Welcome to [[SahrisWiki]]'s development wiki and development environment. 
@@ -14,3 +18,4 @@ Welcome to [[SahrisWiki]]'s development wiki and development environment.
 
 To try this wiki out for yourself, feel free to edit the [[SandBox]].
 ----
+
