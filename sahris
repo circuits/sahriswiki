@@ -908,7 +908,8 @@ class Root(Controller):
                     text = ""
                 page = {"name": name, "text": text}
         else:
-            page = {"name": kwargs["title"], "text": kwargs["text"]}
+            page = {"name": kwargs.get("title", ""),
+                    "text": kwargs.get("text", "")}
 
         data["request"] = environ["request"] = self.request
         data["page"] = environ["page"] = page
@@ -945,6 +946,41 @@ class Root(Controller):
             return self.storage.open_page(name)
         else:
             return self.notfound(name)
+
+    @expose("+upload")
+    def upload(self, *args, **kwargs):
+        if not kwargs:
+            node = short(self.storage.repo_node())
+            self.response.headers.add_header("ETag", node)
+            response = validate_etags(self.request, self.response)
+            if response:
+                return response
+
+        action = kwargs.get("action", None)
+
+        data = {}
+        data["actions"] = []
+
+        if action == "upload":
+            file = kwargs.get("file", None)
+            if file is not None:
+                filename = file.filename
+                filedata = file.value
+                comment = kwargs.get("comment", "Uploaded file: %s" % filename)
+
+                data["filename"] = filename
+
+                author = self.cookie.get("username")
+                if author:
+                    author = author.value
+                else:
+                    author = self.request.headers.get("X-Forwarded-For",
+                            self.request.remote.ip or "AnonymousUser")
+
+                self.storage.reopen()
+                self.storage.save_data(filename, filedata, author, comment)
+
+        return self._render("upload.html", None, **data)
 
     @expose("+edit")
     def edit(self, *args, **kwargs):
