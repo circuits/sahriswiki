@@ -16,7 +16,7 @@ def add_comment(macro, environ, *args, **kwargs):
     # Prevent multiple inclusions - store a temp in environ
     if "add-comment" in environ.tmp:
         raise Exception("<<add-comment>> macro cannot be included twice.")
-    environtmp["add-comment"] = True
+    environ.tmp["add-comment"] = True
 
     # Setup info and defaults
     parser = environ.parser
