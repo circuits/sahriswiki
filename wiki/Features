@@ -1,0 +1,8 @@
+= Features =
+//[[SahrisWiki]] Feature List//
+
+* **[[+backlinks]]** :: [[SahrisWiki]] includes support for displaying [[BackLinks]], pages that refer to the current page.
+* **[[+search]]** :: [[SahrisWiki]] includes a powerful cache-able full-text search thanks to [[http://hatta.sheep.art.pl/|Hatta]].
+* **[[Macros]]** :: [[SahrisWiki]] supports the creole macro extension and includes a variety of useful macros.
+* **[[+plugins]]** :: [[SahrisWiki]] has full plugin support allowing for easy and powerful extensibility.
+
