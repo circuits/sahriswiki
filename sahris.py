@@ -1179,8 +1179,12 @@ class Root(Controller):
 
         text = "\n".join(content())
         title = "Backlinks for %s" % name
+        actions = [("/+search", "Index"),
+                ("/+orphaned", "Orphaned"),
+                ("/+wanted", "Wanted")]
 
-        return self._render("view.html", title="BackLinks", text=text)
+        return self._render("view.html", title="BackLinks", text=text,
+                actions=actions)
 
     @expose("+feed")
     def feed(self, *args, **kwargs):
