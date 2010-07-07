@@ -309,8 +309,7 @@ class WikiStorage(object):
         """Commits and merges conflicting changes in the repository."""
 
         tip_node = changectx.node()
-        filectx = changectx[repo_file].filectx(parent)
-        parent_node = filectx.changectx().node()
+        parent_node = changectx(parent).node()
 
         self.repo.dirstate.setparents(parent_node)
         node = self._commit([repo_file], text, user)
