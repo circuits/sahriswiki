@@ -1062,7 +1062,10 @@ class Root(Controller):
     def edit(self, *args, **kwargs):
         name = "/".join(args)
         if not kwargs:
-            return self._render("edit.html", title=name)
+            if name in self.environ.storage:
+                return self._render("edit.html", name=name)
+            else:
+                return self._render("edit.html", title=name)
 
         author = self.cookie.get("username")
         if author:
