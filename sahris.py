@@ -1062,7 +1062,7 @@ class Root(Controller):
     def edit(self, *args, **kwargs):
         name = "/".join(args)
         if not kwargs:
-            return self._render("edit.html", name=name)
+            return self._render("edit.html", title=name)
 
         author = self.cookie.get("username")
         if author:
