@@ -1381,7 +1381,7 @@ class Root(Controller):
         s.append("Disallow: /+*")
         s.append("Disallow: /%2b*")
         s.append("Disallow: /%2B*")
-        return "\n".join(s)
+        return "\r\n".join(s)
 
 def main():
     opts, args = parse_options()
