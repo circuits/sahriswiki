@@ -950,9 +950,9 @@ class Environment(BaseComponent):
             return self.parser.generate(self.storage.page_text(name),
                     environ=self)
         else:
-            return self.parser.generate(
-                    self.storage.page_text("NotFound") or "Page Not Found!",
-                    environ=self)
+            data = {"page": {"name": name}}
+            t = self.templates.load("notfound.html")
+            return t.generate(**data)
 
     def render(self, template, **data):
         data["environ"] = self
@@ -991,23 +991,17 @@ class Root(Controller):
         self.storage = self.environ.storage
         self.search = self.environ.search
 
-    def _render(self, template, name, **data):
+    def _render(self, template, **data):
+        name = data.get("name", None)
         if name is not None:
-            if name in self.storage:
-                text = self.storage.page_text(name)
-                rev, node, date, author, comment = self.storage.page_meta(name)
+            text = self.storage.page_text(name)
+            rev, node, date, author, comment = self.storage.page_meta(name)
 
-                page = {"name": name, "text": text, "rev": rev,
-                        "node": short(node), "date": date, "author": author,
-                        "comment": comment,
-                        "url": self.url(name),
-                        "feed": self.url("/+feed/%s" % name)}
-            else:
-                if template == "view.html":
-                    text = self.storage.page_text("NotFound") or ""
-                else:
-                    text = ""
-                page = {"name": name, "text": text}
+            page = {"name": name, "text": text, "rev": rev,
+                    "node": short(node), "date": date, "author": author,
+                    "comment": comment,
+                    "url": self.url(name),
+                    "feed": self.url("/+feed/%s" % name)}
         else:
             page = {"name": data.get("title", ""),
                     "text": data.get("text", "")}
@@ -1018,10 +1012,14 @@ class Root(Controller):
 
     def index(self, *args, **kwargs):
         name = os.path.sep.join(args) if args else self.environ.opts.frontpage
-        actions = [("/+edit/%s" % name, "Edit"),
-                ("/+history/%s" % name, "History"),
-                ("/+backlinks/%s" % name, "BackLinks")]
-        return self._render("view.html", name, actions=actions)
+
+        if name in self.environ.storage:
+            actions = [("/+edit/%s" % name, "Edit"),
+                    ("/+history/%s" % name, "History"),
+                    ("/+backlinks/%s" % name, "BackLinks")]
+            return self._render("view.html", name=name, actions=actions)
+        else:
+            return self._render("notfound.html", title=name)
 
     @expose("+download")
     def download(self, *args, **kwargs):
@@ -1038,7 +1036,6 @@ class Root(Controller):
         action = kwargs.get("action", None)
 
         data = {}
-        data["actions"] = []
 
         if action == "upload":
             file = kwargs.get("file", None)
@@ -1059,13 +1056,13 @@ class Root(Controller):
                 self.storage.reopen()
                 self.storage.save_data(filename, filedata, author, comment)
 
-        return self._render("upload.html", None, **data)
+        return self._render("upload.html", **data)
 
     @expose("+edit")
     def edit(self, *args, **kwargs):
         name = "/".join(args)
         if not kwargs:
-            return self._render("edit.html", name, actions=[])
+            return self._render("edit.html", name=name)
 
         author = self.cookie.get("username")
         if author:
@@ -1095,8 +1092,8 @@ class Root(Controller):
         elif action == "cancel":
             return self.redirect(self.url("/%s" % name))
         elif action == "preview":
-            return self._render("edit.html", None, title=name, text=text,
-                    author=author, comment=comment, preview=True, actions=[])
+            return self._render("edit.html", title=name, text=text,
+                    author=author, comment=comment, preview=True)
         elif action == "save":
             self.storage.reopen()
             self.search.update()
@@ -1161,8 +1158,8 @@ class Root(Controller):
             title = "Searching for '%s'" % " ".join(words)
             text = "\n".join(search(words))
 
-        return self._render("view.html", None,
-                text=text, title="Search", actions=actions)
+        return self._render("view.html", itle="Search", text=text,
+                actions=actions)
 
     @expose("+backlinks")
     def backlinks(self, *args, **kwargs):
@@ -1183,8 +1180,7 @@ class Root(Controller):
         text = "\n".join(content())
         title = "Backlinks for %s" % name
 
-        return self._render("view.html", None,
-                text=text, title="BackLinks", actions=[])
+        return self._render("view.html", title="BackLinks", text=text)
 
     @expose("+feed")
     def feed(self, *args, **kwargs):
@@ -1246,8 +1242,8 @@ class Root(Controller):
         text = "\n".join(lines)
         actions = [("/+orphaned", "Orphaned"), ("/+wanted", "Wanted")]
 
-        return self._render("view.html", None,
-                text=text, title=title, actions=actions)
+        return self._render("view.html", title=title, text=text,
+                actions=actions)
 
     @expose("+wanted")
     def wanted(self, *args, **kwargs):
@@ -1266,8 +1262,8 @@ class Root(Controller):
         text = "\n".join(lines)
         actions = [("/+orphaned", "Orphaned"), ("/+wanted", "Wanted")]
 
-        return self._render("view.html", None,
-                text=text, title=title, actions=actions)
+        return self._render("view.html", title=title, text=text,
+                actions=actions)
 
     @expose("+history")
     def history(self, *args, **kwargs):
@@ -1338,8 +1334,8 @@ class Root(Controller):
                 ("/+feed/%s?format=rss2" % page_name or "", "RSS 2.0"),
                 ("/+feed/%s?format=atom" % page_name or "", "Atom")]
 
-        return self._render("view.html", None,
-                text=text, title=title, actions=actions)
+        return self._render("view.html", title=title, text=text,
+                actions=actions)
 
     @expose("robots.txt")
     def robots(self, *args, **kwargs):
