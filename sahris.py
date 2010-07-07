@@ -1408,9 +1408,23 @@ def main():
 if __name__ == "__main__":
     main()
 else:
+    config = {"data": "wiki", "cache": "cache", "name": "SahrisWiki",
+            "author": "", "keywords": "", "description": "",
+            "frontpage": "FrontPage", "encoding": "utf-8",
+            "readonly": False, "plugins": "plugins"}
+
+    class Options(object): pass
+    opts = Options()
+    opts.__dict__.update(config)
+
+    storage = WikiStorage(opts.data, opts.encoding)
+    search = WikiSearch(opts.cache, storage)
+
+    environ = Environment(opts, storage, search)
     application = (Application()
-            + CacheControl(environ)
+            + environ
             + Root(environ)
+            + CacheControl(environ)
             + PluginManager(environ)
             + Static(docroot="static")
             + Gateway(hgweb(storage.repo_path), "/+hg"))
