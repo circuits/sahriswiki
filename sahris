@@ -1138,9 +1138,12 @@ class Root(Controller):
         else:
             query = None
 
+        actions = []
+
         if not query:
             text = "\n".join(index())
             title = "Page index"
+            actions = [("/+orphaned", "Orphaned"), ("/+wanted", "Wanted")]
         else:
             words = tuple(self.search.split_text(query, stop=False))
             if not words:
@@ -1149,7 +1152,7 @@ class Root(Controller):
             text = "\n".join(search(words))
 
         return self._render("view.html", None,
-                text=text, title="Search", actions=[])
+                text=text, title="Search", actions=actions)
 
     @expose("+backlinks")
     def backlinks(self, *args, **kwargs):
