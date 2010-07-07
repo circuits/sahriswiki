@@ -10,6 +10,7 @@ import tempfile
 import optparse
 import mimetypes
 from json import dumps, loads
+from operator import itemgetter
 from difflib import unified_diff
 from time import gmtime, strftime
 from inspect import getmembers, isclass
@@ -191,6 +192,30 @@ def extract_links(text):
         if m.groupdict():
             d = m.groupdict()
             yield d["link_target"], d["link_text"] or ""
+
+def external_link(addr):
+    """
+    Decide whether a link is absolute or internal.
+
+    >>> external_link('http://example.com')
+    True
+    >>> external_link('https://example.com')
+    True
+    >>> external_link('ftp://example.com')
+    True
+    >>> external_link('mailto:user@example.com')
+    True
+    >>> external_link('PageTitle')
+    False
+    >>> external_link(u'ąęśćUnicodePage')
+    False
+
+    """
+
+    return (addr.startswith('http://')
+            or addr.startswith('https://')
+            or addr.startswith('ftp://')
+            or addr.startswith('mailto:'))
 
 class WikiStorage(object):
     """
@@ -628,6 +653,37 @@ without would yet you your yours yourself yourselves""").split())
         for number, (link, label) in enumerate(links_and_labels):
             cursor.execute('INSERT INTO links VALUES (?, ?, ?, ?);',
                              (title_id, link, label, number))
+
+    def orphaned_pages(self):
+        """Gives all pages with no links to them."""
+
+        con = self.con
+        try:
+            sql = ('SELECT title FROM titles '
+                   'WHERE NOT EXISTS '
+                   '(SELECT * FROM links WHERE target=title) '
+                   'ORDER BY title;')
+            for (title,) in con.execute(sql):
+                yield unicode(title)
+        finally:
+            con.commit()
+
+    def wanted_pages(self):
+        """Gives all pages that are linked to, but don't exist, together with
+        the number of links."""
+
+        con = self.con
+        try:
+            sql = ('SELECT COUNT(*), target FROM links '
+                   'WHERE NOT EXISTS '
+                   '(SELECT * FROM titles WHERE target=title) '
+                   'GROUP BY target ORDER BY -COUNT(*);')
+            for (refs, db_title,) in con.execute(sql):
+                title = unicode(db_title)
+                if not external_link(title) and not title.startswith('+'):
+                    yield refs, title
+        finally:
+            con.commit()
 
     def page_backlinks(self, title):
         con = self.con # sqlite3.connect(self.filename)
@@ -1177,6 +1233,55 @@ class Root(Controller):
 
         self.response.headers["Content-Type"] = "application/xml"
         return getattr(feed, "format_%s_string" % format)()
+
+    @expose("+orphaned")
+    def orphaned(self, *args, **kwargs):
+        node = short(self.storage.repo_node())
+        self.response.headers.add_header("ETag", node)
+        response = validate_etags(self.request, self.response)
+        if response:
+            return response
+
+        lines = []
+        out = lines.append
+
+        title = "Orphaned Pages"
+        out("= %s =" % title)
+
+        for name in sorted(self.search.orphaned_pages()):
+            out(" * [[%s]]" % name)
+
+        text = "\n".join(lines)
+        actions = [("/+orphaned", "Orphaned"), ("/+wanted", "Wanted")]
+
+        return self._render("view.html", None,
+                text=text, title="Orphaned Pages", actions=actions)
+
+    @expose("+wanted")
+    def wanted(self, *args, **kwargs):
+        node = short(self.storage.repo_node())
+        self.response.headers.add_header("ETag", node)
+        response = validate_etags(self.request, self.response)
+        if response:
+            return response
+
+        lines = []
+        out = lines.append
+
+        title = "Wanted Pages"
+        out("= %s =" % title)
+
+        pages = list(self.search.wanted_pages())
+        pages.sort(key=itemgetter(0), reverse=True)
+
+        for refs, name in pages:
+            out(" * [[%s]] //%d references//" % (name, refs))
+
+        text = "\n".join(lines)
+        actions = [("/+orphaned", "Orphaned"), ("/+wanted", "Wanted")]
+
+        return self._render("view.html", None,
+                text=text, title="Orphaned Pages", actions=actions)
 
     @expose("+history")
     def history(self, *args, **kwargs):
