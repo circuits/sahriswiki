@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""SahrisWiki - The logical wiki!
+
+SahrisWiki is a new WikiWiki Engine designed for simplicity, flexibility
+and ease of use.
+"""
+
 import os
 import re
 import sys
@@ -99,10 +105,25 @@ def parse_options():
             dest="cache",
             help="Location of cache directory")
 
-    parser.add_option("-n", "--site-name",
+    parser.add_option("", "--name",
             action="store", type="string", default="SahrisWiki",
-            dest="sitename",
-            help="Set site name")
+            dest="name",
+            help="Name")
+
+    parser.add_option("", "--author",
+            action="store", type="string", default="",
+            dest="author",
+            help="Author")
+
+    parser.add_option("", "--keywords",
+            action="store", type="string", default="",
+            dest="keywords",
+            help="Keywords")
+
+    parser.add_option("", "--description",
+            action="store", type="string", default=__doc__.split("\n")[0],
+            dest="description",
+            help="Description")
 
     parser.add_option("-f", "--front-page",
             action="store", type="string", default="FrontPage",
@@ -913,17 +934,24 @@ class Root(Controller):
         self.loader = TemplateLoader(os.path.join(os.path.dirname(__file__),
             "templates"), auto_reload=True)
 
-        self.environ = {"opts": self.opts, "storage": self.storage,
-                "search": self.search, "macros": macros.loadMacros(),
-                "parser": self.parser}
-
-        self.data = {"version": __version__(),
-                "url": self.url,
+        self.environ = {
+                "opts": self.opts,
                 "parser": self.parser,
+                "search": self.search,
+                "storage": self.storage,
+                "macros": macros.loadMacros()}
+
+        self.data = {
+                "url": self.url,
+                "stylesheets": [],
+                "parser": self.parser,
+                "version": __version__(),
                 "include": self._include,
-                "site": {"name": self.opts.sitename,
-                    "description": "", "keywords": "", "author": ""},
-                "stylesheets": []}
+                "site": {
+                    "name": self.opts.name,
+                    "author": self.opts.author,
+                    "keywords": self.opts.keywords,
+                    "description": self.opts.description}}
 
     def _include(self, name, environ=None):
         if name in self.storage:
