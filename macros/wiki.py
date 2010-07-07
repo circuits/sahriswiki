@@ -13,11 +13,6 @@ def title(macro, environ, *args, **kwargs):
 def add_comment(macro, environ, *args, **kwargs):
     """..."""
 
-    # Prevent multiple inclusions - store a temp in environ
-    if "add-comment" in environ.tmp:
-        raise Exception("<<add-comment>> macro cannot be included twice.")
-    environ.tmp["add-comment"] = True
-
     # Setup info and defaults
     parser = environ.parser
     request = environ.request
