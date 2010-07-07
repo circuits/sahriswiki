@@ -60,19 +60,19 @@ FIXLINES = re.compile("(\r[^\n])|(\r\n)")
 def __version__():
     version = None
     if os.path.isdir(".hg"):
-		f = os.popen("hg identify")
-		ident = f.read()[:-1]
-		if not f.close() and ident:
-			ids = ident.split(' ', 1)
-			version = ids.pop(0)
-			if version[-1] == '+':
-				version = version[:-1]
-			if version.isalnum() and ids:
-				for tag in ids[0].split('/'):
-					# is a tag is suitable as a version number?
-					if re.match(r'^(\d+\.)+[\w.-]+$', tag):
-						version = tag
-						break
+        f = os.popen("hg identify")
+        ident = f.read()[:-1]
+        if not f.close() and ident:
+            ids = ident.split(' ', 1)
+            version = ids.pop(0)
+            if version[-1] == '+':
+                version = version[:-1]
+            if version.isalnum() and ids:
+                for tag in ids[0].split('/'):
+                    # is a tag is suitable as a version number?
+                    if re.match(r'^(\d+\.)+[\w.-]+$', tag):
+                        version = tag
+                        break
     return version or "Unknown"
 
 USAGE = "%prog [options]"
@@ -831,23 +831,23 @@ without would yet you your yours yourself yourselves""").split())
         self.set_last_revision(rev)
 
 def safe__import__(moduleName, globals=globals(),
-		locals=locals(), fromlist=[]):
-	"""Safe imports: rollback after a failed import.
+        locals=locals(), fromlist=[]):
+    """Safe imports: rollback after a failed import.
 
-	Initially inspired from the RollbackImporter in PyUnit,
-	but it's now much simpler and works better for our needs.
+    Initially inspired from the RollbackImporter in PyUnit,
+    but it's now much simpler and works better for our needs.
 
-	See http://pyunit.sourceforge.net/notes/reloading.html
-	"""
+    See http://pyunit.sourceforge.net/notes/reloading.html
+    """
 
-	alreadyImported = sys.modules.copy()
-	try:
-		return __import__(moduleName, globals, locals, fromlist)
-	except Exception, e:
-		raise
-		for name in sys.modules.copy():
-			if not name in alreadyImported:
-				del (sys.modules[name])
+    alreadyImported = sys.modules.copy()
+    try:
+        return __import__(moduleName, globals, locals, fromlist)
+    except Exception, e:
+        raise
+        for name in sys.modules.copy():
+            if not name in alreadyImported:
+                del (sys.modules[name])
 
 class PluginManager(Component):
 
