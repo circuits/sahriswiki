@@ -44,7 +44,7 @@ from creoleparser import create_dialect, creole11_base, Parser
 
 from circuits.app import Daemon
 from circuits.net.pollers import Select, Poll
-from circuits import Component, Manager, Debugger
+from circuits import handler, BaseComponent, Manager, Debugger
 
 from circuits.web.wsgi import Gateway
 from circuits.web.tools import validate_etags
@@ -867,16 +867,14 @@ def safe__import__(moduleName, globals=globals(),
             if not name in alreadyImported:
                 del (sys.modules[name])
 
-class PluginManager(Component):
+class PluginManager(BaseComponent):
 
-    def __init__(self, opts, storage, search):
+    def __init__(self, environ):
         super(PluginManager, self).__init__()
 
-        self.opts = opts
-        self.storage = storage
-        self.search = search
+        self.environ = environ
 
-    def _loadPlugins(self, path):
+    def loadPlugins(self, path):
         if not path in sys.path:
             sys.path.append(path)
 
@@ -898,28 +896,29 @@ class PluginManager(Component):
             plugins = getmembers(m, predicate)
 
             for name, Plugin in plugins:
-                o = Plugin(self, self.opts, self.storage, self.search)
+                o = Plugin(self.environ)
                 o.register(self)
 
-    def started(self, component, mode):
-        self._loadPlugins(os.path.abspath(self.opts.plugins))
+    @handler("started", target="*")
+    def _on_started(self, component, mode):
+        self.loadPlugins(os.path.abspath(self.environ.opts.plugins))
 
-class Tools(Component):
+class Tools(BaseComponent):
 
-    def __init__(self, opts, storage, search):
+    def __init__(self, environ):
         super(Tools, self).__init__()
-        self.opts = opts
-        self.storage = storage
-        self.search = search
 
-    def signal(self, sig, stack):
+        self.environ = environ
+
+    @handler("signal", target="*")
+    def _on_signal(self, sig, stack):
         if os.name == "posix" and sig == signal.SIGHUP:
             self.storage.reopen()
 
-class Root(Controller):
+class Environment(BaseComponent):
 
     def __init__(self, opts, storage, search):
-        super(Root, self).__init__()
+        super(Environment, self).__init__()
 
         self.opts = opts
         self.storage = storage
@@ -929,51 +928,75 @@ class Root(Controller):
             macro_func=macros.dispatcher, wiki_links_base_url="/"),
             method="xhtml")
 
-        self.loader = TemplateLoader(os.path.join(os.path.dirname(__file__),
+        self.templates = TemplateLoader(os.path.join(os.path.dirname(__file__),
             "templates"), auto_reload=True)
 
-        self.environ = {
-                "opts": self.opts,
-                "parser": self.parser,
-                "search": self.search,
-                "storage": self.storage,
-                "macros": macros.loadMacros()}
+        self.macros = macros.loadMacros()
 
-        self.data = {
-                "url": self.url,
-                "stylesheets": [],
-                "parser": self.parser,
-                "version": __version__(),
-                "include": self._include,
-                "site": {
-                    "name": self.opts.name,
-                    "author": self.opts.author,
-                    "keywords": self.opts.keywords,
-                    "description": self.opts.description}}
+        self.stylesheets = []
+        self.version =  __version__()
 
-    def _include(self, name, environ=None):
+        self.site = {
+            "name": self.opts.name,
+            "author": self.opts.author,
+            "keywords": self.opts.keywords,
+            "description": self.opts.description}
+
+        self.tmp = {}
+        self.request = None
+        self.response = None
+
+    def include(self, name):
         if name in self.storage:
             return self.parser.generate(self.storage.page_text(name),
-                    environ=environ)
+                    environ=self)
         else:
             return self.parser.generate(
                     self.storage.page_text("NotFound") or "Page Not Found!",
-                    environ=environ)
+                    environ=self)
 
-    def _render(self, template, name, **kwargs):
-        data = self.data.copy()
-        data.update(kwargs)
-        environ = self.environ.copy()
+    def render(self, template, **data):
+        data["environ"] = self
+        t = self.templates.load(template)
+        return t.generate(**data).render("xhtml", doctype="html")
 
+    @handler("request", priority=1.0, target="web")
+    def _on_request(self, request, response):
+        self.request = request
+        self.response = response
+
+class CacheControl(BaseComponent):
+
+    channel = "web"
+
+    def __init__(self, environ):
+        super(CacheControl, self).__init__()
+
+        self.environ = environ
+
+    @handler("request", filter=True, priority=100.0)
+    def _on_request(self, request, response):
+        node = short(self.environ.storage.repo_node())
+        response.headers.add_header("ETag", node)
+        response = validate_etags(request, response)
+        if response:
+            return response
+
+class Root(Controller):
+
+    def __init__(self, environ):
+        super(Root, self).__init__()
+
+        self.environ = environ
+
+        self.storage = self.environ.storage
+        self.search = self.environ.search
+
+    def _render(self, template, name, **data):
         if name is not None:
             if name in self.storage:
                 text = self.storage.page_text(name)
                 rev, node, date, author, comment = self.storage.page_meta(name)
-
-                self.response.headers.add_header("ETag", short(node))
-                response = validate_etags(self.request, self.response)
-                if response:
-                    return response
 
                 page = {"name": name, "text": text, "rev": rev,
                         "node": short(node), "date": date, "author": author,
@@ -987,24 +1010,15 @@ class Root(Controller):
                     text = ""
                 page = {"name": name, "text": text}
         else:
-            page = {"name": kwargs.get("title", ""),
-                    "text": kwargs.get("text", "")}
+            page = {"name": data.get("title", ""),
+                    "text": data.get("text", "")}
 
-        data["request"] = environ["request"] = self.request
-        data["page"] = environ["page"] = page
-        data["environ"] = environ
+        data["page"] = self.environ.page = page
 
-        t = self.loader.load(template)
-        return t.generate(**data).render("xhtml", doctype="html")
+        return self.environ.render(template, **data)
 
     def index(self, *args, **kwargs):
-        node = short(self.storage.repo_node())
-        self.response.headers.add_header("ETag", node)
-        response = validate_etags(self.request, self.response)
-        if response:
-            return response
-
-        name = "/".join(args) if args else self.opts.frontpage
+        name = os.path.sep.join(args) if args else self.environ.opts.frontpage
         actions = [("/+edit/%s" % name, "Edit"),
                 ("/+history/%s" % name, "History"),
                 ("/+backlinks/%s" % name, "BackLinks")]
@@ -1012,13 +1026,7 @@ class Root(Controller):
 
     @expose("+download")
     def download(self, *args, **kwargs):
-        node = short(self.storage.repo_node())
-        self.response.headers.add_header("ETag", node)
-        response = validate_etags(self.request, self.response)
-        if response:
-            return response
-
-        name = "/".join(args) if args else self.opts.frontpage
+        name = os.path.sep.join(args) if args else self.environ.opts.frontpage
         if name in self.storage:
             mime = self.storage.page_mime(name)
             self.response.headers["Content-Type"] = mime
@@ -1028,13 +1036,6 @@ class Root(Controller):
 
     @expose("+upload")
     def upload(self, *args, **kwargs):
-        if not kwargs:
-            node = short(self.storage.repo_node())
-            self.response.headers.add_header("ETag", node)
-            response = validate_etags(self.request, self.response)
-            if response:
-                return response
-
         action = kwargs.get("action", None)
 
         data = {}
@@ -1063,13 +1064,6 @@ class Root(Controller):
 
     @expose("+edit")
     def edit(self, *args, **kwargs):
-        if not kwargs:
-            node = short(self.storage.repo_node())
-            self.response.headers.add_header("ETag", node)
-            response = validate_etags(self.request, self.response)
-            if response:
-                return response
-
         name = "/".join(args)
         if not kwargs:
             return self._render("edit.html", name, actions=[])
@@ -1117,12 +1111,6 @@ class Root(Controller):
 
     @expose("+search")
     def search(self, *args, **kwargs):
-        node = short(self.storage.repo_node())
-        self.response.headers.add_header("ETag", node)
-        response = validate_etags(self.request, self.response)
-        if response:
-            return response
-
         def index():
             yield "= Page Index ="
             for name in sorted(self.storage.all_pages()):
@@ -1179,22 +1167,10 @@ class Root(Controller):
 
     @expose("+backlinks")
     def backlinks(self, *args, **kwargs):
-        node = short(self.storage.repo_node())
-        self.response.headers.add_header("ETag", node)
-        response = validate_etags(self.request, self.response)
-        if response:
-            return response
-
         if args:
             name = "/".join(args)
         else:
             name = kwargs.get("name", None)
-
-        node = short(self.storage.repo_node())
-        self.response.headers.add_header("ETag", node)
-        response = validate_etags(self.request, self.response)
-        if response:
-            return response
 
         def content():
             yield "= Backlinks for [[%s]] =" % name
@@ -1213,12 +1189,6 @@ class Root(Controller):
 
     @expose("+feed")
     def feed(self, *args, **kwargs):
-        node = short(self.storage.repo_node())
-        self.response.headers.add_header("ETag", node)
-        response = validate_etags(self.request, self.response)
-        if response:
-            return response
-
         name = "/".join(args) if args else None
         format = kwargs.get("format", "rss1")
 
@@ -1262,12 +1232,6 @@ class Root(Controller):
 
     @expose("+orphaned")
     def orphaned(self, *args, **kwargs):
-        node = short(self.storage.repo_node())
-        self.response.headers.add_header("ETag", node)
-        response = validate_etags(self.request, self.response)
-        if response:
-            return response
-
         lines = []
         out = lines.append
 
@@ -1288,12 +1252,6 @@ class Root(Controller):
 
     @expose("+wanted")
     def wanted(self, *args, **kwargs):
-        node = short(self.storage.repo_node())
-        self.response.headers.add_header("ETag", node)
-        response = validate_etags(self.request, self.response)
-        if response:
-            return response
-
         lines = []
         out = lines.append
 
@@ -1314,12 +1272,6 @@ class Root(Controller):
 
     @expose("+history")
     def history(self, *args, **kwargs):
-        node = short(self.storage.repo_node())
-        self.response.headers.add_header("ETag", node)
-        response = validate_etags(self.request, self.response)
-        if response:
-            return response
-
         page_name = "/".join(args) or ""
         rev = kwargs.get("rev", None)
 
@@ -1392,12 +1344,6 @@ class Root(Controller):
 
     @expose("robots.txt")
     def robots(self, *args, **kwargs):
-        node = short(self.storage.repo_node())
-        self.response.headers.add_header("ETag", node)
-        response = validate_etags(self.request, self.response)
-        if response:
-            return response
-
         self.response.headers["Content-Type"] = "text/plain"
         if "robots.txt" in self.storage:
             return self.storage.page_text("robots.txt")
@@ -1443,14 +1389,16 @@ def main():
     storage = WikiStorage(opts.data, opts.encoding)
     search = WikiSearch(opts.cache, storage)
 
-    manager += (Poller()
-            + Server(bind)
-            + Gateway(hgweb(storage.repo_path), "/+hg")
+    environ = Environment(opts, storage, search)
+
+    manager += environ
+
+    manager += (Poller() + Server(bind) + CacheControl(environ) + Logger()
+            + Root(environ)
+            + Tools(environ)
+            + PluginManager(environ)
             + Static(docroot="static")
-            + Root(opts, storage, search)
-            + Tools(opts, storage, search)
-            + PluginManager(opts, storage, search)
-            + Logger())
+            + Gateway(hgweb(storage.repo_path), "/+hg"))
 
     if opts.daemon:
         manager += Daemon(opts.pidfile)
