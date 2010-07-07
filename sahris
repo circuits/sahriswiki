@@ -1218,7 +1218,7 @@ class Root(Controller):
                 ("/+feed/%s?format=atom" % page_name or "", "Atom")]
 
         return self._render("view.html", None,
-                text=text, title="History", actions=actions)
+                text=text, title=title, actions=actions)
 
     @expose("robots.txt")
     def robots(self, *args, **kwargs):
