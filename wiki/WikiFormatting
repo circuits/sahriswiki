@@ -141,8 +141,8 @@ You can mix and match bullet and number lists:
 You can create a definition (description) list with the following syntax:
 
 <<code>>
-:Item 1: Something
-:Item 2: Something else
+;Item 1: Something
+;Item 2: Something else
 <</code>>
 
 ;Item 1: Something
@@ -337,5 +337,6 @@ You can create tables using pairs of vertical bars:
 |||| you can span multiple columns by || starting each cell ||
 || with extra cell |||| separators ||
 |||||| but perhaps an example is the easiest way to see ||
+
 
 
