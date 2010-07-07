@@ -1257,7 +1257,8 @@ class Root(Controller):
         pages.sort(key=itemgetter(0), reverse=True)
 
         for refs, name in pages:
-            out(" * [[%s]] //%d references//" % (name, refs))
+            out(" * [[%s]] / [[+backlinks/%s]]  //%d references//" % (name,
+                name, refs))
 
         text = "\n".join(lines)
         actions = [("/+orphaned", "Orphaned"), ("/+wanted", "Wanted")]
