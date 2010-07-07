@@ -15,4 +15,9 @@ class HelloWorld(BasePlugin):
 
     @expose("+hello")
     def hello(self, *args, **kwargs):
-        return "Hello World!"
+        page = {"name": "HelloWorld",
+                "text": "Hello World!"}
+
+        data = {"page": page}
+
+        return self.render("view.html", **data)

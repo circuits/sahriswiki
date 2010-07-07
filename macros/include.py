@@ -5,47 +5,51 @@ Macros for inclusion of other wiki pages
 
 from genshi import builder
 
-def include(macro, environ, pagename=None, *args, **kwargs):
+def include(macro, environ, name=None, *args, **kwargs):
     """Return the parsed content of the page identified by arg_string"""
     
-    if pagename is None:
+    if name is None:
         return None
 
-    db = environ["db"]
-    page = db.get(pagename, None)
+    storage = environ.storage
 
-    if page is not None:
-        environ["page.name"] = pagename
+    if name in storage:
+        text = storage.page_text(name)
 
-        return environ["parser"].generate(page, environ=environ)
+        environ.page["name"] = name
+        environ.page["text"] = text
 
-def include_raw(macro, environ, pagename=None, *args, **kwargs):
+        return environ.parser.generate(text, environ=environ)
+
+def include_raw(macro, environ, name=None, *args, **kwargs):
     """Return the raw text of the page identified by arg_string, rendered
     in a <pre> block.
     """
 
-    if pagename is None:
+    if name is None:
         return None
 
-    db = environ["db"]
-    page = db.get(pagename, None)
+    storage = environ.storage
 
-    if page is not None:
-        return builder.tag.pre(page, class_="plain")
+    if name in storage:
+        text = storage.page_text(name)
 
-def include_source(macro, environ, pagename=None, *args, **kwargs):
+        return builder.tag.pre(text, class_="plain")
+
+def include_source(macro, environ, name=None, *args, **kwargs):
     """Return the parsed text of the page identified by arg_string, rendered
     in a <pre> block.
     """
 
-    if pagename is None:
+    if name is None:
         return None
 
-    db = environ["db"]
-    page = db.get(pagename, None)
+    storage = environ.storage
 
-    if page is not None:
-        environ["page.name"] = pagename
+    if name in storage:
+        text = storage.page_text(name)
 
-        return builder.tag.pre(environ["parser"].render(page,
+        environ.page["name"] = name
+
+        return builder.tag.pre(environ.parser.render(text,
             environ=environ).decode("utf-8"))

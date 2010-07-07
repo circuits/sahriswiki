@@ -11,10 +11,10 @@ from circuits.web import Controller
 
 class BasePlugin(Controller):
 
-    def __init__(self, pluginmanager, opts, storage, search):
+    def __init__(self, environ):
         super(BasePlugin, self).__init__()
 
-        self.pluginmanager = pluginmanager
-        self.opts = opts
-        self.storage = storage
-        self.search = search
+        self.environ = environ
+
+    def render(self, template, **data):
+        return self.environ.render(template, **data)

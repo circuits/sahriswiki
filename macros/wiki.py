@@ -8,23 +8,23 @@ from genshi.builder import tag
 def title(macro, environ, *args, **kwargs):
     """Return the title of the current page."""
 
-    return environ["page"]["name"]
+    return environ.page["name"]
 
 def add_comment(macro, environ, *args, **kwargs):
     """..."""
 
     # Prevent multiple inclusions - store a temp in environ
-    if "add-comment" in environ:
+    if "add-comment" in environ.tmp:
         raise Exception("<<add-comment>> macro cannot be included twice.")
-    environ["add-comment"] = True
+    environtmp["add-comment"] = True
 
     # Setup info and defaults
-    parser = environ["parser"]
-    request = environ["request"]
+    parser = environ.parser
+    request = environ.request
 
     user = request.remote.ip
 
-    page = environ["page"]
+    page = environ.page
     page_name = page["name"]
     page_text = page["text"]
     page_url = page["url"]
@@ -59,8 +59,8 @@ def add_comment(macro, environ, *args, **kwargs):
                 new_text += comment_text
             new_text += line + "\n"
 
-        search = environ["search"]
-        storage = environ["storage"]
+        search = environ.search
+        storage = environ.storage
 
         storage.reopen()
         search.update()
