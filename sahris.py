@@ -942,7 +942,6 @@ class Environment(BaseComponent):
             "keywords": self.opts.keywords,
             "description": self.opts.description}
 
-        self.tmp = {}
         self.request = None
         self.response = None
 
