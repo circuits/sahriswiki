@@ -46,8 +46,8 @@ from circuits.app import Daemon
 from circuits.net.pollers import Select, Poll
 from circuits import handler, BaseComponent, Manager, Debugger
 
-from circuits.web.wsgi import Gateway
 from circuits.web.tools import validate_etags
+from circuits.web.wsgi import Application, Gateway
 from circuits.web.utils import url_quote, url_unquote
 from circuits.web import expose, url, Server, Controller, Logger, Static
 
@@ -1407,3 +1407,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+else:
+    application = (Application()
+            + CacheControl(environ)
+            + Root(environ)
+            + PluginManager(environ)
+            + Static(docroot="static")
+            + Gateway(hgweb(storage.repo_path), "/+hg"))
