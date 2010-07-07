@@ -1251,14 +1251,17 @@ class Root(Controller):
         title = "Orphaned Pages"
         out("= %s =" % title)
 
-        for name in sorted(self.search.orphaned_pages()):
+        pages = list(self.search.orphaned_pages())
+        pages.sort()
+
+        for name in pages:
             out(" * [[%s]]" % name)
 
         text = "\n".join(lines)
         actions = [("/+orphaned", "Orphaned"), ("/+wanted", "Wanted")]
 
         return self._render("view.html", None,
-                text=text, title="Orphaned Pages", actions=actions)
+                text=text, title=title, actions=actions)
 
     @expose("+wanted")
     def wanted(self, *args, **kwargs):
@@ -1284,7 +1287,7 @@ class Root(Controller):
         actions = [("/+orphaned", "Orphaned"), ("/+wanted", "Wanted")]
 
         return self._render("view.html", None,
-                text=text, title="Orphaned Pages", actions=actions)
+                text=text, title=title, actions=actions)
 
     @expose("+history")
     def history(self, *args, **kwargs):
