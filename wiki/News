@@ -1,0 +1,12 @@
+= News =
+//[[SahrisWiki]] News, Updates and Releases//
+
+== 8th July 2010 ==
+
+**New Release**: [[http://bitbucket.org/prologic/sahriswiki/get/0.6.tar.gz|0.6.tar.gz]]
+ * Code is a lot cleaner!
+ * NEW: Plugin support --> +hello
+ * NEW: Upload support --> +upload
+ * NEW: Orphaned pages --> +orphaned
+ * NEW: Wanted pages --> +wanted
+
