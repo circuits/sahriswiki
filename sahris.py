@@ -9,7 +9,6 @@ import sqlite3
 import tempfile
 import optparse
 import mimetypes
-from json import dumps, loads
 from operator import itemgetter
 from difflib import unified_diff
 from time import gmtime, strftime
@@ -30,7 +29,6 @@ import mercurial.revlog
 from mercurial.node import short
 from mercurial.hgweb import hgweb
 
-import genshi
 from genshi.template import TemplateLoader
 
 from feedformatter import Feed
@@ -38,7 +36,6 @@ from feedformatter import Feed
 from creoleparser import create_dialect, creole11_base, Parser
 
 from circuits.app import Daemon
-from circuits.core.utils import findcmp
 from circuits.net.pollers import Select, Poll
 from circuits import Component, Manager, Debugger
 
