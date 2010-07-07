@@ -1060,9 +1060,12 @@ class Root(Controller):
 
     @expose("+edit")
     def edit(self, *args, **kwargs):
-        name = "/".join(args)
+        name = os.path.sep.join(args)
         if not kwargs:
-            return self._render("edit.html", title=name)
+            if name in self.environ.storage:
+                return self._render("edit.html", name=name)
+            else:
+                return self._render("edit.html", title=name)
 
         author = self.cookie.get("username")
         if author:
@@ -1163,10 +1166,7 @@ class Root(Controller):
 
     @expose("+backlinks")
     def backlinks(self, *args, **kwargs):
-        if args:
-            name = "/".join(args)
-        else:
-            name = kwargs.get("name", None)
+        name = os.path.sep.join(args)
 
         def content():
             yield "= Backlinks for [[%s]] =" % name
@@ -1188,7 +1188,7 @@ class Root(Controller):
 
     @expose("+feed")
     def feed(self, *args, **kwargs):
-        name = "/".join(args) if args else None
+        name = os.path.sep.join(args) if args else None
         format = kwargs.get("format", "rss1")
 
         if not format in ("rss1", "rss2", "atom"):
@@ -1272,7 +1272,7 @@ class Root(Controller):
 
     @expose("+history")
     def history(self, *args, **kwargs):
-        page_name = "/".join(args) or ""
+        page_name = os.path.sep.join(args) or ""
         rev = kwargs.get("rev", None)
 
         lines = []
