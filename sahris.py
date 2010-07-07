@@ -12,6 +12,7 @@ import re
 import sys
 import signal
 import sqlite3
+import warnings
 import tempfile
 import optparse
 import mimetypes
@@ -1434,7 +1435,7 @@ def main():
         Poller = Poll
     elif poller == "epoll":
         if EPoll is None:
-            print "No epoll support available - defaulting to Select..."
+            warnings.warn("No epoll support available.")
             Poller = Select
         else:
             Poller = EPoll
