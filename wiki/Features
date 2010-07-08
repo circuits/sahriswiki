@@ -5,4 +5,5 @@
 * **[[+search]]** :: [[SahrisWiki]] includes a powerful cache-able full-text search thanks to [[http://hatta.sheep.art.pl/|Hatta]].
 * **[[Macros]]** :: [[SahrisWiki]] supports the creole macro extension and includes a variety of useful macros.
 * **[[+plugins]]** :: [[SahrisWiki]] has full plugin support allowing for easy and powerful extensibility.
+* **[[Themes]]** :: [[SahrisWiki]] uses the [[http://genshi.edgewall.org/|genshi]] toolkit to make creating new themes easy.
 
