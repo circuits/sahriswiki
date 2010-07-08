@@ -252,11 +252,23 @@ without would yet you your yours yourself yourselves""").split())
     def reindex_page(self, title, cursor, text=None):
         """Updates the content of the database, needs locks around."""
 
+        print "Reindexing:", title
+
         mime = self.storage.page_mime(title)
 
         if not mime.startswith("text/"):
             self.update_words(title, "", cursor=cursor)
             return
+
+        if not title in self.storage:
+            title_id = self.title_id(title, cursor)
+            if not len(list(self.page_backlinks(title))):
+                print " No backlinks, deleting ..."
+                cursor.execute("DELETE FROM titles WHERE id=?;", (title_id,))
+            cursor.execute("DELETE FROM words WHERE page=?;", (title_id,))
+            cursor.execute("DELETE FROM links WHERE src=?;", (title_id,))
+            return
+
         if text is None:
             text = self.storage.page_text(title) or u""
 
