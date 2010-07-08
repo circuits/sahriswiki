@@ -1,0 +1,9 @@
+= BackLinks =
+
+BackLinks are a set of links that link to the page in question. If page A links to page B, then a 'back link' would be a link which goes from page B back to page A. 
+
+On this wiki, the title of each page works as a back link. Clicking on the title of any page finds all the pages referring to that page. It works for any wiki page. E.g. to find all pages that link to this page, click the title at the top of this page.
+
+**NOTE:**
+ * Before you delete a page, please check the BackLinks and clean them up to avoid
+   creating broken links.
