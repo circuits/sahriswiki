@@ -5,6 +5,7 @@ dist
 *.pyc
 *.pyo
 build
+cache
 coverage
 .coverage
 docs/build
