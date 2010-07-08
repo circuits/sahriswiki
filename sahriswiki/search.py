@@ -8,25 +8,25 @@ def external_link(addr):
     """
     Decide whether a link is absolute or internal.
 
-    >>> external_link('http://example.com')
+    >>> external_link("http://example.com")
     True
-    >>> external_link('https://example.com')
+    >>> external_link("https://example.com")
     True
-    >>> external_link('ftp://example.com')
+    >>> external_link("ftp://example.com")
     True
-    >>> external_link('mailto:user@example.com')
+    >>> external_link("mailto:user@example.com")
     True
-    >>> external_link('PageTitle')
+    >>> external_link("PageTitle")
     False
-    >>> external_link(u'ąęśćUnicodePage')
+    >>> external_link(u"ąęśćUnicodePage")
     False
 
     """
 
-    return (addr.startswith('http://')
-            or addr.startswith('https://')
-            or addr.startswith('ftp://')
-            or addr.startswith('mailto:'))
+    return (addr.startswith("http://")
+            or addr.startswith("https://")
+            or addr.startswith("ftp://")
+            or addr.startswith("mailto:"))
 
 def extract_links(text):
     links = re.compile(ur"\[\[(?P<link_target>([^|\]]|\][^|\]])+)"
@@ -44,10 +44,12 @@ class WikiSearch(object):
 
     word_pattern = re.compile(ur"""\w[-~&\w]+\w""", re.UNICODE)
 
-    def __init__(self, cache_path, storage):
-        self.path = cache_path
+    def __init__(self, path, storage):
+        self.path = path
         self.storage = storage
-        self.filename = os.path.join(cache_path, 'index.db')
+
+        self.filename = os.path.join(self.path, "index.db")
+
         if not os.path.isdir(self.path):
             self.empty = True
             os.makedirs(self.path)
@@ -58,18 +60,18 @@ class WikiSearch(object):
 
         self.con = sqlite3.connect(self.filename)
 
-        self.con.execute('CREATE TABLE IF NOT EXISTS titles '
-                '(id INTEGER PRIMARY KEY, title VARCHAR);')
-        self.con.execute('CREATE TABLE IF NOT EXISTS words '
-                '(word VARCHAR, page INTEGER, count INTEGER);')
-        self.con.execute('CREATE INDEX IF NOT EXISTS index1 '
-                         'ON words (page);')
-        self.con.execute('CREATE INDEX IF NOT EXISTS index2 '
-                         'ON words (word);')
-        self.con.execute('CREATE TABLE IF NOT EXISTS links '
-                '(src INTEGER, target INTEGER, label VARCHAR, number INTEGER);')
+        self.con.execute("CREATE TABLE IF NOT EXISTS titles "
+                "(id INTEGER PRIMARY KEY, title VARCHAR);")
+        self.con.execute("CREATE TABLE IF NOT EXISTS words "
+                "(word VARCHAR, page INTEGER, count INTEGER);")
+        self.con.execute("CREATE INDEX IF NOT EXISTS index1 "
+                         "ON words (page);")
+        self.con.execute("CREATE INDEX IF NOT EXISTS index2 "
+                         "ON words (word);")
+        self.con.execute("CREATE TABLE IF NOT EXISTS links "
+                "(src INTEGER, target INTEGER, label VARCHAR, number INTEGER);")
         self.con.commit()
-        self.stop_words_re = re.compile(u'^('+u'|'.join(re.escape(
+        self.stop_words_re = re.compile(u"^(" + u"|".join(re.escape(
 u"""am ii iii per po re a about above
 across after afterwards again against all almost alone along already also
 although always am among ain amongst amoungst amount an and another any aren
@@ -96,7 +98,8 @@ un under ve until up upon us very via was wasn we well were what whatever when
 whence whenever where whereafter whereas whereby wherein whereupon wherever
 whether which while whither who whoever whole whom whose why will with within
 without would yet you your yours yourself yourselves""").split())
-+ur')$|.*\d.*', re.U|re.I|re.X)
++ ur")$|.*\d.*", re.U | re.I | re.X)
+
         self.update()
 
     def split_text(self, text, stop=True):
@@ -114,11 +117,11 @@ without would yet you your yours yourself yourselves""").split())
         return count
 
     def title_id(self, title, con):
-        c = con.execute('SELECT id FROM titles WHERE title=?;', (title,))
+        c = self.con.execute("SELECT id FROM titles WHERE title=?;", (title,))
         idents = c.fetchone()
         if idents is None:
-            con.execute('INSERT INTO titles (title) VALUES (?);', (title,))
-            c = con.execute('SELECT LAST_INSERT_ROWID();')
+            self.con.execute("INSERT INTO titles (title) VALUES (?);", (title,))
+            c = self.con.execute("SELECT LAST_INSERT_ROWID();")
             idents = c.fetchone()
         return idents[0]
 
@@ -128,16 +131,16 @@ without would yet you your yours yourself yourselves""").split())
         title_words = self.count_words(self.split_text(title))
         for word, count in title_words.iteritems():
             words[word] = words.get(word, 0) + count
-        cursor.execute('DELETE FROM words WHERE page=?;', (title_id,))
+        cursor.execute("DELETE FROM words WHERE page=?;", (title_id,))
         for word, count in words.iteritems():
-            cursor.execute('INSERT INTO words VALUES (?, ?, ?);',
+            cursor.execute("INSERT INTO words VALUES (?, ?, ?);",
                              (word, title_id, count))
 
     def update_links(self, title, links_and_labels, cursor):
         title_id = self.title_id(title, cursor)
-        cursor.execute('DELETE FROM links WHERE src=?;', (title_id,))
+        cursor.execute("DELETE FROM links WHERE src=?;", (title_id,))
         for number, (link, label) in enumerate(links_and_labels):
-            cursor.execute('INSERT INTO links VALUES (?, ?, ?, ?);',
+            cursor.execute("INSERT INTO links VALUES (?, ?, ?, ?);",
                              (title_id, link, label, number))
 
     def orphaned_pages(self):
@@ -145,10 +148,10 @@ without would yet you your yours yourself yourselves""").split())
 
         con = self.con
         try:
-            sql = ('SELECT title FROM titles '
-                   'WHERE NOT EXISTS '
-                   '(SELECT * FROM links WHERE target=title) '
-                   'ORDER BY title;')
+            sql = ("SELECT title FROM titles "
+                   "WHERE NOT EXISTS "
+                   "(SELECT * FROM links WHERE target=title) "
+                   "ORDER BY title;")
             for (title,) in con.execute(sql):
                 yield unicode(title)
         finally:
@@ -160,13 +163,13 @@ without would yet you your yours yourself yourselves""").split())
 
         con = self.con
         try:
-            sql = ('SELECT COUNT(*), target FROM links '
-                   'WHERE NOT EXISTS '
-                   '(SELECT * FROM titles WHERE target=title) '
-                   'GROUP BY target ORDER BY -COUNT(*);')
+            sql = ("SELECT COUNT(*), target FROM links "
+                   "WHERE NOT EXISTS "
+                   "(SELECT * FROM titles WHERE target=title) "
+                   "GROUP BY target ORDER BY -COUNT(*);")
             for (refs, db_title,) in con.execute(sql):
                 title = unicode(db_title)
-                if not external_link(title) and not title.startswith('+'):
+                if not external_link(title) and not title.startswith("+"):
                     yield refs, title
         finally:
             con.commit()
@@ -174,10 +177,10 @@ without would yet you your yours yourself yourselves""").split())
     def page_backlinks(self, title):
         con = self.con # sqlite3.connect(self.filename)
         try:
-            sql = ('SELECT DISTINCT(titles.title) '
-                   'FROM links, titles '
-                   'WHERE links.target=? AND titles.id=links.src '
-                   'ORDER BY titles.title;')
+            sql = ("SELECT DISTINCT(titles.title) "
+                   "FROM links, titles "
+                   "WHERE links.target=? AND titles.id=links.src "
+                   "ORDER BY titles.title;")
             for (backlink,) in con.execute(sql, (title,)):
                 yield backlink
         finally:
@@ -187,7 +190,7 @@ without would yet you your yours yourself yourselves""").split())
         con = self.con # sqlite3.connect(self.filename)
         try:
             title_id = self.title_id(title, con)
-            sql = 'SELECT TARGET from links where src=? ORDER BY number;'
+            sql = "SELECT TARGET from links where src=? ORDER BY number;"
             for (link,) in con.execute(sql, (title_id,)):
                 yield link
         finally:
@@ -197,7 +200,7 @@ without would yet you your yours yourself yourselves""").split())
         con = self.con # sqlite3.connect(self.filename)
         try:
             title_id = self.title_id(title, con)
-            sql = 'SELECT target, label FROM links WHERE src=? ORDER BY number;'
+            sql = "SELECT target, label FROM links WHERE src=? ORDER BY number;"
             for link_and_label in con.execute(sql, (title_id,)):
                 yield link_and_label
         finally:
@@ -212,8 +215,8 @@ without would yet you your yours yourself yourselves""").split())
             ranks = []
             for word in words:
                 # Calculate popularity of each word.
-                sql = 'SELECT SUM(words.count) FROM words WHERE word LIKE ?;'
-                rank = con.execute(sql, ('%%%s%%' % word,)).fetchone()[0]
+                sql = "SELECT SUM(words.count) FROM words WHERE word LIKE ?;"
+                rank = con.execute(sql, ("%%%s%%" % word,)).fetchone()[0]
                 # If any rank is 0, there will be no results anyways
                 if not rank:
                     return
@@ -222,20 +225,20 @@ without would yet you your yours yourself yourselves""").split())
             # Start with the least popular word. Get all pages that contain it.
             first_rank, first = ranks[0]
             rest = ranks[1:]
-            sql = ('SELECT words.page, titles.title, SUM(words.count) '
-                   'FROM words, titles '
-                   'WHERE word LIKE ? AND titles.id=words.page '
-                   'GROUP BY words.page;')
-            first_counts = con.execute(sql, ('%%%s%%' % first,))
+            sql = ("SELECT words.page, titles.title, SUM(words.count) "
+                   "FROM words, titles "
+                   "WHERE word LIKE ? AND titles.id=words.page "
+                   "GROUP BY words.page;")
+            first_counts = con.execute(sql, ("%%%s%%" % first,))
             # Check for the rest of words
             for title_id, title, first_count in first_counts:
                 # Score for the first word
                 score = float(first_count)/first_rank
                 for rank, word in rest:
-                    sql = ('SELECT SUM(count) FROM words '
-                           'WHERE page=? AND word LIKE ?;')
+                    sql = ("SELECT SUM(count) FROM words "
+                           "WHERE page=? AND word LIKE ?;")
                     count = con.execute(sql,
-                        (title_id, '%%%s%%' % word)).fetchone()[0]
+                        (title_id, "%%%s%%" % word)).fetchone()[0]
                     if not count:
                         # If page misses any of the words, its score is 0
                         score = 0
@@ -255,16 +258,18 @@ without would yet you your yours yourself yourselves""").split())
             return
         if text is None:
             text = self.storage.page_text(title) or u""
-        if mime == 'text/x-wiki':
+
+        if mime == "text/x-wiki":
             links = extract_links(text)
             self.update_links(title, links, cursor=cursor)
+
         self.update_words(title, text, cursor=cursor)
 
     def update_page(self, title, data=None, text=None):
         """Updates the index with new page content, for a single page."""
 
         if text is None and data is not None:
-            text = unicode(data, self.storage.charset, 'replace')
+            text = unicode(data, self.storage.charset, "replace")
         cursor = self.con.cursor()
         try:
             self.set_last_revision(self.storage.repo_revision())
@@ -278,7 +283,7 @@ without would yet you your yours yourself yourselves""").split())
         """Updates specified pages in bulk."""
 
         cursor = self.con.cursor()
-        cursor.execute('BEGIN IMMEDIATE TRANSACTION;')
+        cursor.execute("BEGIN IMMEDIATE TRANSACTION;")
         try:
             for title in pages:
                 self.reindex_page(title, cursor)
@@ -293,13 +298,13 @@ without would yet you your yours yourself yourselves""").split())
 
         # We use % here because the sqlite3's substitiution doesn't work
         # We store revision 0 as 1, 1 as 2, etc. because 0 means "no revision"
-        self.con.execute('PRAGMA USER_VERSION=%d;' % (int(rev+1),))
+        self.con.execute("PRAGMA USER_VERSION=%d;" % (int(rev+1),))
 
     def get_last_revision(self):
         """Retrieve the last indexed repository revision."""
 
         con = self.con
-        c = con.execute('PRAGMA USER_VERSION;')
+        c = con.execute("PRAGMA USER_VERSION;")
         rev = c.fetchone()[0]
         # -1 means "no revision", 1 means revision 0, 2 means revision 1, etc.
         return rev-1
