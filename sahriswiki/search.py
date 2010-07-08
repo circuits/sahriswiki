@@ -253,8 +253,9 @@ without would yet you your yours yourself yourselves""").split())
         """Updates the content of the database, needs locks around."""
 
         mime = self.storage.page_mime(title)
-        if not mime.startswith('text/'):
-            self.update_words(title, '', cursor=cursor)
+
+        if not mime.startswith("text/"):
+            self.update_words(title, "", cursor=cursor)
             return
         if text is None:
             text = self.storage.page_text(title) or u""
