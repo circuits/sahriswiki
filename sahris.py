@@ -9,7 +9,6 @@ and ease of use.
 
 import os
 import re
-import sys
 import signal
 import sqlite3
 import warnings
@@ -19,7 +18,6 @@ import mimetypes
 from operator import itemgetter
 from difflib import unified_diff
 from time import gmtime, strftime
-from inspect import getmembers, isclass
 
 try:
     import psyco
@@ -57,7 +55,7 @@ except ImportError:
     EPoll = None
 
 import macros
-from plugins import BasePlugin
+from plugins import PluginManager
 
 FIXLINES = re.compile("(\r[^\n])|(\r\n)")
 
@@ -847,61 +845,6 @@ without would yet you your yours yourself yourselves""").split())
         self.reindex(changed)
         rev = self.storage.repo_revision()
         self.set_last_revision(rev)
-
-def safe__import__(moduleName, globals=globals(),
-        locals=locals(), fromlist=[]):
-    """Safe imports: rollback after a failed import.
-
-    Initially inspired from the RollbackImporter in PyUnit,
-    but it's now much simpler and works better for our needs.
-
-    See http://pyunit.sourceforge.net/notes/reloading.html
-    """
-
-    alreadyImported = sys.modules.copy()
-    try:
-        return __import__(moduleName, globals, locals, fromlist)
-    except Exception, e:
-        raise
-        for name in sys.modules.copy():
-            if not name in alreadyImported:
-                del (sys.modules[name])
-
-class PluginManager(BaseComponent):
-
-    def __init__(self, environ):
-        super(PluginManager, self).__init__()
-
-        self.environ = environ
-
-    def loadPlugins(self, path):
-        if not path in sys.path:
-            sys.path.append(path)
-
-        __package__ = os.path.basename(path)
-
-        p = lambda x: os.path.splitext(x)[1] == ".py"
-        modules = [x for x in os.listdir(path)
-                if p(x) and not x == "__init__.py"]
-
-        for module in modules:
-            name, _ = os.path.splitext(module)
-
-            moduleName = "%s.%s" % (__package__, name)
-            m = __import__(moduleName, globals(), locals(), __package__)
-
-            p1 = lambda x: isclass(x) and issubclass(x, BasePlugin)
-            p2 = lambda x: x is not BasePlugin
-            predicate = lambda x: p1(x) and p2(x)
-            plugins = getmembers(m, predicate)
-
-            for name, Plugin in plugins:
-                o = Plugin(self.environ)
-                o.register(self)
-
-    @handler("started", target="*")
-    def _on_started(self, component, mode):
-        self.loadPlugins(os.path.abspath(self.environ.opts.plugins))
 
 class Tools(BaseComponent):
 
