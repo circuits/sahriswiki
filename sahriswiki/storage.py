@@ -1,5 +1,4 @@
 import os
-import re
 import tempfile
 import mimetypes
 
@@ -13,9 +12,6 @@ import mercurial.revlog
 from mercurial.node import short
 
 from circuits.web.utils import url_quote, url_unquote
-
-periods_re = re.compile(r'^[.]|(?<=/)[.]')
-slashes_re = re.compile(r'^[/]|(?<=/)[/]')
 
 def locked_repo(func):
     """A decorator for locking the repository when calling a method."""
@@ -56,7 +52,7 @@ class WikiStorage(object):
         """
 
         self.charset = charset or 'utf-8'
-        self.path = os.path.abspath(path)
+        self.path = path
         if not os.path.exists(self.path):
             os.makedirs(self.path)
         self.repo_path = self._find_repo_path(self.path)
@@ -83,18 +79,6 @@ class WikiStorage(object):
 
         self.repo = mercurial.hg.repository(self.ui, self.repo_path)
 
-    def _check_path(self, path):
-        """
-        Ensure that the path is within allowed bounds.
-        """
-
-        abspath = os.path.abspath(path)
-        if os.path.islink(path) or os.path.isdir(path):
-            raise Exception(
-                    "Can't use symbolic links or directories as pages")
-        if not abspath.startswith(self.path):
-            raise Exception(
-                    "Can't read or write outside of the pages repository")
 
     def _find_repo_path(self, path):
         """Go up the directory tree looking for a repository."""
@@ -109,14 +93,8 @@ class WikiStorage(object):
         return os.path.join(self.path, url_quote(title, safe=''))
 
     def _title_to_file(self, title):
-        """Modified escaping allowing (some) slashes and spaces."""
-
-        title = unicode(title).strip()
-        escaped = url_quote(title, safe='/ ')
-        escaped = periods_re.sub('%2E', escaped)
-        escaped = slashes_re.sub('%2F', escaped)
-        path = os.path.join(self.repo_prefix, escaped)
-        return path
+        return os.path.join(self.repo_prefix,
+                            url_quote(title, safe=''))
 
     def _file_to_title(self, filename):
         assert filename.startswith(self.repo_prefix)
@@ -162,20 +140,7 @@ class WikiStorage(object):
 
     @locked_repo
     def save_file(self, title, file_name, author=u'', comment=u'', parent=None):
-        """
-        Save the file and make the subdirectories if needed.
-        """
-
-        file_path = self._file_path(title)
-        self._check_path(file_path)
-        dir_path = os.path.dirname(file_path)
-        try:
-            os.makedirs(dir_path)
-        except OSError, e:
-            if e.errno == 17 and not os.path.isdir(dir_path):
-                raise Exception("Can't make subpages of existing pages")
-            elif e.errno != 17:
-                raise
+        """Save an existing file as specified page."""
 
         user = author.encode('utf-8') or u'anon'.encode('utf-8')
         text = comment.encode('utf-8') or u'comment'.encode('utf-8')
@@ -197,6 +162,7 @@ class WikiStorage(object):
             user = '<wiki>'
             text = msg.encode('utf-8')
         self._commit([repo_file], text, user)
+
 
     def _commit(self, files, text, user):
         try:
@@ -252,13 +218,6 @@ class WikiStorage(object):
 
     @locked_repo
     def delete_page(self, title, author=u'', comment=u''):
-        """
-        Remove empty directories after deleting a page.
-
-        Note that Mercurial doesn't track directories, so we don't have to
-        commit after removing empty directories.
-        """
-
         user = author.encode('utf-8') or 'anon'
         text = comment.encode('utf-8') or 'deleted'
         repo_file = self._title_to_file(title)
@@ -269,11 +228,6 @@ class WikiStorage(object):
             pass
         self.repo.remove([repo_file])
         self._commit([repo_file], text, user)
-
-        file_path = self._file_path(title)
-        self._check_path(file_path)
-        dir_path = os.path.dirname(file_path)
-        os.removedirs(dir_path)
 
     def open_page(self, title):
         try:
@@ -399,13 +353,10 @@ class WikiStorage(object):
     def all_pages(self):
         """Iterate over the titles of all pages in the wiki."""
 
-        for (dirpath, dirnames, filenames) in os.walk(self.path):
-            path = dirpath[len(self.path)+1:]
-            for name in filenames:
-                filename = os.path.join(path, name)
-                if (os.path.isfile(os.path.join(self.path, filename))
-                    and not filename.startswith('.')):
-                    yield url_unquote(filename)
+        for filename in os.listdir(self.path):
+            if (os.path.isfile(os.path.join(self.path, filename))
+                and not filename.startswith('.')):
+                yield url_unquote(filename)
 
     def changed_since(self, rev):
         """Return all pages that changed since specified repository revision."""
