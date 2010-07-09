@@ -32,7 +32,8 @@ class Root(BaseController):
                     "node": short(node), "date": date, "author": author,
                     "comment": comment,
                     "url": self.url(name),
-                    "feed": self.url("/+feed/%s" % name)}
+                    "feed": self.url("/+feed/%s" % name),
+                    "backlinks": self.url("/+backlinks/%s" % name)}
         else:
             page = {"name": data.get("title", ""),
                     "text": data.get("text", "")}
@@ -47,8 +48,7 @@ class Root(BaseController):
 
         if name in self.environ.storage:
             actions = [("/+edit/%s" % name, "Edit"),
-                    ("/+history/%s" % name, "History"),
-                    ("/+backlinks/%s" % name, "BackLinks")]
+                    ("/+history/%s" % name, "History")]
             return self.render("view.html", name=name, actions=actions)
         else:
             return self.render("notfound.html", title=name)
@@ -201,7 +201,7 @@ class Root(BaseController):
         name = os.path.sep.join(args)
 
         def content():
-            yield "= Backlinks for [[%s]] =" % name
+            yield "= BackLinks for [[%s]] =" % name
             yield "Pages that contain a link to %s: " % name
             for link in self.search.page_backlinks(name):
                 yield "* [[%s]]" % link
@@ -210,7 +210,7 @@ class Root(BaseController):
         self.search.update()
 
         text = "\n".join(content())
-        title = "Backlinks for %s" % name
+        title = "BackLinks for %s" % name
         actions = [("/+search", "Index"),
                 ("/+orphaned", "Orphaned"),
                 ("/+wanted", "Wanted")]

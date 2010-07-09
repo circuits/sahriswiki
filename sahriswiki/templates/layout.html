@@ -38,7 +38,15 @@
   <body py:attrs="select('@*')">
 	 	<div id="main">
 	 		<div id="header">
-     <h1>${page["name"]}</h1>
+     <py:choose test="'backlinks' in page">
+      <py:when test="True">
+       <h1><a title="View BackLinks for ${page['name']}"
+        href="${page['backlinks']}">${page["name"]}</a></h1>
+      </py:when>
+      <py:otherwise>
+       <h1>${page["name"]}</h1>
+      </py:otherwise>
+     </py:choose>
      <div id="search">
       <form class="search" action="${environ.request.url('/+search')}">
        <input id="q" name="q" size="18" />
