@@ -137,6 +137,13 @@ table {
     float: left;
     position: relative;
 }
+#header h1 a {
+	color : #ffffff;
+	padding : 0.75em 1.5em;
+}
+#header h1 a:hover {
+	color : #ba8f43;
+}
 
 #search {
   float: right;
