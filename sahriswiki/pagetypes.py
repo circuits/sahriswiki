@@ -279,6 +279,13 @@ class WikiPageImage(WikiPageFile):
         return serve_file(self.request, self.response, path, type=self.mime)
 
     def view(self):
+        if self.name not in self.storage:
+            data = {
+                "actions": [],
+                "page": {"name": self.name}
+            }
+            return self.render("notfound.html", **data)
+
         data = {
             "actions": [
                 (self.url("/+download/%s" % self.name), "Download"),
