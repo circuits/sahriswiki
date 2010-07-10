@@ -201,6 +201,7 @@ class Root(BaseController):
                 (self.request.url("/+orphaned"),    "Orphaned"),
                 (self.request.url("/+wanted"),      "Wanted")
             ],
+            "title": "Orphaned Pages",
             "pages": sorted(self.search.orphaned_pages(), key=itemgetter(0))
         }
         return self.render("orphaned.html", **data)
@@ -213,6 +214,7 @@ class Root(BaseController):
                 (self.request.url("/+orphaned"),    "Orphaned"),
                 (self.request.url("/+wanted"),      "Wanted")
             ],
+            "title": "Wanted Pages",
             "pages": sorted(self.search.wanted_pages(),
                 key=itemgetter(0), reverse=True)
 
