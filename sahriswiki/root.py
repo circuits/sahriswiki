@@ -114,6 +114,7 @@ class Root(BaseController):
         if not query:
             data = {
                 "actions": [
+                    (self.request.url("/+search"),      "Index"),
                     (self.request.url("/+orphaned"),    "Orphaned"),
                     (self.request.url("/+wanted"),      "Wanted")
                 ],
