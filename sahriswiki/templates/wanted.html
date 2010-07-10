@@ -3,12 +3,10 @@
  xmlns:xi="http://www.w3.org/2001/XInclude"
  xmlns:py="http://genshi.edgewall.org/">
  <xi:include href="layout.html" />
- <head>
-  <title>Wanted Pages</title>
- </head>
+ <head></head>
  <body>
   <div class="article">
-   <h1>Wanted Pages</h1>
+   <h1>${title}</h1>
    <ul>
     <li py:for="refs, name in pages">
      <a href="${environ.request.url('/%s' % name)}">${name}</a>
