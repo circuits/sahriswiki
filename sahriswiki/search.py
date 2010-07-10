@@ -7,30 +7,7 @@ import sqlite3
 
 from i18n import _
 from errors import NotFoundErr
-
-def external_link(addr):
-    """
-    Decide whether a link is absolute or internal.
-
-    >>> external_link('http://example.com')
-    True
-    >>> external_link('https://example.com')
-    True
-    >>> external_link('ftp://example.com')
-    True
-    >>> external_link('mailto:user@example.com')
-    True
-    >>> external_link('PageTitle')
-    False
-    >>> external_link(u'ąęśćUnicodePage')
-    False
-
-    """
-
-    return (addr.startswith('http://')
-            or addr.startswith('https://')
-            or addr.startswith('ftp://')
-            or addr.startswith('mailto:'))
+from utils import external_link
 
 class WikiSearch(object):
     """
@@ -111,8 +88,6 @@ whence whenever where whereafter whereas whereby wherein whereupon wherever
 whether which while whither who whoever whole whom whose why will with within
 without would yet you your yours yourself yourselves""")).split())
 +ur')$|.*\d.*', re.U|re.I|re.X)
-
-
 
     @property
     def con(self):
@@ -329,14 +304,14 @@ without would yet you your yours yourself yourselves""")).split())
             cursor.execute('ROLLBACK;')
             raise
 
-    def reindex(self, wiki, request,  pages):
+    def reindex(self, environ, request,  pages):
         """Updates specified pages in bulk."""
 
         cursor = self.con.cursor()
         cursor.execute('BEGIN IMMEDIATE TRANSACTION;')
         try:
             for title in pages:
-                page = wiki.get_page(request, title)
+                page = environ.get_page(request, title)
                 self.reindex_page(page, title, cursor)
             cursor.execute('COMMIT TRANSACTION;')
             self.empty = False
@@ -360,7 +335,7 @@ without would yet you your yours yourself yourselves""")).split())
         # -1 means "no revision", 1 means revision 0, 2 means revision 1, etc.
         return rev-1
 
-    def update(self, wiki, request):
+    def update(self, environ, request):
         """Reindex al pages that changed since last indexing."""
 
         last_rev = self.get_last_revision()
@@ -368,6 +343,6 @@ without would yet you your yours yourself yourselves""")).split())
             changed = self.storage.all_pages()
         else:
             changed = self.storage.changed_since(last_rev)
-        self.reindex(wiki, request, changed)
+        self.reindex(environ, request, changed)
         rev = self.storage.repo_revision()
         self.set_last_revision(rev)
