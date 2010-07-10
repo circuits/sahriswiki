@@ -36,6 +36,7 @@ from env import Environment
 from search import WikiSearch
 from cache import CacheControl
 from storage import WikiStorage
+from errors import ErrorHandler
 from plugins import PluginManager
 from sahriswiki import __version__
 
@@ -188,6 +189,7 @@ def main():
     manager += (Poller() + Server(bind) + CacheControl(environ) + Logger()
             + Root(environ)
             + Tools(environ)
+            + ErrorHandler(environ)
             + PluginManager(environ)
             + Static(docroot=htdocs)
             + Gateway(hgweb(storage.repo_path), "/+hg"))
@@ -217,6 +219,7 @@ else:
             + environ
             + Root(environ)
             + CacheControl(environ)
+            + ErrorHandler(environ)
             + PluginManager(environ)
             + Static(docroot="static")
             + Gateway(hgweb(storage.repo_path), "/+hg"))
