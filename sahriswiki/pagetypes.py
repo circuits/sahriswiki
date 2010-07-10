@@ -274,6 +274,23 @@ class WikiPageFile(WikiPage):
 class WikiPageImage(WikiPageFile):
     """Pages of mime type image/* use this for display."""
 
+    def download(self):
+        path = self.storage._file_path(self.name)
+        return serve_file(self.request, self.response, path, type=self.mime)
+
+    def view(self):
+        data = {
+            "actions": [
+                (self.url("/+download/%s" % self.name), "Download"),
+            ],
+            "image": {
+                "url": self.url("/+download/%s" % self.name)
+                "alt": self.name,
+            }
+        }
+
+        return self.render("view_image.html", **data)
+
 class WikiPageCSV(WikiPageFile):
     """Display class for type text/csv."""
 
