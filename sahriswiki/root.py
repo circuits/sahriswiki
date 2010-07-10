@@ -161,13 +161,13 @@ class Root(BaseController):
         feed = Feed()
 
         if name is not None:
-            feed.feed["title"] = "%s :: %s" % (name, self.data["site"]["name"])
+            feed.feed["title"] = "%s :: %s" % (name, self.environ.site["name"])
         else:
-            feed.feed["title"] = self.data["site"]["name"]
+            feed.feed["title"] = self.environ.site["name"]
 
         feed.feed["link"] = self.request.server.base
-        feed.feed["author"] = self.data["site"]["author"]
-        feed.feed["description"] = self.data["site"]["description"]
+        feed.feed["author"] = self.environ.site["author"]
+        feed.feed["description"] = self.environ.site["description"]
 
         if name is not None:
             for rev, date, author, comment in self.storage.page_history(name):
@@ -180,7 +180,7 @@ class Root(BaseController):
 
                 feed.items.append(item)
         else:
-            for name, ver, date, rev, author, comment in self.storage.history():
+            for name, rev, date, author, comment in self.storage.history():
                 item = {}
                 item["title"] = "%s by %s" % (name, author)
                 item["link"] = self.request.url(name)
