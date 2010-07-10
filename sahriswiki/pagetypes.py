@@ -131,9 +131,9 @@ class WikiPageWiki(WikiPageColorText):
     def view(self):
         data = {
             "actions": [
-                ("/+edit/%s" % self.name, "Edit"),
-                ("/+download/%s" % self.name, "Download"),
-                ("/+history/%s" % self.name, "History"),
+                (self.url("/+edit/%s" % self.name),     "Edit"),
+                (self.url("/+download/%s" % self.name), "Download"),
+                (self.url("/+history/%s" % self.name),  "History"),
             ],
             "page": self._get_page_data()
         }

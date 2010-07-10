@@ -10,6 +10,8 @@ from mercurial.node import short
 
 from circuits.web.controllers import expose, BaseController
 
+from errors import NotFoundErr
+
 FIXLINES = re.compile("(\r[^\n])|(\r\n)")
 
 class Root(BaseController):
@@ -27,7 +29,14 @@ class Root(BaseController):
     def index(self, *args, **kwargs):
         name = os.path.sep.join(args) if args else self.environ.opts.frontpage
         page = self.environ.get_page(name)
-        return page.view()
+        try:
+            return page.view()
+        except NotFoundErr:
+            data = {
+                "actions": [],
+                "page": {"name": name}
+            }
+            return self.render("notfound.html", **data)
 
     @expose("+download")
     def download(self, *args, **kwargs):
@@ -70,16 +79,12 @@ class Root(BaseController):
 
     @expose("+search")
     def search(self, *args, **kwargs):
-        def index():
-            yield "= Page Index ="
-            for name in sorted(self.storage.all_pages()):
-                yield " * [[%s]]" % name
 
-        def snippet(title, words):
+        def snippet(name, words):
             """Extract a snippet of text for search results."""
 
-            text = unicode(self.storage.open_page(title).read(), "utf-8",
-                           "replace")
+            text = unicode(self.storage.open_page(name).read(), "utf-8",
+                    "replace")
             regexp = re.compile(u"|".join(re.escape(w) for w in words),
                     re.U | re.I)
             match = regexp.search(text)
@@ -92,43 +97,54 @@ class Root(BaseController):
             return regexp.sub(highlighted, text[min_pos:max_pos])
 
         def search(words):
-            yield "= Searching for '%s' =" % " ".join(words)
             self.storage.reopen()
-            self.search.update()
-            result = sorted(self.search.find(words), key=lambda x:-x[0])
-            yield "%d page(s) containing words:" % len(result)
-            for score, title in result:
-                yield "* **[[%s]]** //(%d)// %s" % (title, score,
-                        snippet(title, words))
+            self.search.update(self.environ)
+            results = list(self.search.find(words))
+            results.sort(key=itemgetter(0), reverse=True)
+            for score, name in results:
+                yield score, name, snippet(name, words)
 
-        q = kwargs.get("q", None)
-
-        if q is not None:
-            query = q.strip()
-        else:
-            query = None
-
-        actions = []
+        query = kwargs.get("q", None)
+        if query is not None:
+            query = query.strip()
 
         if not query:
-            text = "\n".join(index())
-            title = "Page index"
-            actions = [("/+orphaned", "Orphaned"), ("/+wanted", "Wanted")]
-        else:
-            words = tuple(self.search.split_text(query, stop=False))
-            if not words:
-                words = (query,)
-            title = "Searching for '%s'" % " ".join(words)
-            text = "\n".join(search(words))
+            data = {
+                "actions": [
+                    (self.request.url("/+orphaned"),    "Orphaned"),
+                    (self.request.url("/+wanted"),      "Wanted")
+                ],
+                "page": {"name": "Index"},
+                "pages": sorted(self.storage.all_pages()),
+            }
+            return self.render("index.html", **data)
 
-        return self.render("view.html", itle="Search", text=text,
-                actions=actions)
+        words = tuple(self.search.split_text(query, stop=False))
+        if not words:
+            words = (query,)
+
+        data = {
+            "actions": [],
+            "page": {"name": "Search"},
+            "query": " ".join(words),
+            "results": list(search(words)),
+        }
+
+        return self.render("search.html", **data)
 
     @expose("+backlinks")
     def backlinks(self, *args, **kwargs):
         name = os.path.sep.join(args)
-        page = self.environ.get_page(name)
-        return page.backlinks()
+        data = {
+            "actions": [
+                (self.request.url("/+search"),      "Index"),
+                (self.request.url("/+orphaned"),    "Orphaned"),
+                (self.request.url("/+wanted"),      "Wanted")
+            ],
+            "page": {"name": "BackLinks for \"%s\"" % name},
+            "pages": sorted(self.search.page_backlinks(name), key=itemgetter(0))
+        }
+        return self.render("index.html", **data)
 
     @expose("+feed")
     def feed(self, *args, **kwargs):
@@ -175,44 +191,31 @@ class Root(BaseController):
 
     @expose("+orphaned")
     def orphaned(self, *args, **kwargs):
-        lines = []
-        out = lines.append
-
-        title = "Orphaned Pages"
-        out("= %s =" % title)
-
-        pages = list(self.search.orphaned_pages())
-        pages.sort()
-
-        for name in pages:
-            out(" * [[%s]]" % name)
-
-        text = "\n".join(lines)
-        actions = [("/+orphaned", "Orphaned"), ("/+wanted", "Wanted")]
-
-        return self.render("view.html", title=title, text=text,
-                actions=actions)
+        data = {
+            "actions": [
+                (self.request.url("/+search"),      "Index"),
+                (self.request.url("/+orphaned"),    "Orphaned"),
+                (self.request.url("/+wanted"),      "Wanted")
+            ],
+            "page": {"name": "Orphaned Pages"},
+            "pages": sorted(self.search.orphaned_pages(), key=itemgetter(0))
+        }
+        return self.render("index.html", **data)
 
     @expose("+wanted")
     def wanted(self, *args, **kwargs):
-        lines = []
-        out = lines.append
+        data = {
+            "actions": [
+                (self.request.url("/+search"),      "Index"),
+                (self.request.url("/+orphaned"),    "Orphaned"),
+                (self.request.url("/+wanted"),      "Wanted")
+            ],
+            "page": {"name": "Wanted Pages"},
+            "pages": sorted(self.search.wanted_pages(),
+                key=itemgetter(0), reverse=True)
 
-        title = "Wanted Pages"
-        out("= %s =" % title)
-
-        pages = list(self.search.wanted_pages())
-        pages.sort(key=itemgetter(0), reverse=True)
-
-        for refs, name in pages:
-            out(" * [[%s]] / [[+backlinks/%s]]  //%d references//" % (name,
-                name, refs))
-
-        text = "\n".join(lines)
-        actions = [("/+orphaned", "Orphaned"), ("/+wanted", "Wanted")]
-
-        return self.render("view.html", title=title, text=text,
-                actions=actions)
+        }
+        return self.render("index.html", **data)
 
     @expose("+history")
     def history(self, *args, **kwargs):
