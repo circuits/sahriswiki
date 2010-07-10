@@ -56,3 +56,12 @@ def page_mime(title):
     if mime is None:
         mime = 'text/x-wiki'
     return mime
+
+def extract_links(text):
+    links = re.compile(ur"\[\[(?P<link_target>([^|\]]|\][^|\]])+)"
+            ur"(\|(?P<link_text>([^\]]|\][^\]])+))?\]\]")
+
+    for m in links.finditer(text):
+        if m.groupdict():
+            d = m.groupdict()
+            yield d["link_target"], d["link_text"] or ""

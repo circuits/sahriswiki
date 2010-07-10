@@ -7,7 +7,7 @@ import sqlite3
 
 from i18n import _
 from errors import NotFoundErr
-from utils import external_link
+from utils import external_link, extract_links
 
 class WikiSearch(object):
     """
@@ -280,12 +280,11 @@ without would yet you your yours yourself yourselves""")).split())
                 text = None
                 title_id = self.title_id(title, cursor)
                 if not list(self.page_backlinks(title)):
-                    cursor.execute("DELETE FROM titles WHERE id=?;", (title_id,))
-        extract_links = getattr(page, 'extract_links', None)
-        if extract_links and text:
-            links = extract_links(text)
-        else:
-            links = []
+                    cursor.execute("DELETE FROM titles WHERE id=?;",
+                            (title_id,))
+
+        links = extract_links(text)
+
         self.update_links(title, links, cursor=cursor)
         self.update_words(title, text or u'', cursor=cursor)
 
