@@ -1,5 +1,10 @@
 from mercurial.node import short
 
+from circuits.web.tools import serve_file
+from circuits.web.exceptions import NotImplemented, Redirect
+
+from utils import FIXLINES
+
 class WikiPage(object):
     """Everything needed for rendering a page."""
 
@@ -19,14 +24,14 @@ class WikiPage(object):
         self.search = self.environ.search
         self.storage = self.environ.storage
 
-    def view(self):
-        return self.render("view.html")
+    def download(self):
+        raise NotImplemented()
 
     def edit(self):
-        return self.render("edit.html")
+        raise NotImplemented()
 
-    def download(self):
-        return self.render("download.html")
+    def view(self):
+        raise NotImplemented()
 
 class WikiPageText(WikiPage):
     """Pages of mime type text/* use this for display."""
@@ -37,17 +42,14 @@ class WikiPageColorText(WikiPageText):
 class WikiPageWiki(WikiPageColorText):
     """Pages of with wiki markup use this for display."""
 
-    def view(self):
-        data = {}
-        data["actions"] = [
-            ("/+edit/%s" % self.name, "Edit"),
-            ("/+history/%s" % self.name, "History"),
-        ]
+    def _get_text(self):
+        return self.storage.page_text(self.name)
 
-        text = self.storage.page_text(self.name)
+    def _get_page_data(self):
+        text = self._get_text()
         rev, node, date, author, comment = self.storage.page_meta(self.name)
 
-        data["page"] = self.environ.page = {
+        data = {
             "rev": rev,
             "date": date,
             "text": text,
@@ -58,6 +60,82 @@ class WikiPageWiki(WikiPageColorText):
             "url": self.url(self.name),
             "feed": self.url("/+feed/%s" % self.name),
             "backlinks": self.url("/+backlinks/%s" % self.name),
+        }
+
+        self.environ.page = data
+
+        return data
+
+    def download(self):
+        path = self.storage._file_path(self.name)
+        return serve_file(self.request, self.response, path, type=self.mime)
+
+    def edit(self):
+        data = {
+            "actions": [],
+        }
+
+        if not self.request.kwargs:
+            if self.name in self.storage:
+                data["page"] = self._get_page_data()
+                return self.render("edit.html", **data)
+            else:
+                data["page"] = {"name": self.name, "text": ""}
+                return self.render("edit.html", **data)
+
+        author = self.request.cookie.get("username")
+        if author:
+            author = author.value
+        else:
+            author = self.request.headers.get("X-Forwarded-For",
+                    self.request.remote.ip or "AnonymousUser")
+
+        action = self.request.kwargs.get("action", None)
+        comment = self.request.kwargs.get("comment", "")
+        parent = self.request.kwargs.get("parent", None)
+        text = self.request.kwargs.get("text", "")
+
+        if text:
+            text = FIXLINES.sub("\n", text)
+        else:
+            action = "delete"
+
+        if action == "delete":
+            self.storage.reopen()
+            self.search.update(self.environ)
+
+            self.storage.delete_page(self.name, author, comment)
+            self.search.update_page(self, self.name, text=text)
+
+            raise Redirect(self.url("/%s" % self.name))
+        elif action == "cancel":
+            raise Redirect(self.url("/%s" % self.name))
+        elif action == "preview":
+            data["page"] = {"name": self.name, "text": text}
+            data["author"] = author
+            data["comment"] = comment
+            data["preview"] = True
+            return self.render("edit.html", **data)
+        elif action == "save":
+            self.storage.reopen()
+            self.search.update(self.environ)
+
+            self.storage.save_text(self.name, text, author, comment,
+                    parent=parent)
+            self.search.update_page(self, self.name, text=text)
+
+            raise Redirect(self.url("/%s" % self.name))
+        else:
+            raise Exception("Invalid action %r" % action)
+
+    def view(self):
+        data = {
+            "actions": [
+                ("/+edit/%s" % self.name, "Edit"),
+                ("/+download/%s" % self.name, "Download"),
+                ("/+history/%s" % self.name, "History"),
+            ],
+            "page": self._get_page_data()
         }
 
         return self.render("view.html", **data)

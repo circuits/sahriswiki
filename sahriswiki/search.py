@@ -273,9 +273,9 @@ without would yet you your yours yourself yourselves""")).split())
         """Updates the content of the database, needs locks around."""
 
         if text is None:
-            get_text = getattr(page, 'plain_text', lambda: u'')
+            _get_text = getattr(page, '_get_text', lambda: u'')
             try:
-                text = get_text()
+                text = _get_text()
             except NotFoundErr:
                 text = None
                 title_id = self.title_id(title, cursor)
@@ -304,14 +304,14 @@ without would yet you your yours yourself yourselves""")).split())
             cursor.execute('ROLLBACK;')
             raise
 
-    def reindex(self, environ, request,  pages):
+    def reindex(self, environ, pages):
         """Updates specified pages in bulk."""
 
         cursor = self.con.cursor()
         cursor.execute('BEGIN IMMEDIATE TRANSACTION;')
         try:
             for title in pages:
-                page = environ.get_page(request, title)
+                page = environ.get_page(title)
                 self.reindex_page(page, title, cursor)
             cursor.execute('COMMIT TRANSACTION;')
             self.empty = False
@@ -335,7 +335,7 @@ without would yet you your yours yourself yourselves""")).split())
         # -1 means "no revision", 1 means revision 0, 2 means revision 1, etc.
         return rev-1
 
-    def update(self, environ, request):
+    def update(self, environ):
         """Reindex al pages that changed since last indexing."""
 
         last_rev = self.get_last_revision()
@@ -343,6 +343,6 @@ without would yet you your yours yourself yourselves""")).split())
             changed = self.storage.all_pages()
         else:
             changed = self.storage.changed_since(last_rev)
-        self.reindex(environ, request, changed)
+        self.reindex(environ, changed)
         rev = self.storage.repo_revision()
         self.set_last_revision(rev)
