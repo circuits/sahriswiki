@@ -201,10 +201,9 @@ class Root(BaseController):
                 (self.request.url("/+orphaned"),    "Orphaned"),
                 (self.request.url("/+wanted"),      "Wanted")
             ],
-            "page": {"name": "Orphaned Pages"},
             "pages": sorted(self.search.orphaned_pages(), key=itemgetter(0))
         }
-        return self.render("index.html", **data)
+        return self.render("orphaned.html", **data)
 
     @expose("+wanted")
     def wanted(self, *args, **kwargs):
@@ -214,12 +213,11 @@ class Root(BaseController):
                 (self.request.url("/+orphaned"),    "Orphaned"),
                 (self.request.url("/+wanted"),      "Wanted")
             ],
-            "page": {"name": "Wanted Pages"},
             "pages": sorted(self.search.wanted_pages(),
                 key=itemgetter(0), reverse=True)
 
         }
-        return self.render("index.html", **data)
+        return self.render("wanted.html", **data)
 
     @expose("+history")
     def history(self, *args, **kwargs):
