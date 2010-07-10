@@ -10,10 +10,6 @@ class WikiPage(object):
         self.name = name
         self.mime = mime
 
-        # for now we just use the globals from environ object
-        #self.get_url = self.request.get_url # FIXME
-        #self.get_download_url = self.request.get_download_url # FIXME
-
         self.request = self.environ.request
         self.response = self.environ.response
 
@@ -22,8 +18,6 @@ class WikiPage(object):
 
         self.search = self.environ.search
         self.storage = self.environ.storage
-
-        #self.config = self.environ.config # TODO
 
     def view(self):
         return self.render("view.html")
