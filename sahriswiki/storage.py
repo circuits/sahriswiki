@@ -2,7 +2,6 @@ import re
 import os
 import thread
 import tempfile
-import datetime
 
 import mercurial.hg
 import mercurial.ui
@@ -286,7 +285,7 @@ class WikiStorage(object):
         rev = filectx_tip.filerev()
         node = filectx_tip.node()
         filectx = filectx_tip.filectx(rev)
-        date = datetime.datetime.fromtimestamp(filectx.date()[0])
+        date = filectx.date()[0]
         author = unicode(filectx.user(), "utf-8",
                          'replace').split('<')[0].strip()
         comment = unicode(filectx.description(), "utf-8", 'replace')
@@ -337,7 +336,7 @@ class WikiStorage(object):
         minrev = 0
         for rev in range(maxrev, minrev-1, -1):
             filectx = filectx_tip.filectx(rev)
-            date = datetime.datetime.fromtimestamp(filectx.date()[0])
+            date = filectx.date()[0]
             author = unicode(filectx.user(), "utf-8",
                              'replace').split('<')[0].strip()
             comment = unicode(filectx.description(), "utf-8", 'replace')
@@ -370,7 +369,7 @@ class WikiStorage(object):
         minrev = 0
         for wiki_rev in range(maxrev, minrev-1, -1):
             change = self.repo.changectx(wiki_rev)
-            date = datetime.datetime.fromtimestamp(change.date()[0])
+            date = change.date()[0]
             author = unicode(change.user(), "utf-8",
                              'replace').split('<')[0].strip()
             comment = unicode(change.description(), "utf-8", 'replace')

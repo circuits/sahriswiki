@@ -3,8 +3,17 @@
  xmlns:py="http://genshi.edgewall.org/" py:strip="">
  <py:match path="head" once="true">
   <head py:attrs="select('@*')">
-   <title py:with="title = list(select('title/text()'))">
-    <py:if test="title">: ${title}</py:if> ${page["name"]} :: ${environ.site["name"]}
+   <title py:with="_title = list(select('title/text()'))">
+    ${_title}
+    <py:choose test="defined('title')">
+     <py:when test="True">
+      ${title}
+     </py:when>
+     <py:otherwise>
+      ${page['name']}
+     </py:otherwise>
+    </py:choose>
+    :: ${environ.site["name"]}
    </title>
    <meta name="description" content="${environ.site['description']}" />
    <meta name="keywords" content="${environ.site['keywords']}" />
@@ -44,7 +53,14 @@
         href="${page['backlinks']}">${page["name"]}</a></h1>
       </py:when>
       <py:otherwise>
-       <h1>${page["name"]}</h1>
+       <py:choose test="defined('title')">
+        <py:when test="True">
+         <h1>${title}</h1>
+        </py:when>
+        <py:otherwise>
+         <h1>${page['name']}</h1>
+        </py:otherwise>
+       </py:choose>
       </py:otherwise>
      </py:choose>
      <div id="search">

@@ -48,7 +48,10 @@ class Root(BaseController):
     def upload(self, *args, **kwargs):
         action = kwargs.get("action", None)
 
-        data = {}
+        data = {
+            "actions": [],
+            "page": {"name": "Upload"},
+        }
 
         if action == "upload":
             file = kwargs.get("file", None)
@@ -224,27 +227,19 @@ class Root(BaseController):
             page = self.environ.get_page(name)
             return page.history()
 
-        rev = kwargs.get("rev", None)
+        data = {
+            "actions": [
+                (self.request.url("/+feed"),                "RSS 1.0"),
+                (self.request.url("/+feed?format=rss2"),    "RSS 2.0"),
+                (self.request.url("/+feed?format=atom"),    "Atom"),
+            ],
+            "page": {"name": "Recent Changes"},
+            "history": self.storage.history(),
+            "strftime": strftime,
+            "gmtime": gmtime,
+        }
 
-        lines = []
-        out = lines.append
-
-        title = "Recent Changes"
-        out("= %s =" % title)
-        for name, ver, date, rev, author, comment in self.storage.history():
-            out(" * [[+history/%s?rev=%d|%s]] [[%s]]" % (name, ver,
-                strftime("%Y-%m-%d", gmtime(date)), name))
-            out("[ [[%s|%d]] ] by [[%s]]\\\\" % (
-                self.url("/+hg/rev/%d" % rev), rev, author))
-            out(comment)
-        text = "\n".join(lines)
-
-        actions = [("/+feed", "RSS 1.0"),
-                ("/+feed?format=rss2", "RSS 2.0"),
-                ("/+feed?format=atom", "Atom")]
-
-        return self.render("view.html", title=title, text=text,
-                actions=actions)
+        return self.render("recentchanges.html", **data)
 
     @expose("robots.txt")
     def robots(self, *args, **kwargs):
@@ -258,3 +253,42 @@ class Root(BaseController):
         s.append("Disallow: /%2b*")
         s.append("Disallow: /%2B*")
         return "\r\n".join(s)
+
+    @expose("+diff")
+    def diff(self, *args, **kwargs):
+        name = os.path.sep.join(args)
+
+        rev = kwargs["rev"]
+
+        to_rev = int(rev)
+        from_rev = to_rev - 1
+
+        text = self.storage.revision_text(name, from_rev).split("\n")
+        other = self.storage.revision_text(name, to_rev).split("\n")
+
+        to_date = ""
+        from_date = ""
+        date_format = "%Y-%m-%dT%H:%M:%SZ"
+
+        for history in self.storage.page_history(name):
+            if history[0] == to_rev:
+                to_date = history[1]
+            elif history[0] == from_rev:
+                from_date = history[1]
+
+        if not from_date:
+            from_date = to_date
+
+        diff = "\n".join(unified_diff(text, other,
+            "%s@%d" % (name, from_rev),
+            "%s@%d" % (name, to_rev),
+            strftime(date_format, gmtime(from_date)),
+            strftime(date_format, gmtime(to_date))))
+
+        data = {
+            "actions": [],
+            "page": {"name": "diff -r %s -r %s %s" % (from_rev, to_rev, name)},
+            "diff": diff,
+        }
+
+        return self.render("diff.html", **data)
