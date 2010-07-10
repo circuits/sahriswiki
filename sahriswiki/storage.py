@@ -179,10 +179,14 @@ class WikiStorage(object):
         try:
             filectx_tip = changectx[repo_file]
             current_page_rev = filectx_tip.filerev()
+            current_page_ver = (
+                filectx_tip.filerev(),
+                short(filectx_tip.node())
+            )
         except mercurial.revlog.LookupError:
             self.repo.add([repo_file])
             current_page_rev = -1
-        if parent is not None and current_page_rev != parent:
+        if parent is not None and parent not in current_page_ver:
             msg = self.merge_changes(changectx, repo_file, text, user, parent)
             user = '<wiki>'
             text = msg.encode('utf-8')
