@@ -6,8 +6,9 @@ import datetime
 
 import mercurial.hg
 import mercurial.ui
-import mercurial.revlog
 import mercurial.util
+import mercurial.revlog
+from mercurial.node import short
 
 from circuits.web.utils import url_quote, url_unquote
 
