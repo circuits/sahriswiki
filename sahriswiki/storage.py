@@ -4,7 +4,10 @@ import thread
 import tempfile
 import datetime
 
-import mercurial
+import mercurial.hg
+import mercurial.ui
+import mercurial.revlog
+import mercurial.util
 
 from circuits.web.utils import url_quote, url_unquote
 
