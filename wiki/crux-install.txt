@@ -1,4 +1,6 @@
-3. Login as root (no password required).
+CRUX Installation Quick Guide
+
+1. Login as root (no password required).
 4. Create (if necessary) and format the partition(s) you want CRUX to be
      installed on.
 
