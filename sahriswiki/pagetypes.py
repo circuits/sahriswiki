@@ -41,9 +41,6 @@ class WikiPage(object):
 class WikiPageText(WikiPage):
     """Pages of mime type text/* use this for display."""
 
-class WikiPageColorText(WikiPageText):
-    """Text pages, but displayed colorized with pygments"""
-
     def _get_text(self):
         return self.storage.page_text(self.name)
 
@@ -150,6 +147,9 @@ class WikiPageColorText(WikiPageText):
         }
 
         return self.render("view_plain.html", **data)
+
+class WikiPageColorText(WikiPageText):
+    """Text pages, but displayed colorized with pygments"""
 
 class WikiPageWiki(WikiPageColorText):
     """Pages of with wiki markup use this for display."""
