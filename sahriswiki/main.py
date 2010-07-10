@@ -96,6 +96,11 @@ def parse_options():
             dest="encoding",
             help="Set encoding to read and write pages")
 
+    parser.add_option("-l", "--language",
+            action="store", type="string", default="en",
+            dest="lang",
+            help="Set language")
+
     parser.add_option("-r", "--read-only",
             action="store_true", default=False,
             dest="readonly",
@@ -172,7 +177,7 @@ def main():
         Poller = Select
 
     storage = WikiStorage(opts.data, opts.encoding)
-    search = WikiSearch(opts.cache, storage)
+    search = WikiSearch(opts.cache, opts.lang, storage)
 
     environ = Environment(opts, storage, search)
 
@@ -192,12 +197,12 @@ def main():
 
     manager.run()
 
-if __name__ == "__main__":
+if __name__ in "__main__":
     main()
 else:
     config = {"data": "wiki", "cache": "cache", "name": "SahrisWiki",
             "author": "", "keywords": "", "description": "",
-            "frontpage": "FrontPage", "encoding": "utf-8",
+            "frontpage": "FrontPage", "encoding": "utf-8", "lang": "en",
             "readonly": False, "plugins": "plugins"}
 
     class Options(object): pass
@@ -205,7 +210,7 @@ else:
     opts.__dict__.update(config)
 
     storage = WikiStorage(opts.data, opts.encoding)
-    search = WikiSearch(opts.cache, storage)
+    search = WikiSearch(opts.cache, opts.lang, storage)
 
     environ = Environment(opts, storage, search)
     application = (Application()
