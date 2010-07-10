@@ -1,3 +1,5 @@
+from time import strftime, gmtime
+
 from mercurial.node import short
 
 from circuits.web.tools import serve_file
@@ -127,6 +129,22 @@ class WikiPageWiki(WikiPageColorText):
             raise Redirect(self.url("/%s" % self.name))
         else:
             raise Exception("Invalid action %r" % action)
+
+    def history(self):
+        data = {
+            "actions": [
+                (self.url("/+feed"),                "RSS 1.0"),
+                (self.url("/+feed?format=rss2"),    "RSS 2.0"),
+                (self.url("/+feed?format=atom"),    "Atom"),
+            ],
+            "title": "History of \"%s\"" % self.name,
+            "page": {"name": self.name},
+            "history": self.storage.page_history(self.name),
+            "strftime": strftime,
+            "gmtime": gmtime,
+        }
+
+        return self.render("history.html", **data)
 
     def view(self):
         data = {
