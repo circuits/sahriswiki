@@ -1,0 +1,103 @@
+3. Login as root (no password required).
+4. Create (if necessary) and format the partition(s) you want CRUX to be
+     installed on.
+
+ $ fdisk /dev/discs/disc?/disc
+ $ mkreiserfs /dev/discs/disc?/part?
+ $ mkswap /dev/discs/disc?/part?
+
+     The amount of disk space you need depends on how many packages you choose
+     to install. I recommend having at least a 1G root partition (CRUX will use
+     about 200MB-500MB depending on your configuration).
+
+     Using ReiserFS is recommended, but there is support for Ext2fs/Ext3fs, XFS
+     and JFS as well. Further, I highly recommend separating system data from
+     user data, i.e. use a separate partition for /home (and possibly /var)
+     since that will make your life a lot easier the day you want to
+     upgrade/reinstall/remove your system.
+
+     [Note] Note                                
+            Make sure that any BIOS Virus Protection option is DISABLED as this
+            option may prevent fdisk from writing new partitions correctly.
+
+  5. Mount the partition on which you want to install this distribution.
+
+ $ mount /dev/discs/disc?/part? /mnt
+
+     If you want the installation to span more than one partition, mount those
+     partitions as well. For example, if you want to have a different partition
+     for /home or /var, then do:
+
+ $ mkdir /mnt/var
+ $ mount /dev/discs/disc?/part? /mnt/var
+
+  6. Activate your swap partition(s).
+
+ $ swapon /dev/discs/disc?/part?
+
+  7. Type setup to start the package installation script. The script will ask
+     where you mounted your new root partition and which packages you want to
+     install. Just select the packages you want and nothing else will be
+     installed. However, I recommend at least installing all the packages
+     marked base.
+
+     Once it has installed the selected packages, the setup script will display
+     an installation log. Make sure the last line in the log says "0 error(s)".
+
+     If you at a later stage find that you need some additional packages you
+     can just mount the CRUX CD-ROM and use pkgadd to install them.
+
+     [Note] Note                                 
+            There is no package dependency checking. This means that it is up
+            to you to figure out that if you for example install the sendmail
+            package you also need to install the db package.
+
+     Screenshots of setup
+
+  8. Now it's time to compile your kernel and do basic system configuration.
+     The kernel compilation requires that you "chroot" into your new CRUX
+     installation.
+
+ $ mount -t devfs devfs /mnt/dev
+ $ mount -t proc proc /mnt/proc
+ $ chroot /mnt /bin/bash
+
+  9. Set the root password.
+
+ $ passwd
+
+ 10. Edit /etc/fstab to configure your filesystem(s). Editors vim and pico are
+     available.
+
+ 11. Edit /etc/rc.conf to configure font, keyboard, timezone, hostname and
+     services. See Section 5.1.3, "Configuration Variables in /etc/rc.conf" for
+     details about /etc/rc.conf.
+
+ 12. Edit /etc/rc.d/net, /etc/hosts and /etc/resolv.conf to configure your
+     network (ip-address/gateway/hostname/domain/dns).
+
+ 13. Go to /usr/src/linux-2.6.6, configure and compile a new kernel.
+
+ $ cd /usr/src/linux-2.6.6
+ $ make menuconfig
+ $ make all
+ $ make modules_install
+ $ cp arch/i386/boot/bzImage /vmlinuz
+ $ cp System.map /
+
+     Remember to enable the following kernel options:
+
+ Code maturity level options  --->
+       [*] Prompt for development and/or incomplete code/drivers
+
+ File systems  --->
+    Pseudo filesystems  --->
+       [*] /dev file system support
+       [*]   Automatically mount at boot
+
+ 14. Edit /etc/lilo.conf to boot the kernel you just compiled and run lilo to
+     make the new system bootable.
+
+ 15. Remove the CRUX CD-ROM from your drive and reboot from harddisk.
+
+ 16. Login as root
