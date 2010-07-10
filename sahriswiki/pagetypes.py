@@ -284,7 +284,7 @@ class WikiPageImage(WikiPageFile):
                 (self.url("/+download/%s" % self.name), "Download"),
             ],
             "image": {
-                "url": self.url("/+download/%s" % self.name)
+                "url": self.url("/+download/%s" % self.name),
                 "alt": self.name,
             }
         }
