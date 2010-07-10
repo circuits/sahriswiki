@@ -279,7 +279,7 @@ class WikiStorage(object):
             raise NotFoundErr()
             #return -1, None, u'', u''
         rev = filectx_tip.filerev()
-        rev = filectx_tip.node()
+        node = filectx_tip.node()
         filectx = filectx_tip.filectx(rev)
         date = datetime.datetime.fromtimestamp(filectx.date()[0])
         author = unicode(filectx.user(), "utf-8",
@@ -292,6 +292,10 @@ class WikiStorage(object):
 
         return self._changectx().rev()
 
+    def repo_node(self):
+        """Give the latest node of the repository."""
+
+        return self._changectx().node()
 
     def _changectx(self):
         """Get the changectx of the tip."""
