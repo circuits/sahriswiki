@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import re
+
 from circuits.web.tools import mimetypes
+
+FIXLINES = re.compile("(\r[^\n])|(\r\n)")
 
 def external_link(addr):
     """
