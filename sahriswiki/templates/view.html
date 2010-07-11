@@ -5,6 +5,6 @@
  <xi:include href="layout.html" />
  <head></head>
  <body>
-  ${environ.parser.generate(page["text"], environ=environ)}
+  ${environ.parser.generate(page["text"], environ=(environ, locals().get("__data__"),))}
  </body>
 </html>
