@@ -38,7 +38,7 @@ remember_version()
 
 setup(
     name="sahriswiki",
-    version=getattr(get_version(), "version", "unknown"),
+    version=get_version(),
     description="A Lightweight Wiki Engine",
     long_description=open("README", "r").read(),
     author="James Mills",
