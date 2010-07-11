@@ -149,8 +149,9 @@ location / {
                 rewrite ^(.*)$ $supercache_file break;
         }
 
-        # If the cached file location does not exit, or is blank, and the file requested does not exist
-        # Fall back to index.php to be parsed dynamically
+        # If the cached file location does not exit, or is blank, 
+        # and the file requested does not exist Fall back to 
+        # index.php to be parsed dynamically
         if (!-e $request_filename) {
                 rewrite . /index.php last;
         }	
