@@ -10,15 +10,13 @@ import macros
 from utils import page_mime
 from sahriswiki import __version__
 from pagetypes import WikiPageWiki, WikiPageFile
-from pagetypes import WikiPageText, WikiPageBugs, WikiPageImage
+from pagetypes import WikiPageText, WikiPageHTML, WikiPageImage
 from pagetypes import WikiPageColorText, WikiPageCSV, WikiPageRST
 
 class Environment(BaseComponent):
 
     filename_map = {
         "README":       (WikiPageText,  "text/plain"),
-        "ISSUES":       (WikiPageBugs,  "text/x-bugs"),
-        "ISSUES.txt":   (WikiPageBugs,  "text/x-bugs"),
         "COPYING":      (WikiPageText,  "text/plain"),
         "CHANGES":      (WikiPageText,  "text/plain"),
         "MANIFEST":     (WikiPageText,  "text/plain"),
@@ -30,6 +28,7 @@ class Environment(BaseComponent):
         "application/x-javascript": WikiPageColorText,
         "application/x-python":     WikiPageColorText,
         "text/csv":                 WikiPageCSV,
+        "text/html":                WikiPageHTML,
         "text/x-rst":               WikiPageRST,
         "text/x-wiki":              WikiPageWiki,
         "image":                    WikiPageImage,
@@ -47,8 +46,9 @@ class Environment(BaseComponent):
             macro_func=macros.dispatcher, wiki_links_base_url="/"),
             method="xhtml")
 
-        self.templates = TemplateLoader(os.path.join(os.path.dirname(__file__),
-            "templates"), auto_reload=True)
+        self.templates = TemplateLoader([
+            os.path.join(os.path.dirname(__file__), "templates"),
+            self.storage.path], auto_reload=True)
 
         self.macros = macros.loadMacros()
 
