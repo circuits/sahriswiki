@@ -106,6 +106,12 @@ class Config(object):
                 dest="pid", metavar="FILE", type="string",
                 help="Write pid to FILE")
 
+        add("", "--disable-hgweb", action="store_true", default=False,
+                dest="disable-hgweb", help="Disable hgweb interface")
+
+        add("", "--disable-static", action="store_true", default=False,
+                dest="disable-static", help="Disable static file serving")
+
         options, args = parser.parse_args()
 
         for option, value in options.__dict__.iteritems():

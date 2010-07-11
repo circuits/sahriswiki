@@ -53,9 +53,13 @@ def main():
             + CacheControl(environ)
             + ErrorHandler(environ)
             + SignalHandler(environ)
-            + PluginManager(environ)
-            + Static(docroot=config.get("static"))
-            + Gateway(hgweb(environ.storage.repo_path), "/+hg"))
+            + PluginManager(environ))
+
+    if not environ.config.get_bool("disable-static"):
+        manager += Static("/static", docroot=config.get("static"))
+
+    if not environ.config.get_bool("disable-hgweb"):
+        manager += Gateway(hgweb(environ.storage.repo_path), "/+hg")
 
     if config.get_bool("daemon"):
         manager += Daemon(config.get("pid"))
@@ -76,6 +80,10 @@ else:
             + Root(environ)
             + CacheControl(environ)
             + ErrorHandler(environ)
-            + PluginManager(environ)
-            + Static(docroot=config.get("static"))
-            + Gateway(hgweb(environ.storage.repo_path), "/+hg"))
+            + PluginManager(environ))
+
+    if not environ.config.get_bool("disable-static"):
+        application += Static("/static", docroot=config.get("static"))
+
+    if not environ.config.get_bool("disable-hgweb"):
+        application += Gateway(hgweb(environ.storage.repo_path), "/+hg")
