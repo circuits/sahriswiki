@@ -5,16 +5,14 @@
  <xi:include href="layout.html" />
  <head></head>
  <body>
-  <div class="article">
-   <h1>Searching for: "${query}"</h1>
-   <p>${len(results)} pages(s) found matching all words.</p>
-   <ol>
-    <li py:for="score, name, snippet in results">
-     <b><a href="${environ.request.url('/%s' % name)}">${name}</a></b>
-     <i>${score}</i>
-     <p>${snippet}</p>
-    </li>
-   </ol>
-  </div>
+  <h1>Searching for: "${query}"</h1>
+  <p>${len(results)} pages(s) found matching all words.</p>
+  <ol>
+   <li py:for="score, name, snippet in results">
+    <b><a href="${environ.request.url('/%s' % name)}">${name}</a></b>
+    <i>${score}</i>
+    <p>${snippet}</p>
+   </li>
+  </ol>
  </body>
 </html>

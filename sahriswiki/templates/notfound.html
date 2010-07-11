@@ -5,23 +5,21 @@
  <xi:include href="layout.html" />
  <head></head>
  <body>
-  <div class="article">
-   <h1>Page Not Found</h1>
-   <p>
-    The page <strong>${page["name"]}</strong> you have requested
-    cannot be found.
-   </p>
-   <p>
-    You can:
-    <ul>
-     <li>
-      <a href="${environ.request.url('/+edit/%s' % page['name'])}">
-       Create the Page
-      </a>
-     </li>
-     <li><a href="${environ.request.url('/+upload')}">Upload a File</a></li>
-    </ul>
-   </p>
-  </div>
+  <h1>Page Not Found</h1>
+  <p>
+   The page <strong>${page["name"]}</strong> you have requested
+   cannot be found.
+  </p>
+  <p>
+   You can:
+   <ul>
+    <li>
+     <a href="${environ.request.url('/+edit/%s' % page['name'])}">
+      Create the Page
+     </a>
+    </li>
+    <li><a href="${environ.request.url('/+upload')}">Upload a File</a></li>
+   </ul>
+  </p>
  </body>
 </html>

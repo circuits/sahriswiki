@@ -5,13 +5,11 @@
  <xi:include href="layout.html" />
  <head></head>
  <body>
-  <div class="article">
-   <h1>${title}</h1>
-   <ul>
-    <li py:for="name in pages">
-     <a href="${environ.request.url('/%s' % name)}">${name}</a>
-    </li>
-   </ul>
-  </div>
+  <h1>${title}</h1>
+  <ul>
+   <li py:for="name in pages">
+    <a href="${environ.request.url('/%s' % name)}">${name}</a>
+   </li>
+  </ul>
  </body>
 </html>

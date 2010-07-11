@@ -5,18 +5,16 @@
  <xi:include href="layout.html" />
  <head></head>
  <body>
-  <div class="article">
-   <h1>${title}</h1>
-   <ul>
-    <li py:for="rev, date, author, comment in history">
-     <a href="${environ.request.url('/+diff/%s?rev=%s' % (page['name'], rev))}">
-      ${strftime('%Y-%m-%d', gmtime(date))}
-     </a>
-     [ <a href="${environ.request.url('/+hg/rev/%d' % rev)}">${rev}</a> ]
-     by <a href="${environ.request.url('/~%s' % author)}">${author}</a>
-     <i>${comment}</i>
-    </li>
-   </ul>
-  </div>
+  <h1>${title}</h1>
+  <ul>
+   <li py:for="rev, date, author, comment in history">
+    <a href="${environ.request.url('/+diff/%s?rev=%s' % (page['name'], rev))}">
+     ${strftime('%Y-%m-%d', gmtime(date))}
+    </a>
+    [ <a href="${environ.request.url('/+hg/rev/%d' % rev)}">${rev}</a> ]
+    by <a href="${environ.request.url('/~%s' % author)}">${author}</a>
+    <i>${comment}</i>
+   </li>
+  </ul>
  </body>
 </html>
