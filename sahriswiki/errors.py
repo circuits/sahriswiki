@@ -37,6 +37,7 @@ class ErrorHandler(BaseComponent):
     def _on_httperror(self, event, request, response, code, **kwargs):
         data = event.data.copy()
         data["title"] = "Error"
+        data["traceback"] = Markup(data["traceback"])
         data["description"] = Markup(data["description"])
         response.body = self.render("error.html", **data)
         return self.push(Response(response))
