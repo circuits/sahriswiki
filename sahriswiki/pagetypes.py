@@ -300,7 +300,7 @@ class WikiPageImage(WikiPageFile):
             self.search.update(self.environ)
 
             self.storage.delete_page(self.name, author, "deleted")
-            self.search.update_page(self, self.name, text=text)
+            self.search.update_page(self, self.name, "")
 
             raise Redirect(self.url("/%s" % self.name))
         else:
