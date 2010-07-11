@@ -8,8 +8,6 @@ try:
 except ImportError:
     HAS_DOCUTILS = False
 
-HAS_DOCUTILS = False
-
 from genshi import Markup
 from genshi.template import Template
 
