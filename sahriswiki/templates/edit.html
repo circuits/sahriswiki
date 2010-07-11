@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:py="http://genshi.edgewall.org/">
+ <xi:include href="layout.html" />
+ <head>
+  <title>Editing</title>
+ </head>
+ <body>
+  <div id="editor">
+   <form method="post" action="">
+    <input py:if="'node' in page" type="hidden" name="parent"
+     value="${page['node']}" />
+		 	<p class="text">
+    <textarea id="text" name="text" rows="25"
+     cols="80">${page["text"]}</textarea>
+		 	</p>
+		 	<h4><label for="comment">Comment:</label></h4>
+		 	<p class="input">
+    <input id="comment" name="comment"
+     value="${value_of('comment', '')}" />
+		 	</p>
+		 	<p class="button">
+     <button name="action" type="submit" value="preview">Preview</button>
+     <button name="action" type="submit" value="save">Save</button>
+     <button name="action" type="submit" value="cancel">Cancel</button>
+		 	</p>
+   </form>
+  </div>
+  <div id="editor-help">
+   <dl>
+    <dt>Emphasis</dt>
+    <dd>//<em>italics</em>//; **<strong>bold</strong>**;
+    //**<em><strong>bold italics</strong></em>**//;
+    //<em>mixed </em>////**<em><strong>bold</strong>** and italics</em>//;
+    ---- horizontal rule. </dd>
+    <dt>Headings</dt>
+    <dd>= Title 1 =; == Title 2 ==; === Title 3 ===; ==== Title 4 ====;</dd>
+    <dt>Lists</dt>
+    <dd>* bullets; ** indented bullet; 1. numbered;</dd>
+    <dt>Links</dt>
+    <dd>[[target|linktext]]. </dd>
+    <dt>Tables</dt>
+    <dd>|=header| cell text |;</dd>
+   </dl>
+   <img width="15" height="15" title="(!)"
+   src="${environ.url('/images/icons/idea.png')}" alt="(!)" />
+    For more help, see
+   <a href="${environ.url('/HelpOnEditing')}">HelpOnEditing</a> or
+   <a href="${environ.url('/WikiFormatting')}">WikiFormatting</a>.
+  </div>
+  <py:if test="defined('preview')">
+   <py:if test="preview">
+    <div id="preview"><h1>Preview</h1></div>
+     ${environ.parser.generate(page["text"], environ=environ)}
+   </py:if>
+  </py:if>
+ </body>
+</html>
