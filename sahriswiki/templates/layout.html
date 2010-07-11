@@ -25,11 +25,11 @@
      href="${page['feed']}" type="application/xml" />
    </py:if>
    <link rel="stylesheet" title="Normal" type="text/css" media="screen"
-    href="${environ.request.url('/css/screen.css')}" />
+    href="${environ.staticurl('/css/screen.css')}" />
     <link rel="stylesheet" type="text/css"
-     href="${environ.request.url('/css/pygments.css')}" />
+     href="${environ.staticurl('/css/pygments.css')}" />
    <link py:for="stylesheet in environ.stylesheets" rel="stylesheet"
-    type="text/css" href="${environ.request.url(stylesheet)}" />
+    type="text/css" href="${environ.staticurl(stylesheet)}" />
    <py:if test="defined('page')">
     <style type="text/css">
      #menu li a[href="/${page['name']}"] {
@@ -68,7 +68,7 @@
       </py:otherwise>
      </py:choose>
      <div id="search">
-      <form class="search" action="${environ.request.url('/+search')}">
+      <form class="search" action="${environ.url('/+search')}">
        <input id="q" name="q" size="18" />
        <button type="submit">Search</button>
 		    </form>

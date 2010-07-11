@@ -8,7 +8,7 @@
   <h1>${page['name']}</h1>
   <ul>
    <li py:for="name in pages">
-    <a href="${environ.request.url('/%s' % name)}">${name}</a>
+    <a href="${environ.url('/%s' % name)}">${name}</a>
    </li>
   </ul>
  </body>

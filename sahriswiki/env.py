@@ -1,4 +1,5 @@
 import os
+from urllib import basejoin
 
 from circuits import handler, BaseComponent
 
@@ -81,6 +82,17 @@ class Environment(BaseComponent):
 
         self.request = None
         self.response = None
+
+    def url(self, url):
+        return self.request.url(url)
+
+    def staticurl(self, url):
+        if url and url[0] == "/":
+            base = self.config.get("static-baseurl")
+            if base:
+                return basejoin(base, url)
+            else:
+                return self.request.url(url)
 
     def get_page(self, name):
         """Creates a page object based on page"s mime type"""
