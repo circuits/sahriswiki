@@ -447,7 +447,7 @@ class WikiPageCSV(WikiPageFile):
             "page": self._get_page_data()
         }
 
-        data["page"]["rows"] = csv.reader(
+        data["rows"] = csv.reader(
                 StringIO(data["page"]["text"]))
 
         return self.render("view_csv.html", **data)
