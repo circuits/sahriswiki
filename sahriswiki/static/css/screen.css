@@ -185,33 +185,19 @@ table {
 	background : #2b548c;
 }
 
-#actions {
-	background : #437fda;
-	border-bottom : 1px solid #2b548c;
-	font : 100% sans-serif;
+#ctxnav {
+    text-align: right;
+	border-bottom : 1px solid #cfcfcf;
+	font : 85% sans-serif;
 }
-#actions ul {
+#ctxnav ul {
 	padding : 0.75em 4em;
 }
-#actions li {
+#ctxnav li {
 	display : inline;
 }
-#actions li a {
-	color : #ffffff;
-	padding : 0.75em 1.5em;
-}
-#actions li a:hover {
-	background : #2b548c;
-}
-#actions li.selected a {
-	background : #ffffff;
-	border : 1px solid #2b548c;
-	border-bottom : 1px solid #ffffff;
-	color : #437fda;
-}
-#actions li.selected a:hover {
-	background : #ffffff;
-	color : #ba8f43;
+#ctxnav li a {
+	padding : 0.75em 0.5em;
 }
 
 #content {

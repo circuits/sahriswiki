@@ -135,6 +135,13 @@ class WikiPageColorText(WikiPageText):
 class WikiPageWiki(WikiPageColorText):
     """Pages of with wiki markup use this for display."""
 
+    def _get_ctxnav(self):
+        if not self.environ.config.get_bool("readonly"):
+            yield ("Edit", self.url("/+edit/%s" % self.name))
+
+        yield ("Download", self.url("/+download/%s" % self.name))
+        yield ("History",  self.url("/+history/%s" % self.name))
+
     def edit(self):
         if not self.request.kwargs:
             if self.name in self.storage:
@@ -192,7 +199,10 @@ class WikiPageWiki(WikiPageColorText):
             raise Exception("Invalid action %r" % action)
 
     def view(self):
-        data = {"page": self._get_page_data()}
+        data = {
+            "page": self._get_page_data(),
+            "ctxnav": list(self._get_ctxnav())
+        }
         return self.render("view.html", **data)
 
 class WikiPageFile(WikiPage):
