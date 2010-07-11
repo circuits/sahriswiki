@@ -1,7 +1,7 @@
 <<div cls="right">>
 <<include "News">>
 <</div>>
-<<div cls="left">>
+<<div cls="right">>
 = [[SahrisWiki]] =
 
 Welcome to [[SahrisWiki]]'s development wiki and development environment. 
