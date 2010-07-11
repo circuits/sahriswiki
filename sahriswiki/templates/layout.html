@@ -25,9 +25,9 @@
      href="${page['feed']}" type="application/xml" />
    </py:if>
    <link rel="stylesheet" title="Normal" type="text/css" media="screen"
-    href="${environ.request.url('/static/css/screen.css')}" />
+    href="${environ.request.url('/css/screen.css')}" />
     <link rel="stylesheet" type="text/css"
-     href="${environ.request.url('/static/css/pygments.css')}" />
+     href="${environ.request.url('/css/pygments.css')}" />
    <link py:for="stylesheet in environ.stylesheets" rel="stylesheet"
     type="text/css" href="${environ.request.url(stylesheet)}" />
    <py:if test="defined('page')">
