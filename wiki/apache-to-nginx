@@ -6,7 +6,7 @@
 
 This guide will show you common examples in Nginx to make migration from Apache a bit easier. 
 
-====HTTP Basic Authentication or htpasswd support====
+===HTTP Basic Authentication or htpasswd support===
 If you have been playing with nginx for a the first time you may have noticed that there is no .htaccess support. However Nginx can still utilize HTTP Basic Authenication with existing htpasswd files using the HTTP Auth Basic Module. The module is compiled by default. 
 
 If you still have Apache installed (but perhaps turned off or on a different port) you can still use htpasswd to generate a password file. But in the event that you don't have or don't want to install Apache you can use Perl or Ruby to generate at least the encrypted passwords. The .htpasswd files should be in the following format.
@@ -40,7 +40,7 @@ location  /admin  {
 
 If the above did not work, check your error logs as sometimes it will notify you if the path to the password file could not be found. 
 
-====Ignoring robots.txt, favicon.ico and hidden files====
+===Ignoring robots.txt, favicon.ico and hidden files===
 
 Sometimes you may wish to omit commonly accessed files from being recorded in the access log as well as block access to hidden files (filenames beginning with a period such as .htpasswd and .htaccess). Even though nginx doesn't support htaccess, you may still wish to secure files left behind from the migration. You can easily do this by adding a couple location blocks to your domain's server block.
 
@@ -56,7 +56,7 @@ The above will not record access to the favicon.ico or robots.txt in the root of
 include drop.conf;
 <</code>>
 
-====Extremely Easy Wordpress Migration====
+===Extremely Easy Wordpress Migration===
 
 Most people now days take advantage of Wordpress' permalink feature which normally requires mod_rewrite enabled in the .htaccess file. However as of Nginx 0.7.26 and above this can be taken care of very easily with a single directive.
 
@@ -97,7 +97,7 @@ The two if blocks replace the common RewriteCond used by wordpress to test if th
 
 On the next page: Utilizing WP Super Cache, rewrite examples and more.
 
-====Using WP Super Cache with Nginx====
+===Using WP Super Cache with Nginx===
 
 While utilizing permalinks for Wordpress on nginx is incredibly easy, getting WP Super Cache to work to the best of its ability requires a bit more elbow grease. WP Super Cache can save you a great deal of bandwidth by proving both uncompressed and gzip compressed versions of your pages and articles in a cached html format. And it saves both versions of these in the /wp-content/cache/supercache/ folder. The problem is we need to make sure that Nginx serves these files when the conditions are appropriate thus completely bypassing the PHP interpreter when not needed. Since Nginx does an incredible job serving static files, getting this one right can be of great benefit. 
 
@@ -159,7 +159,7 @@ location / {
 
 You'll notice in the above we only rewrite to the .html file. With the Gzip Precompression module enabled nginx will automatically serve a *.gz file of the same name (ie: index.html vs index.html.gz) to browsers that support gzip encoding. With the above configuration paired with WP Super Cache should help save considerable bandwidth as well as improve site response time when serving up cached results. 
 
-====Basic Rewrite Conversions====
+===Basic Rewrite Conversions===
 Rewrites are internal by default in Nginx, that is to say by default they're the equivalent of apache's [PT] Pass-Thru flag. 
 
 A pretty common rewrite setup in .htaccess may look something like this:
