@@ -5,8 +5,13 @@ import time
 
 from genshi.builder import tag
 
-def title(macro, environ, *args, **kwargs):
+def title(macro, environ, context, *args, **kwargs):
     """Return the title of the current page."""
+
+    if args and args[0]:
+        title = args[0]
+        context["title"] = title
+        return title
 
     return environ.page["name"]
 

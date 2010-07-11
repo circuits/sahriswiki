@@ -18,12 +18,13 @@ class Macro(object):
         self.body = body
         self.isblock = isblock
 
-def dispatcher(name, arg_string, body, isblock, environ):
+def dispatcher(name, arg_string, body, isblock, (environ, context)):
     if name in environ.macros:
         macro = Macro(name, arg_string, body, isblock)
         args, kwargs = parse_args(arg_string)
         try:
-            return environ.macros[name](macro, environ, *args, **kwargs)
+            return environ.macros[name](macro, environ, context,
+                *args, **kwargs)
         except Exception, e:
             return "ERROR: Error while executing macro %r (%s)" % (name, e)
     else:

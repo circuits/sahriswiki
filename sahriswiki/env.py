@@ -123,10 +123,10 @@ class Environment(BaseComponent):
             mime = ""
         return page_class(self, name, mime)
 
-    def include(self, name):
+    def include(self, name, context=None):
         if name in self.storage:
             return self.parser.generate(self.storage.page_text(name),
-                    environ=self)
+                    environ=(self, context))
         else:
             data = {"page": {"name": name}}
             t = self.templates.load("notfound.html")
