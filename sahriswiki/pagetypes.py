@@ -32,21 +32,6 @@ class WikiPage(object):
         self.search = self.environ.search
         self.storage = self.environ.storage
 
-    def download(self):
-        raise NotImplemented()
-
-    def edit(self):
-        raise NotImplemented()
-
-    def history(self):
-        raise NotImplemented()
-
-    def view(self):
-        raise NotImplemented()
-
-class WikiPageText(WikiPage):
-    """Pages of mime type text/* use this for display."""
-
     def _get_text(self):
         return self.storage.page_text(self.name)
 
@@ -62,9 +47,9 @@ class WikiPageText(WikiPage):
             "name": self.name,
             "comment": comment,
             "node": short(node),
-            "url": self.url(self.name),
-            "feed": self.url("/+feed/%s" % self.name),
         }
+
+        self.environ.page = data
 
         return data
 
@@ -73,16 +58,32 @@ class WikiPageText(WikiPage):
         return serve_file(self.request, self.response, path, type=self.mime)
 
     def edit(self):
+        raise NotImplemented()
+
+    def history(self):
         data = {
-            "actions": [],
+            "title": "History of \"%s\"" % self.name,
+            "page": {"name": self.name},
+            "history": self.storage.page_history(self.name),
+            "strftime": strftime,
+            "gmtime": gmtime,
         }
 
+        return self.render("history.html", **data)
+
+    def view(self):
+        raise NotImplemented()
+
+class WikiPageText(WikiPage):
+    """Pages of mime type text/* use this for display."""
+
+    def edit(self):
         if not self.request.kwargs:
             if self.name in self.storage:
-                data["page"] = self._get_page_data()
+                data = {"page": self._get_page_data()}
                 return self.render("edit_plain.html", **data)
             else:
-                data["page"] = {"name": self.name, "text": ""}
+                data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit_plain.html", **data)
 
         author = self.request.cookie.get("username")
@@ -124,32 +125,8 @@ class WikiPageText(WikiPage):
         else:
             raise Exception("Invalid action %r" % action)
 
-    def history(self):
-        data = {
-            "actions": [
-                (self.url("/+feed"),                "RSS 1.0"),
-                (self.url("/+feed?format=rss2"),    "RSS 2.0"),
-                (self.url("/+feed?format=atom"),    "Atom"),
-            ],
-            "title": "History of \"%s\"" % self.name,
-            "page": {"name": self.name},
-            "history": self.storage.page_history(self.name),
-            "strftime": strftime,
-            "gmtime": gmtime,
-        }
-
-        return self.render("history.html", **data)
-
     def view(self):
-        data = {
-            "actions": [
-                (self.url("/+edit/%s" % self.name),     "Edit"),
-                (self.url("/+download/%s" % self.name), "Download"),
-                (self.url("/+history/%s" % self.name),  "History"),
-            ],
-            "page": self._get_page_data()
-        }
-
+        data = {"page": self._get_page_data()}
         return self.render("view_plain.html", **data)
 
 class WikiPageColorText(WikiPageText):
@@ -158,45 +135,13 @@ class WikiPageColorText(WikiPageText):
 class WikiPageWiki(WikiPageColorText):
     """Pages of with wiki markup use this for display."""
 
-    def _get_text(self):
-        return self.storage.page_text(self.name)
-
-    def _get_page_data(self):
-        text = self._get_text()
-        rev, node, date, author, comment = self.storage.page_meta(self.name)
-
-        data = {
-            "rev": rev,
-            "date": date,
-            "text": text,
-            "author": author,
-            "name": self.name,
-            "comment": comment,
-            "node": short(node),
-            "url": self.url(self.name),
-            "feed": self.url("/+feed/%s" % self.name),
-            "backlinks": self.url("/+backlinks/%s" % self.name),
-        }
-
-        self.environ.page = data
-
-        return data
-
-    def download(self):
-        path = self.storage._file_path(self.name)
-        return serve_file(self.request, self.response, path, type=self.mime)
-
     def edit(self):
-        data = {
-            "actions": [],
-        }
-
         if not self.request.kwargs:
             if self.name in self.storage:
-                data["page"] = self._get_page_data()
+                data = {"page": self._get_page_data()}
                 return self.render("edit.html", **data)
             else:
-                data["page"] = {"name": self.name, "text": ""}
+                data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit.html", **data)
 
         author = self.request.cookie.get("username")
@@ -227,10 +172,12 @@ class WikiPageWiki(WikiPageColorText):
         elif action == "cancel":
             raise Redirect(self.url("/%s" % self.name))
         elif action == "preview":
-            data["page"] = {"name": self.name, "text": text}
-            data["author"] = author
-            data["comment"] = comment
-            data["preview"] = True
+            data = {
+                "page": {"name": self.name, "text": text},
+                "author": author,
+                "comment": comment,
+                "preview": True,
+            }
             return self.render("edit.html", **data)
         elif action == "save":
             self.storage.reopen()
@@ -244,32 +191,8 @@ class WikiPageWiki(WikiPageColorText):
         else:
             raise Exception("Invalid action %r" % action)
 
-    def history(self):
-        data = {
-            "actions": [
-                (self.url("/+feed"),                "RSS 1.0"),
-                (self.url("/+feed?format=rss2"),    "RSS 2.0"),
-                (self.url("/+feed?format=atom"),    "Atom"),
-            ],
-            "title": "History of \"%s\"" % self.name,
-            "page": {"name": self.name},
-            "history": self.storage.page_history(self.name),
-            "strftime": strftime,
-            "gmtime": gmtime,
-        }
-
-        return self.render("history.html", **data)
-
     def view(self):
-        data = {
-            "actions": [
-                (self.url("/+edit/%s" % self.name),     "Edit"),
-                (self.url("/+download/%s" % self.name), "Download"),
-                (self.url("/+history/%s" % self.name),  "History"),
-            ],
-            "page": self._get_page_data()
-        }
-
+        data = {"page": self._get_page_data()}
         return self.render("view.html", **data)
 
 class WikiPageFile(WikiPage):
@@ -278,15 +201,7 @@ class WikiPageFile(WikiPage):
 class WikiPageImage(WikiPageFile):
     """Pages of mime type image/* use this for display."""
 
-    def download(self):
-        path = self.storage._file_path(self.name)
-        return serve_file(self.request, self.response, path, type=self.mime)
-
     def edit(self):
-        data = {
-            "actions": [],
-        }
-
         if not self.request.kwargs:
             raise NotImplemented()
 
@@ -312,21 +227,10 @@ class WikiPageImage(WikiPageFile):
 
     def view(self):
         if self.name not in self.storage:
-            data = {
-                "actions": [],
-                "page": {"name": self.name}
-            }
+            data = {"page": {"name": self.name}}
             return self.render("notfound.html", **data)
 
         data = {
-            "actions": [
-                (self.url("/+edit/%s?action=delete" % self.name),
-                    "Delete"),
-                (self.url("/+download/%s" % self.name),
-                    "Download"),
-                (self.url("/+upload"),
-                    "Upload"),
-            ],
             "image": {
                 "url": self.url("/+download/%s" % self.name),
                 "alt": self.name,
@@ -338,42 +242,13 @@ class WikiPageImage(WikiPageFile):
 class WikiPageCSV(WikiPageFile):
     """Display class for type text/csv."""
 
-    def _get_text(self):
-        return self.storage.page_text(self.name)
-
-    def _get_page_data(self):
-        text = self._get_text()
-        rev, node, date, author, comment = self.storage.page_meta(self.name)
-
-        data = {
-            "rev": rev,
-            "date": date,
-            "text": text,
-            "author": author,
-            "name": self.name,
-            "comment": comment,
-            "node": short(node),
-            "url": self.url(self.name),
-            "feed": self.url("/+feed/%s" % self.name),
-        }
-
-        return data
-
-    def download(self):
-        path = self.storage._file_path(self.name)
-        return serve_file(self.request, self.response, path, type=self.mime)
-
     def edit(self):
-        data = {
-            "actions": [],
-        }
-
         if not self.request.kwargs:
             if self.name in self.storage:
-                data["page"] = self._get_page_data()
+                data = {"page": self._get_page_data()}
                 return self.render("edit_csv.html", **data)
             else:
-                data["page"] = {"name": self.name, "text": ""}
+                data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit_csv.html", **data)
 
         author = self.request.cookie.get("username")
@@ -404,11 +279,13 @@ class WikiPageCSV(WikiPageFile):
         elif action == "cancel":
             raise Redirect(self.url("/%s" % self.name))
         elif action == "preview":
-            data["page"] = {"name": self.name, "text": text}
-            data["rows"] = csv.reader(StringIO(text))
-            data["author"] = author
-            data["comment"] = comment
-            data["preview"] = True
+            data = {
+                "page": {"name": self.name, "text": text},
+                "rows": csv.reader(StringIO(text)),
+                "author": author,
+                "comment": comment,
+                "preview": True,
+            }
             return self.render("edit_csv.html", **data)
         elif action == "save":
             self.storage.reopen()
@@ -422,62 +299,15 @@ class WikiPageCSV(WikiPageFile):
         else:
             raise Exception("Invalid action %r" % action)
 
-    def history(self):
-        data = {
-            "actions": [
-                (self.url("/+feed"),                "RSS 1.0"),
-                (self.url("/+feed?format=rss2"),    "RSS 2.0"),
-                (self.url("/+feed?format=atom"),    "Atom"),
-            ],
-            "title": "History of \"%s\"" % self.name,
-            "page": {"name": self.name},
-            "history": self.storage.page_history(self.name),
-            "strftime": strftime,
-            "gmtime": gmtime,
-        }
-
-        return self.render("history.html", **data)
-
     def view(self):
-        data = {
-            "actions": [
-                (self.url("/+edit/%s" % self.name),     "Edit"),
-                (self.url("/+download/%s" % self.name), "Download"),
-                (self.url("/+history/%s" % self.name),  "History"),
-            ],
-            "page": self._get_page_data()
-        }
-
-        data["rows"] = csv.reader(
-                StringIO(data["page"]["text"]))
-
+        data = {"page": self._get_page_data()}
+        data["rows"] = csv.reader(StringIO(data["page"]["text"]))
         return self.render("view_csv.html", **data)
 
 class WikiPageRST(WikiPageText):
     """
     Display ReStructured Text.
     """
-
-    def _get_text(self):
-        return self.storage.page_text(self.name)
-
-    def _get_page_data(self):
-        text = self._get_text()
-        rev, node, date, author, comment = self.storage.page_meta(self.name)
-
-        data = {
-            "rev": rev,
-            "date": date,
-            "text": text,
-            "author": author,
-            "name": self.name,
-            "comment": comment,
-            "node": short(node),
-            "url": self.url(self.name),
-            "feed": self.url("/+feed/%s" % self.name),
-        }
-
-        return data
 
     def _render(self, text=None):
         if text is None:
@@ -488,21 +318,13 @@ class WikiPageRST(WikiPageText):
         return Markup(publish_parts(text, writer_name="html",
             settings_overrides=SAFE_DOCUTILS)["html_body"])
 
-    def download(self):
-        path = self.storage._file_path(self.name)
-        return serve_file(self.request, self.response, path, type=self.mime)
-
     def edit(self):
-        data = {
-            "actions": [],
-        }
-
         if not self.request.kwargs:
             if self.name in self.storage:
-                data["page"] = self._get_page_data()
+                data = {"page": self._get_page_data()}
                 return self.render("edit_rst.html", **data)
             else:
-                data["page"] = {"name": self.name, "text": ""}
+                data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit_rst.html", **data)
 
         author = self.request.cookie.get("username")
@@ -533,11 +355,13 @@ class WikiPageRST(WikiPageText):
         elif action == "cancel":
             raise Redirect(self.url("/%s" % self.name))
         elif action == "preview":
-            data["page"] = {"name": self.name, "text": text}
-            data["output"] = self._render(text)
-            data["author"] = author
-            data["comment"] = comment
-            data["preview"] = True
+            data = {
+                "page": {"name": self.name, "text": text},
+                "output": self._render(text),
+                "author": author,
+                "comment": comment,
+                "preview": True,
+            }
             return self.render("edit_rst.html", **data)
         elif action == "save":
             self.storage.reopen()
@@ -551,75 +375,21 @@ class WikiPageRST(WikiPageText):
         else:
             raise Exception("Invalid action %r" % action)
 
-    def history(self):
-        data = {
-            "actions": [
-                (self.url("/+feed"),                "RSS 1.0"),
-                (self.url("/+feed?format=rss2"),    "RSS 2.0"),
-                (self.url("/+feed?format=atom"),    "Atom"),
-            ],
-            "title": "History of \"%s\"" % self.name,
-            "page": {"name": self.name},
-            "history": self.storage.page_history(self.name),
-            "strftime": strftime,
-            "gmtime": gmtime,
-        }
-
-        return self.render("history.html", **data)
-
     def view(self):
-        data = {
-            "actions": [
-                (self.url("/+edit/%s" % self.name),     "Edit"),
-                (self.url("/+download/%s" % self.name), "Download"),
-                (self.url("/+history/%s" % self.name),  "History"),
-            ],
-            "page": self._get_page_data()
-        }
-
-        data["page"]["output"] = self._renger()
-
-        return self.render("view_csv.html", **data)
+        data = {"page": self._get_page_data()}
+        data["output"] = self._render()
+        return self.render("view_rst.html", **data)
 
 class WikiPageHTML(WikiPageColorText):
     """Display HTML (genshi) templates"""
 
-    def _get_text(self):
-        return self.storage.page_text(self.name)
-
-    def _get_page_data(self):
-        text = self._get_text()
-        rev, node, date, author, comment = self.storage.page_meta(self.name)
-
-        data = {
-            "rev": rev,
-            "date": date,
-            "text": text,
-            "author": author,
-            "name": self.name,
-            "comment": comment,
-            "node": short(node),
-            "url": self.url(self.name),
-            "feed": self.url("/+feed/%s" % self.name),
-        }
-
-        return data
-
-    def download(self):
-        path = self.storage._file_path(self.name)
-        return serve_file(self.request, self.response, path, type=self.mime)
-
     def edit(self):
-        data = {
-            "actions": [],
-        }
-
         if not self.request.kwargs:
             if self.name in self.storage:
-                data["page"] = self._get_page_data()
+                data = {"page": self._get_page_data()}
                 return self.render("edit_html.html", **data)
             else:
-                data["page"] = {"name": self.name, "text": ""}
+                data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit_html.html", **data)
 
         author = self.request.cookie.get("username")
@@ -650,12 +420,14 @@ class WikiPageHTML(WikiPageColorText):
         elif action == "cancel":
             raise Redirect(self.url("/%s" % self.name))
         elif action == "preview":
-            data["page"] = {"name": self.name, "text": text}
-            data["author"] = author
-            data["comment"] = comment
-            data["preview"] = True
-            data["html"] = Template(text).render(**data)
-            return self.render("edit.html", **data)
+            data = {
+                "page": {"name": self.name, "text": text},
+                "author": author,
+                "comment": comment,
+                "preview": True,
+                "html": Template(text).render(**data),
+            }
+            return self.render("edit_html.html", **data)
         elif action == "save":
             self.storage.reopen()
             self.search.update(self.environ)
@@ -668,92 +440,7 @@ class WikiPageHTML(WikiPageColorText):
         else:
             raise Exception("Invalid action %r" % action)
 
-    def history(self):
-        data = {
-            "actions": [
-                (self.url("/+feed"),                "RSS 1.0"),
-                (self.url("/+feed?format=rss2"),    "RSS 2.0"),
-                (self.url("/+feed?format=atom"),    "Atom"),
-            ],
-            "title": "History of \"%s\"" % self.name,
-            "page": {"name": self.name},
-            "history": self.storage.page_history(self.name),
-            "strftime": strftime,
-            "gmtime": gmtime,
-        }
-
-        return self.render("history.html", **data)
-
     def view(self):
-        data = {
-            "actions": [
-                (self.url("/+edit/%s" % self.name),     "Edit"),
-                (self.url("/+download/%s" % self.name), "Download"),
-                (self.url("/+history/%s" % self.name),  "History"),
-            ],
-            "page": self._get_page_data()
-        }
-
-        data["html"] = Markup(self.render(self.name, **data))
-
+        data = {"page": self._get_page_data()}
+        data["html"] = Markup(self.render(self.name))
         return self.render("view_html.html", **data)
-
-class WikiPageFile(WikiPage):
-    """Pages of all other mime types use this for display."""
-
-class WikiPageImage(WikiPageFile):
-    """Pages of mime type image/* use this for display."""
-
-    def download(self):
-        path = self.storage._file_path(self.name)
-        return serve_file(self.request, self.response, path, type=self.mime)
-
-    def edit(self):
-        data = {
-            "actions": [],
-        }
-
-        if not self.request.kwargs:
-            raise NotImplemented()
-
-        author = self.request.cookie.get("username")
-        if author:
-            author = author.value
-        else:
-            author = self.request.headers.get("X-Forwarded-For",
-                    self.request.remote.ip or "AnonymousUser")
-
-        action = self.request.kwargs.get("action", None)
-
-        if action == "delete":
-            self.storage.reopen()
-            self.search.update(self.environ)
-
-            self.storage.delete_page(self.name, author, "deleted")
-            self.search.update_page(self, self.name, "")
-
-            raise Redirect(self.url("/%s" % self.name))
-        else:
-            raise Exception("Invalid action %r" % action)
-
-    def view(self):
-        if self.name not in self.storage:
-            data = {
-                "actions": [],
-                "page": {"name": self.name}
-            }
-            return self.render("notfound.html", **data)
-
-        data = {
-            "actions": [
-                (self.url("/+edit/%s?action=delete" % self.name),
-                    "Delete"),
-                (self.url("/+download/%s" % self.name),
-                    "Download"),
-                (self.url("/+upload"),
-                    "Upload"),
-            ],
-        }
-
-        return self.render("view_image.html", **data)
-

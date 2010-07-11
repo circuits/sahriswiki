@@ -31,6 +31,7 @@ if not HAS_SETUPTOOLS:
 
         return out
 
+import sahriswiki
 from sahriswiki.version import forget_version, get_version, remember_version
 
 forget_version()
@@ -41,7 +42,7 @@ setup(
     version=get_version(),
     description="A Lightweight Wiki Engine",
     long_description=open("README", "r").read(),
-    author="James Mills",
+    author=sahriswiki.__author__,
     author_email="James Mills, prologic at shortcircuit dot net dot au",
     url="http://bitbucket.org/prologic/sahriswiki/",
     download_url="http://bitbucket.org/prologic/sahriswiki/downloads/",
@@ -57,7 +58,7 @@ setup(
         "Programming Language :: Python :: 2.6",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application"],
     license="MIT",
-    keywords="wiki engine creole",
+    keywords=sahriswiki.__keywords__,
     platforms="POSIX",
     packages=find_packages("."),
     package_data={

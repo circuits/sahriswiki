@@ -21,26 +21,24 @@ class Root(BaseController):
 
         self.environ = environ
 
+        self.config = self.environ.config
         self.render = self.environ.render
         self.search = self.environ.search
         self.storage = self.environ.storage
 
     @expose("index")
     def index(self, *args, **kwargs):
-        name = os.path.sep.join(args) if args else self.environ.opts.frontpage
+        name = os.path.sep.join(args) if args else self.config.get("index")
         page = self.environ.get_page(name)
         try:
             return page.view()
         except NotFoundErr:
-            data = {
-                "actions": [],
-                "page": {"name": name}
-            }
+            data = {"page": {"name": name}}
             return self.render("notfound.html", **data)
 
     @expose("+download")
     def download(self, *args, **kwargs):
-        name = os.path.sep.join(args) if args else self.environ.opts.frontpage
+        name = os.path.sep.join(args) if args else self.config.get("index")
         page = self.environ.get_page(name)
         return page.download()
 
@@ -48,10 +46,7 @@ class Root(BaseController):
     def upload(self, *args, **kwargs):
         action = kwargs.get("action", None)
 
-        data = {
-            "actions": [],
-            "page": {"name": "Upload"},
-        }
+        data = {"page": {"name": "Upload"}}
 
         if action == "upload":
             file = kwargs.get("file", None)
@@ -113,11 +108,6 @@ class Root(BaseController):
 
         if not query:
             data = {
-                "actions": [
-                    (self.request.url("/+search"),      "Index"),
-                    (self.request.url("/+orphaned"),    "Orphaned"),
-                    (self.request.url("/+wanted"),      "Wanted")
-                ],
                 "page": {"name": "Index"},
                 "pages": sorted(self.storage.all_pages()),
             }
@@ -128,7 +118,6 @@ class Root(BaseController):
             words = (query,)
 
         data = {
-            "actions": [],
             "page": {"name": "Search"},
             "query": " ".join(words),
             "results": list(search(words)),
@@ -144,11 +133,6 @@ class Root(BaseController):
         self.search.update(self.environ)
 
         data = {
-            "actions": [
-                (self.request.url("/+search"),      "Index"),
-                (self.request.url("/+orphaned"),    "Orphaned"),
-                (self.request.url("/+wanted"),      "Wanted")
-            ],
             "page": {"name": "BackLinks for \"%s\"" % name},
             "pages": sorted(self.search.page_backlinks(name), key=itemgetter(0))
         }
@@ -200,11 +184,6 @@ class Root(BaseController):
     @expose("+orphaned")
     def orphaned(self, *args, **kwargs):
         data = {
-            "actions": [
-                (self.request.url("/+search"),      "Index"),
-                (self.request.url("/+orphaned"),    "Orphaned"),
-                (self.request.url("/+wanted"),      "Wanted")
-            ],
             "title": "Orphaned Pages",
             "pages": sorted(self.search.orphaned_pages(), key=itemgetter(0))
         }
@@ -213,15 +192,9 @@ class Root(BaseController):
     @expose("+wanted")
     def wanted(self, *args, **kwargs):
         data = {
-            "actions": [
-                (self.request.url("/+search"),      "Index"),
-                (self.request.url("/+orphaned"),    "Orphaned"),
-                (self.request.url("/+wanted"),      "Wanted")
-            ],
             "title": "Wanted Pages",
             "pages": sorted(self.search.wanted_pages(),
                 key=itemgetter(0), reverse=True)
-
         }
         return self.render("wanted.html", **data)
 
@@ -233,11 +206,6 @@ class Root(BaseController):
             return page.history()
 
         data = {
-            "actions": [
-                (self.request.url("/+feed"),                "RSS 1.0"),
-                (self.request.url("/+feed?format=rss2"),    "RSS 2.0"),
-                (self.request.url("/+feed?format=atom"),    "Atom"),
-            ],
             "page": {"name": "Recent Changes"},
             "history": self.storage.history(),
             "strftime": strftime,
@@ -291,7 +259,6 @@ class Root(BaseController):
             strftime(date_format, gmtime(to_date))))
 
         data = {
-            "actions": [],
             "page": {"name": "diff -r %s -r %s %s" % (from_rev, to_rev, name)},
             "diff": diff,
         }
