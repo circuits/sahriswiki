@@ -1,7 +1,14 @@
 import csv
-import docutils.core
 from StringIO import StringIO
 from time import strftime, gmtime
+
+try:
+    import docutils.core
+    HAS_DOCUTILS = True
+except ImportError:
+    HAS_DOCUTILS = False
+
+HAS_DOCUTILS = False
 
 from genshi import Markup
 from genshi.template import Template
@@ -12,6 +19,7 @@ from circuits.web.tools import serve_file
 from circuits.web.exceptions import NotImplemented, Redirect
 
 from utils import FIXLINES
+from errors import UnsupportedMediaTypeErr
 
 class WikiPage(object):
     """Everything needed for rendering a page."""
@@ -386,6 +394,9 @@ class WikiPageRST(WikiPageText):
             raise Exception("Invalid action %r" % action)
 
     def view(self):
+        if not HAS_DOCUTILS:
+            raise UnsupportedMediaTypeErr("No docutils support available")
+
         data = {"page": self._get_page_data()}
         data["output"] = self._render()
         return self.render("view_rst.html", **data)
