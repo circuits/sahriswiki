@@ -10,7 +10,7 @@ from mercurial.node import short
 
 from circuits.web.controllers import expose, BaseController
 
-from errors import NotFoundErr
+from errors import ForbiddenErr, NotFoundErr
 
 FIXLINES = re.compile("(\r[^\n])|(\r\n)")
 
@@ -44,6 +44,9 @@ class Root(BaseController):
 
     @expose("+upload")
     def upload(self, *args, **kwargs):
+        if self.config.get_bool("readonly"):
+            raise ForbiddenErr("This wiki is in readonly mode.")
+
         action = kwargs.get("action", None)
 
         data = {"page": {"name": "Upload"}}
@@ -71,6 +74,9 @@ class Root(BaseController):
 
     @expose("+edit")
     def edit(self, *args, **kwargs):
+        if self.config.get_bool("readonly"):
+            raise ForbiddenErr("This wiki is in readonly mode.")
+
         name = os.path.sep.join(args)
         page = self.environ.get_page(name)
         return page.edit()
