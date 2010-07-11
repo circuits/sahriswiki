@@ -1,10 +1,10 @@
-Emphasis
-//italics//; **bold**; //**bold italics**//; //mixed ////**bold** and italics//; ---- horizontal rule.
-Headings
-= Title 1 =; == Title 2 ==; === Title 3 ===; ==== Title 4 ====;
-Lists
-* bullets; ** indented bullet; 1. numbered;
-Links
-[[target|linktext]].
-Tables
-|=header| cell text |;
+= Downloading =
+
+[[SahrisWiki]] can be downloaded from the [[http://bitbucket.org/prologic/sahriswiki/download/|Downloads]] page. You'll find the latest snapshots and releases here.
+
+Alternatively you can download [[SahrisWiki]] by using [[http://mercurial.selenic.com/|Mercurial]] and cloning the repository:
+{{{
+hg clone http://bitbucket.org/prologic/sahriswiki/
+}}}
+
+For installation instructions see [[Installing]]
