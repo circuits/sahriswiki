@@ -87,12 +87,11 @@ class Environment(BaseComponent):
         return self.request.url(url)
 
     def staticurl(self, url):
-        if url and url[0] == "/":
-            base = self.config.get("static-baseurl")
-            if base:
-                return basejoin(base, url)
-            else:
-                return self.request.url(url)
+        base = self.config.get("static-baseurl")
+        if base:
+            return basejoin(base, url)
+        else:
+            return self.request.url(url)
 
     def get_page(self, name):
         """Creates a page object based on page"s mime type"""
