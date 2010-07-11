@@ -7,6 +7,7 @@ import mercurial.hg
 import mercurial.ui
 import mercurial.util
 import mercurial.revlog
+import mercurial.context
 from mercurial.node import short
 
 from circuits.web.utils import url_quote, url_unquote
@@ -65,6 +66,7 @@ class WikiStorage(object):
             create = False
         self.repo_prefix = self.path[len(self.repo_path):].strip('/')
         self._repos = {}
+        self._workingctxs = {}
         # Create the repository if needed.
         mercurial.hg.repository(self.ui, self.repo_path, create=create)
 
@@ -73,6 +75,7 @@ class WikiStorage(object):
 
         #self.repo = mercurial.hg.repository(self.ui, self.repo_path)
         self._repos = {}
+        self._workingctxs = {}
 
     @property
     def repo(self):
@@ -85,6 +88,18 @@ class WikiStorage(object):
             repo = mercurial.hg.repository(self.ui, self.repo_path)
             self._repos[thread_id] = repo
             return repo
+
+    @property
+    def workingctx(self):
+        """Keep one open working ctx per thread."""
+
+        thread_id = thread.get_ident()
+        try:
+            return self._workingctxs[thread_id]
+        except KeyError:
+            workingctx = mercurial.context.workingctx(self.repo)
+            self._workingctxs[thread_id] = workingctx
+            return workingctx
 
     def _find_repo_path(self, path):
         """Go up the directory tree looking for a repository."""
@@ -184,7 +199,7 @@ class WikiStorage(object):
                 short(filectx_tip.node())
             )
         except mercurial.revlog.LookupError:
-            self.repo.add([repo_file])
+            self.workingctx.add([repo_file])
             current_page_rev = -1
         if parent is not None and parent not in current_page_ver:
             msg = self.merge_changes(changectx, repo_file, text, user, parent)
@@ -252,7 +267,7 @@ class WikiStorage(object):
             os.unlink(file_path)
         except OSError:
             pass
-        self.repo.remove([repo_file])
+        self.workingctx.remove([repo_file])
         self._commit([repo_file], text, user)
 
     def open_page(self, title):
