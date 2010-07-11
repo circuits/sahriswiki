@@ -80,9 +80,9 @@
 
     <div id="content">${select('*|text()')}</div>
 
-    <div id="actions" py:if="defined('actions')">
+    <div id="ctxnav" py:if="defined('ctxnav')">
      <ul>
-      <li py:for="(href, text) in actions"><a href="${href}">${text}</a></li>
+      <li py:for="text, href in ctxnav"><a href="${href}">${text}</a></li>
      </ul>
     </div>
 
