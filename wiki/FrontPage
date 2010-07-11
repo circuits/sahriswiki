@@ -1,4 +1,4 @@
-<<div float="right">>
+<<div cls="right">>
 <<include "News">>
 <</div>>
 
