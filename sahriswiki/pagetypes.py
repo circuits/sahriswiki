@@ -442,5 +442,5 @@ class WikiPageHTML(WikiPageColorText):
 
     def view(self):
         data = {"page": self._get_page_data()}
-        data["html"] = Markup(self.render(self.name))
+        data["html"] = Markup(self.render(self.name, **data))
         return self.render("view_html.html", **data)
