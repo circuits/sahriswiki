@@ -278,6 +278,34 @@ class WikiPageImage(WikiPageFile):
         path = self.storage._file_path(self.name)
         return serve_file(self.request, self.response, path, type=self.mime)
 
+    def edit(self):
+        data = {
+            "actions": [],
+        }
+
+        if not self.request.kwargs:
+            raise NotImplemented()
+
+        author = self.request.cookie.get("username")
+        if author:
+            author = author.value
+        else:
+            author = self.request.headers.get("X-Forwarded-For",
+                    self.request.remote.ip or "AnonymousUser")
+
+        action = self.request.kwargs.get("action", None)
+
+        if action == "delete":
+            self.storage.reopen()
+            self.search.update(self.environ)
+
+            self.storage.delete_page(self.name, author, comment)
+            self.search.update_page(self, self.name, text=text)
+
+            raise Redirect(self.url("/%s" % self.name))
+        else:
+            raise Exception("Invalid action %r" % action)
+
     def view(self):
         if self.name not in self.storage:
             data = {
@@ -288,7 +316,12 @@ class WikiPageImage(WikiPageFile):
 
         data = {
             "actions": [
-                (self.url("/+download/%s" % self.name), "Download"),
+                (self.url("/+edit/%s?action=delete" % self.name),
+                    "Delete"),
+                (self.url("/+download/%s" % self.name),
+                    "Download"),
+                (self.url("/+upload")
+                    "Upload"),
             ],
             "image": {
                 "url": self.url("/+download/%s" % self.name),
