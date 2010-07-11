@@ -31,14 +31,11 @@ if not HAS_SETUPTOOLS:
 
         return out
 
-from sahriswiki.version import forget_version, remember_version
-
-forget_version()
-version = remember_version()
+from sahriswiki.version import get_version
 
 setup(
     name="sahriswiki",
-    version=version,
+    version=get_version(),
     description="A Lightweight Wiki Engine",
     long_description=open("README", "r").read(),
     author="James Mills",
