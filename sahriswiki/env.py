@@ -7,8 +7,10 @@ from genshi.template import TemplateLoader
 from creoleparser import create_dialect, creole11_base, Parser
 
 import macros
+import sahriswiki
 from utils import page_mime
-from sahriswiki import __version__
+from search import WikiSearch
+from storage import WikiStorage
 from pagetypes import WikiPageWiki, WikiPageFile
 from pagetypes import WikiPageText, WikiPageHTML, WikiPageImage
 from pagetypes import WikiPageColorText, WikiPageCSV, WikiPageRST
@@ -35,31 +37,47 @@ class Environment(BaseComponent):
         "":                         WikiPageFile,
     }
 
-    def __init__(self, opts, storage, search):
+    def __init__(self, config):
         super(Environment, self).__init__()
 
-        self.opts = opts
-        self.storage = storage
-        self.search = search
+        self.config = config
 
-        self.parser = Parser(create_dialect(creole11_base,
-            macro_func=macros.dispatcher, wiki_links_base_url="/"),
-            method="xhtml")
+        self.storage = WikiStorage(
+            self.config.get("data"),
+            self.config.get("encoding")
+        )
+
+        self.search = WikiSearch(
+            self.config.get("cache"),
+            self.config.get("language"),
+            self.storage
+        )
+
+        self.parser = Parser(
+            create_dialect(
+                creole11_base,
+                macro_func=macros.dispatcher,
+                wiki_links_base_url="/"
+            ),
+            method="xhtml"
+        )
 
         self.templates = TemplateLoader([
-            os.path.join(os.path.dirname(__file__), "templates"),
-            self.storage.path], auto_reload=True)
+            self.config.get("templates"),
+            self.storage.path], auto_reload=True
+        )
 
         self.macros = macros.loadMacros()
 
         self.stylesheets = []
-        self.version =  __version__
+        self.version = sahriswiki.__version__
 
         self.site = {
-            "name": self.opts.name,
-            "author": self.opts.author,
-            "keywords": self.opts.keywords,
-            "description": self.opts.description}
+            "name": self.config.get("name"),
+            "author": self.config.get("author"),
+            "keywords": self.config.get("keywords"),
+            "description": self.config.get("description")
+        }
 
         self.request = None
         self.response = None

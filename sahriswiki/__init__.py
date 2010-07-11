@@ -10,6 +10,9 @@ Lightweight Wiki Engine
 :license: MIT (See: LICENSE)
 """
 
+__author__ = "James Mills"
+__keywords__ = "lightweight creole wiki engine circuits circuits.web python",
+
 try:
     from __version__ import version as __version__
 except ImportError:
