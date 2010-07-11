@@ -220,18 +220,28 @@ class Root(BaseController):
 
         return self.render("recentchanges.html", **data)
 
+    @expose("facicon.ico")
+    def favicon(self, *args, **kwargs):
+        if "favicon.ico" in self.storage:
+            return self.download("favicon.ico")
+        else:
+            return self.serve_file(
+                os.path.join(self.config.get("static"), "favicon.ico")
+            )
+
     @expose("robots.txt")
     def robots(self, *args, **kwargs):
-        self.response.headers["Content-Type"] = "text/plain"
         if "robots.txt" in self.storage:
-            return self.storage.page_text("robots.txt")
+            return self.download("robots.txt")
 
-        s = []
-        s.append("User-agent: *")
-        s.append("Disallow: /+*")
-        s.append("Disallow: /%2b*")
-        s.append("Disallow: /%2B*")
-        return "\r\n".join(s)
+        self.response.headers["Content-Type"] = "text/plain"
+
+        return "\r\n".join((
+            "User-agent: *",
+            "Disallow: /+*",
+            "Disallow: /%2b*",
+            "Disallow: /%2B*",
+        ))
 
     @expose("+diff")
     def diff(self, *args, **kwargs):
