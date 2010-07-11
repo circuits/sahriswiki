@@ -283,7 +283,10 @@ without would yet you your yours yourself yourselves""")).split())
                     cursor.execute("DELETE FROM titles WHERE id=?;",
                             (title_id,))
 
-        links = extract_links(text)
+        if text is not None:
+            links = extract_links(text)
+        else:
+            links = []
 
         self.update_links(title, links, cursor=cursor)
         self.update_words(title, text or u'', cursor=cursor)
