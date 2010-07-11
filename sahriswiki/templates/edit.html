@@ -52,8 +52,7 @@
   <py:if test="defined('preview')">
    <py:if test="preview">
     <div id="preview"><h1>Preview</h1></div>
-    <div class="article">${environ.parser.generate(page["text"],
-     environ=environ)}</div>
+     ${environ.parser.generate(page["text"], environ=environ)}
    </py:if>
   </py:if>
  </body>

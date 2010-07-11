@@ -30,13 +30,11 @@
   <py:if test="defined('preview')">
    <py:if test="preview">
     <div id="preview"><h1>Preview</h1></div>
-    <div class="article">
-     <table class="csv">
-      <tr py:for="row in rows">
-       <td py:for="cell in row">${cell}</td>
-      </tr>
-     </table>
-    </div>
+    <table class="csv">
+     <tr py:for="row in rows">
+      <td py:for="cell in row">${cell}</td>
+     </tr>
+    </table>
    </py:if>
   </py:if>
  </body>
