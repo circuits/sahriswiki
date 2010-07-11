@@ -3,34 +3,47 @@
  xmlns:py="http://genshi.edgewall.org/" py:strip="">
  <py:match path="head" once="true">
   <head py:attrs="select('@*')">
-   <title py:with="title = list(select('title/text()'))">
-    <py:if test="title">: ${title}</py:if> ${page["name"]} :: ${environ.site["name"]}
+   <title py:with="_title = list(select('title/text()'))">
+    ${_title}
+    <py:choose test="defined('title')">
+     <py:when test="True">
+      ${title}
+     </py:when>
+     <py:otherwise>
+      <py:if test="defined('page')">${page['name']}</py:if>
+     </py:otherwise>
+    </py:choose>
+    :: ${environ.site["name"]}
    </title>
    <meta name="description" content="${environ.site['description']}" />
    <meta name="keywords" content="${environ.site['keywords']}" />
    <meta name="author" content="${environ.site['author']}" />
    <meta http-equiv="Content-Type"
     content="application/xhtml+xml; charset=utf-8" />
-   <link py:if="'feed' in page" rel="alternate" title="${page['name']}"
-    href="${page['feed']}" type="application/xml" />
+   <py:if test="defined('page')">
+    <link py:if="'feed' in page" rel="alternate" title="${page['name']}"
+     href="${page['feed']}" type="application/xml" />
+   </py:if>
    <link rel="stylesheet" title="Normal" type="text/css" media="screen"
     href="${environ.request.url('/css/screen.css')}" />
     <link rel="stylesheet" type="text/css"
      href="${environ.request.url('/css/pygments.css')}" />
    <link py:for="stylesheet in environ.stylesheets" rel="stylesheet"
     type="text/css" href="${environ.request.url(stylesheet)}" />
-   <style type="text/css">
-    #menu li a[href="/${page['name']}"] {
-    	background : #ffffff;
-    	border : 1px solid #2b548c;
-    	border-bottom : 1px solid #ffffff;
-    	color : #437fda;
-    }
-    #menu li a[href="/${page['name']}"]:hover {
-    	background : #ffffff;
-    	color : #ba8f43;
+   <py:if test="defined('page')">
+    <style type="text/css">
+     #menu li a[href="/${page['name']}"] {
+     	background : #ffffff;
+     	border : 1px solid #2b548c;
+     	border-bottom : 1px solid #ffffff;
+     	color : #437fda;
      }
-   </style>
+     #menu li a[href="/${page['name']}"]:hover {
+     	background : #ffffff;
+     	color : #ba8f43;
+      }
+    </style>
+   </py:if>
    ${select('*[local-name()!="title"]')}
 	 </head>
  </py:match>
@@ -38,11 +51,26 @@
   <body py:attrs="select('@*')">
 	 	<div id="main">
 	 		<div id="header">
-     <h1>${page["name"]}</h1>
+     <py:choose test="defined('page') and 'backlinks' in page">
+      <py:when test="True">
+       <h1><a title="View BackLinks for ${page['name']}"
+        href="${page['backlinks']}">${page["name"]}</a></h1>
+      </py:when>
+      <py:otherwise>
+       <py:choose test="defined('title')">
+        <py:when test="True">
+         <h1>${title}</h1>
+        </py:when>
+        <py:otherwise>
+         <py:if test="defined('page')"><h1>${page['name']}</h1></py:if>
+        </py:otherwise>
+       </py:choose>
+      </py:otherwise>
+     </py:choose>
      <div id="search">
       <form class="search" action="${environ.request.url('/+search')}">
        <input id="q" name="q" size="18" />
-       <button name="search" type="submit">Search</button>
+       <button type="submit">Search</button>
 		    </form>
      </div>
 	 		</div>
@@ -52,8 +80,8 @@
 
     <div id="content">${select('*|text()')}</div>
 
-    <div id="actions">
-     <ul py:if="defined('actions')">
+    <div id="actions" py:if="defined('actions')">
+     <ul>
       <li py:for="(href, text) in actions"><a href="${href}">${text}</a></li>
      </ul>
     </div>

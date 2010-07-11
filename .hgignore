@@ -1,4 +1,14 @@
 syntax: glob
 
+tmp
+dist
 *.pyc
+*.pyo
+build
 cache
+coverage
+.coverage
+docs/build
+__version__.py
+docs/source/api
+sahriswiki.egg-info

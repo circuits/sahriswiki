@@ -127,7 +127,7 @@ table {
 }
 
 #header {
-	background : #2b548c url('../images/header_bg.png') repeat-x bottom left;
+	background : #2b548c url('../img/header_bg.png') repeat-x bottom left;
 	padding : 6em 4em 1em 4em;
     overflow: auto;
 }
@@ -136,6 +136,12 @@ table {
 	font : italic 200% sans-serif;
     float: left;
     position: relative;
+}
+#header h1 a {
+	color : #ffffff;
+}
+#header h1 a:hover {
+	color : #ba8f43;
 }
 
 #search {

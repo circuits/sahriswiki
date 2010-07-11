@@ -3,12 +3,11 @@
  xmlns:xi="http://www.w3.org/2001/XInclude"
  xmlns:py="http://genshi.edgewall.org/">
  <xi:include href="layout.html" />
- <head>
-  <title>Upload</title>
- </head>
+ <head></head>
  <body>
   <div py:if="defined('filename')" id="message">
-   <a href="/${filename}">${filename}</a> uploaded successfully.
+   <a href="${environ.request.url('/%s' % filename)}">${filename}</a>
+    uploaded successfully.
   </div>
   <div id="uploader">
    <form method="post" action="" enctype="multipart/form-data">
