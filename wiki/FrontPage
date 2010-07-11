@@ -16,6 +16,6 @@ For more information see [[Docs]].
 
 To try this wiki out for yourself, feel free to edit the [[SandBox]].
 ----
-<<div cls="right">>
+<<div float="right">>
 <<include "News">>
 <</div>>
