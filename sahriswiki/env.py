@@ -62,10 +62,10 @@ class Environment(BaseComponent):
             method="xhtml"
         )
 
-        self.templates = TemplateLoader([
+        self.templates = TemplateLoader((
+            self.storage.path,
             self.config.get("templates"),
-            self.storage.path], auto_reload=True
-        )
+        ), auto_reload=True)
 
         self.macros = macros.loadMacros()
 
