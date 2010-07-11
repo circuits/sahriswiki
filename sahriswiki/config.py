@@ -112,6 +112,10 @@ class Config(object):
         add("", "--disable-static", action="store_true", default=False,
                 dest="disable-static", help="Disable static file serving")
 
+        add("", "--static-baseurl", action="store", default=None,
+                dest="static-baseurl", metavar="URL", type="string",
+                help="Set static baseurl to URL")
+
         options, args = parser.parse_args()
 
         for option, value in options.__dict__.iteritems():

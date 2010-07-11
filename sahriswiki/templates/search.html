@@ -9,7 +9,7 @@
   <p>${len(results)} pages(s) found matching all words.</p>
   <ol>
    <li py:for="score, name, snippet in results">
-    <b><a href="${environ.request.url('/%s' % name)}">${name}</a></b>
+    <b><a href="${environ.url('/%s' % name)}">${name}</a></b>
     <i>${score}</i>
     <p>${snippet}</p>
    </li>

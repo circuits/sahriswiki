@@ -6,7 +6,7 @@
  <head></head>
  <body>
   <div py:if="defined('filename')" id="message">
-   <a href="${environ.request.url('/%s' % filename)}">${filename}</a>
+   <a href="${environ.url('/%s' % filename)}">${filename}</a>
     uploaded successfully.
   </div>
   <div id="uploader">

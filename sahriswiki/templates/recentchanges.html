@@ -10,12 +10,12 @@
   <h1>Recent Changes</h1>
   <ul>
    <li py:for="name, rev, date, author, comment in history">
-    <a href="${environ.request.url('/+diff/%s?rev=%s' % (name, rev))}">
+    <a href="${environ.url('/+diff/%s?rev=%s' % (name, rev))}">
      ${strftime('%Y-%m-%d', gmtime(date))}
     </a>
-    <a href="${environ.request.url('/%s' % name)}">${name}</a>
-    [ <a href="${environ.request.url('/+hg/rev/%d' % rev)}">${rev}</a> ]
-    by <a href="${environ.request.url('/~%s' % author)}">${author}</a>
+    <a href="${environ.url('/%s' % name)}">${name}</a>
+    [ <a href="${environ.url('/+hg/rev/%d' % rev)}">${rev}</a> ]
+    by <a href="${environ.url('/~%s' % author)}">${author}</a>
     <i>${comment}</i>
    </li>
   </ul>
