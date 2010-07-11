@@ -320,7 +320,7 @@ class WikiPageImage(WikiPageFile):
                     "Delete"),
                 (self.url("/+download/%s" % self.name),
                     "Download"),
-                (self.url("/+upload")
+                (self.url("/+upload"),
                     "Upload"),
             ],
             "image": {
