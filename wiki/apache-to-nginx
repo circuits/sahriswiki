@@ -1,3 +1,5 @@
+= <<title>> =
+
 //For a simple beginning example configuration to start with please view my [[http://wiki.kbeezie.com/nginx-config/|example configuration]]//
  
 [[http://wiki.nginx.org|Nginx]] currently holds shy of 6.5% of the known webserver market, which is just roughly shy of 13 million servers. This little lightweight webserver created by a sole Russian developer has been gaining a great deal of popularity over the last few years and is used by sites such as [[http://wordpress.com|Wordpress]], [[http://textsfromlastnight.com|Texts from Last Night]] and [[http://www.hulu.com|Hulu]].
