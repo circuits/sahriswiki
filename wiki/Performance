@@ -1,0 +1,8 @@
+= Performance =
+
+* [[SahrisWiki]] is built using [[http://bitbucket.org/prologic/circuits/|circuits]]'s
+  lightweight web framework (//circuits.web//) which is itself a fast, scalable, and very powerful asynchronous web application server and framework.
+* [[SahrisWiki]] has an **A** grade [[http://developer.yahoo.com/yslow/|YSlow]] rating and employs all of the techniques that apply to high performance web applications.
+
+
+
