@@ -91,7 +91,7 @@ class Environment(BaseComponent):
         if base:
             return basejoin(base, url)
         else:
-            return self.request.url(url)
+            return self.request.url("/%s" % url)
 
     def get_page(self, name):
         """Creates a page object based on page"s mime type"""
