@@ -28,8 +28,10 @@ def get_version(doreload=False):
         import sahriswiki.__version__
         if doreload and type(sahriswiki.__version__) == ModuleType:
             reload(sahriswiki.__version__)
+        if type(sahriswiki.__version__) == ModuleType:
             version = sahriswiki.__version__.version
-        version = sahriswiki.__version__
+        else:
+            version = sahriswiki.__version__
     except ImportError:
         version = unknown_version
     return version
