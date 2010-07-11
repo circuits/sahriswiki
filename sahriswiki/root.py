@@ -139,6 +139,10 @@ class Root(BaseController):
     @expose("+backlinks")
     def backlinks(self, *args, **kwargs):
         name = os.path.sep.join(args)
+
+        self.storage.reopen()
+        self.search.update(self.environ)
+
         data = {
             "actions": [
                 (self.request.url("/+search"),      "Index"),
