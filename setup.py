@@ -69,6 +69,7 @@ setup(
             "htdocs/favicon.ico",
             "htdocs/img/icons/*.png",]},
     include_package_data=True,
+    scripts=["scripts/sahriswiki"],
     entry_points="""
     [console_scripts]
     sahriswiki = sahriswiki.main:main
