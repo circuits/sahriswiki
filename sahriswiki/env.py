@@ -11,7 +11,7 @@ import macros
 import sahriswiki
 from utils import page_mime
 from search import WikiSearch
-from storage import WikiStorage
+from storage import WikiSubdirectoryStorage
 from pagetypes import WikiPageWiki, WikiPageFile, WikiPageHello
 from pagetypes import WikiPageText, WikiPageHTML, WikiPageImage
 from pagetypes import WikiPageColorText, WikiPageCSV, WikiPageRST
