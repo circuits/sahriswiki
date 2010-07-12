@@ -112,6 +112,9 @@ class Config(object):
         add("", "--disable-static", action="store_true", default=False,
                 dest="disable-static", help="Disable static file serving")
 
+        add("", "--disable-compression", action="store_true", default=False,
+                dest="disable-compression", help="Disable compression")
+
         add("", "--static-baseurl", action="store", default=None,
                 dest="static-baseurl", metavar="URL", type="string",
                 help="Set static baseurl to URL")

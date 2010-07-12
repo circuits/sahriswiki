@@ -50,7 +50,6 @@ def main():
 
     manager += (Server(bind) + Logger()
             + Root(environ)
-            + Compression(environ)
             + CacheControl(environ)
             + ErrorHandler(environ)
             + SignalHandler(environ)
@@ -61,6 +60,9 @@ def main():
 
     if not environ.config.get_bool("disable-hgweb"):
         manager += Gateway(hgweb(environ.storage.repo_path), "/+hg")
+
+    if not environ.config.get_bool("disable-compression"):
+        manager += Compression(environ)
 
     if config.get_bool("daemon"):
         manager += Daemon(config.get("pid"))
