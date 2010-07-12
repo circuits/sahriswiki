@@ -312,12 +312,12 @@ echo $wiki->transform($text);
 
 You can create tables using pairs of vertical bars:
 
-<code>
+<<code>>
 || **column one** || **column two** ||
 |||| extended line ||
 || cell four || cell five ||
 || cell six || here's a very long cell ||
-</code>
+<</code>>
 
 || **column one** || **column two** ||
 |||| extended line ||
