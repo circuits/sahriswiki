@@ -197,9 +197,9 @@ SmashWordsTogether to create a page link.
 You can force a WikiPage name '''not''' to be clickable by putting \\
 an exclamation mark in front of it.
 
-{{{WikiPage !WikiPage}}}
+{{{WikiFormatting !WikiFormatting}}}
 
-WikiPage !WikiPage
+WikiFormatting !WikiFormatting
 
 (Note: existing wiki pages must be in the Text_Wiki {{pages}} option array, \\
 and the {{view_url}} option must be set for the linking to work.)
