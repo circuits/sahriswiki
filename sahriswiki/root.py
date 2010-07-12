@@ -34,7 +34,7 @@ class Root(BaseController):
 
     @expose("index")
     def index(self, *args, **kwargs):
-        name = os.path.sep.join(args) if args else self.config.get("index")
+        name = os.path.sep.join(args) if args else self.config.get("indexes")[0]
         page = self.environ.get_page(name)
         try:
             return page.view()
