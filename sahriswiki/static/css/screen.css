@@ -180,10 +180,10 @@ table {
 	padding : 0.75em 1.5em;
 }
 #menu li a:hover {
-	background : #437FDA;
-	color: #fff;
+	background : #c1d7ff;
+	color: #00c;
 	border : 1px solid #2b548c;
-    border-bottom : 1px solid #437FDA;
+    border-bottom : 1px solid #c1d7ff;
 }
 
 #ctxnav {
