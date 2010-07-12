@@ -12,7 +12,7 @@ a:visited {
 	text-decoration : none;
 }
 a:hover {
-	color : #ba8f43;
+	color : #437FDA;
 }
 
 html {
@@ -121,21 +121,24 @@ table {
 }
 
 #header {
-	background : #2b548c url('../img/header_bg.png') repeat-x bottom left;
-	padding : 6em 4em 1em 4em;
+	/* background : #2b548c url('../img/header_bg.png') repeat-x bottom left; */
+	/* padding : 6em 4em 1em 4em; */
+	padding-top: 20px;
+	
     overflow: auto;
 }
 #header h1 {
-	color : #ffffff;
-	font : italic 200% sans-serif;
+	color : #20b;
+	font-family: Helvetica;
+	font-size: 24px; font-weight: bold; margin-bottom: 20px;
     float: left;
     position: relative;
 }
 #header h1 a {
-	color : #ffffff;
+	color : #00d;
 }
 #header h1 a:hover {
-	color : #ba8f43;
+	color : #00f;
 }
 
 #search {
@@ -161,22 +164,26 @@ table {
 }
 
 #menu {
-	background : #437fda;
+	background : #fff;
 	border-bottom : 1px solid #2b548c;
-	font : 100% sans-serif;
+	font-family: Helvetica;
+	font-size: 12px;
 }
 #menu ul {
-	padding : 0.75em 4em;
+	padding : 0.60em 4em;
 }
 #menu li {
 	display : inline;
 }
 #menu li a {
-	color : #ffffff;
+	color : #00c;
 	padding : 0.75em 1.5em;
 }
 #menu li a:hover {
-	background : #2b548c;
+	background : #437FDA;
+	color: #fff;
+	border : 1px solid #2b548c;
+    border-bottom : 1px solid #437FDA;
 }
 
 #ctxnav {
