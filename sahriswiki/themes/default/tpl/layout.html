@@ -77,6 +77,12 @@
      ${environ.include("SiteMenu")}
     </div>
 
+    <div id="metanav" py:if="defined('metanav')">
+     <ul>
+      <li py:for="text, href in metanav"><a href="${href}">${text}</a></li>
+     </ul>
+    </div>
+
     <div id="content">${select('*|text()')}</div>
 
     <div id="ctxnav" py:if="defined('ctxnav')">
