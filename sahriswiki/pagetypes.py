@@ -269,6 +269,7 @@ class WikiPageImage(WikiPageFile):
             return self.render("notfound.html", **data)
 
         data = {
+            "title": self.name,
             "image": {
                 "url": self.url("/+download/%s" % self.name),
                 "alt": self.name,
