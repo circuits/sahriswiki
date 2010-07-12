@@ -254,10 +254,10 @@ You can put a picture in a page by typing the URL to the picture \
 
 You can use the described-reference URL markup to give the image an ALT tag:
 <<code>>
-{{fuckcat.jpg|F**K YOU I'm a Cat!}}
+{{+download/fuckcat.jpg|F**K YOU I'm a Cat!}}
 <</code>>
 
-{{fuckcat.jpg|F**K YOU I'm a Cat!}}
+{{+download/fuckcat.jpg|F**K YOU I'm a Cat!}}
 
 
 ----
