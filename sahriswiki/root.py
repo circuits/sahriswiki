@@ -34,8 +34,15 @@ class Root(BaseController):
 
     @expose("index")
     def index(self, *args, **kwargs):
-        name = os.path.sep.join(args) if args else self.config.get("indexes")[0]
+        if args:
+            name = os.path.sep.join(args)
+        else:
+            for name in self.config.get("indexes"):
+                if name in self.storage:
+                    break
+
         page = self.environ.get_page(name)
+
         try:
             return page.view()
         except NotFoundErr:
