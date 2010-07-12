@@ -26,6 +26,12 @@ class Root(BaseController):
         self.search = self.environ.search
         self.storage = self.environ.storage
 
+    def _get_ctxnav(self, type="view"):
+        if type in ("history", "index", "search"):
+            yield ("Index",    self.url("/+search"))
+            yield ("Orphaned", self.url("/+orphaned"))
+            yield ("Wanted",   self.url("/+wanteds"))
+
     @expose("index")
     def index(self, *args, **kwargs):
         name = os.path.sep.join(args) if args else self.config.get("index")
@@ -49,7 +55,10 @@ class Root(BaseController):
 
         action = kwargs.get("action", None)
 
-        data = {"title": "Upload"}
+        data = {
+            "title": "Upload",
+            "ctxnav": list(self._get_ctxnav("history")),
+        }
 
         if action == "upload":
             file = kwargs.get("file", None)
@@ -120,6 +129,7 @@ class Root(BaseController):
             data = {
                 "title": "Page Index",
                 "pages": sorted(self.storage.all_pages()),
+                "ctxnav": list(self._get_ctxnav("history")),
             }
             return self.render("index.html", **data)
 
@@ -131,6 +141,7 @@ class Root(BaseController):
             "title": "Search",
             "query": " ".join(words),
             "results": list(search(words)),
+            "ctxnav": list(self._get_ctxnav("history")),
         }
 
         return self.render("search.html", **data)
@@ -144,7 +155,9 @@ class Root(BaseController):
 
         data = {
             "title": "BackLinks for \"%s\"" % name,
-            "pages": sorted(self.search.page_backlinks(name), key=itemgetter(0))
+            "pages": sorted(self.search.page_backlinks(name),
+                key=itemgetter(0)),
+            "ctxnav": list(self._get_ctxnav("history")),
         }
         return self.render("index.html", **data)
 
@@ -195,7 +208,8 @@ class Root(BaseController):
     def orphaned(self, *args, **kwargs):
         data = {
             "title": "Orphaned Pages",
-            "pages": sorted(self.search.orphaned_pages(), key=itemgetter(0))
+            "pages": sorted(self.search.orphaned_pages(), key=itemgetter(0)),
+            "ctxnav": list(self._get_ctxnav("history")),
         }
         return self.render("orphaned.html", **data)
 
@@ -204,7 +218,8 @@ class Root(BaseController):
         data = {
             "title": "Wanted Pages",
             "pages": sorted(self.search.wanted_pages(),
-                key=itemgetter(0), reverse=True)
+                key=itemgetter(0), reverse=True),
+            "ctxnav": list(self._get_ctxnav("history")),
         }
         return self.render("wanted.html", **data)
 
@@ -220,6 +235,7 @@ class Root(BaseController):
             "history": self.storage.history(),
             "strftime": strftime,
             "gmtime": gmtime,
+            "ctxnav": list(self._get_ctxnav("history")),
         }
 
         return self.render("recentchanges.html", **data)
