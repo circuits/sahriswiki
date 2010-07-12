@@ -15,7 +15,7 @@ def title(macro, environ, context, *args, **kwargs):
 
     return environ.page["name"]
 
-def add_comment(macro, environ, *args, **kwargs):
+def add_comment(macro, environ, context, *args, **kwargs):
     """..."""
 
     # Setup info and defaults
