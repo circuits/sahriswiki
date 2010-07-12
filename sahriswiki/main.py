@@ -23,7 +23,7 @@ from root import Root
 from config import Config
 from env import Environment
 from plugins import PluginManager
-from tools import CacheControl, ErrorHandler, SignalHandler
+from tools import CacheControl, Compression, ErrorHandler, SignalHandler
 
 def main():
     config = Config()
@@ -60,6 +60,9 @@ def main():
 
     if not environ.config.get_bool("disable-hgweb"):
         manager += Gateway(hgweb(environ.storage.repo_path), "/+hg")
+
+    if not environ.config.get_bool("disable-compression"):
+        manager += Compression(environ)
 
     if config.get_bool("daemon"):
         manager += Daemon(config.get("pid"))

@@ -126,11 +126,10 @@ class Environment(BaseComponent):
     def include(self, name, context=None):
         if name in self.storage:
             return self.parser.generate(self.storage.page_text(name),
-                    environ=(self, context))
+                environ=(self, context))
         else:
-            data = {"page": {"name": name}}
-            t = self.templates.load("notfound.html")
-            return t.generate(**data)
+            data = {"name": name}
+            return self.templates.load("notfound.html").generate(**data)
 
     def render(self, template, **data):
         data["environ"] = self
