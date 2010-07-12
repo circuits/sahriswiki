@@ -152,20 +152,20 @@ You can create a definition (description) list with the following syntax:
 
 == Block Quotes
 
-You can mark a blockquote by starting a line with one or more '>' \
+You can mark a blockquote by starting a line with one or more '>' \\
 characters, followed by a space and the text to be quoted.
 
 <<code>>
 This is normal text here.
 
-> Indent me! The quick brown fox jumps over the lazy dog. \
-Now this the time for all good men to come to the aid of \
-their country. Notice how we can continue the block-quote \
-in the same "paragraph" by using a backslash at the end of \
+> Indent me! The quick brown fox jumps over the lazy dog. \\
+Now this the time for all good men to come to the aid of \\
+their country. Notice how we can continue the block-quote \\
+in the same "paragraph" by using a backslash at the end of \\
 the line.
 >
 > Another block, leading to...
->> Second level of indenting.  This second is indented even \
+>> Second level of indenting.  This second is indented even \\
 more than the previous one.
 
 Back to normal text.
@@ -173,14 +173,14 @@ Back to normal text.
 
 This is normal text here.
 
-> Indent me! The quick brown fox jumps over the lazy dog. \
-Now this the time for all good men to come to the aid of \
-their country. Notice how we can continue the block-quote \
-in the same "paragraph" by using a backslash at the end of \
+> Indent me! The quick brown fox jumps over the lazy dog. \\
+Now this the time for all good men to come to the aid of \\
+their country. Notice how we can continue the block-quote \\
+in the same "paragraph" by using a backslash at the end of \\
 the line.
 >
 > Another block, leading to...
->> Second level of indenting.  This second is indented even \
+>> Second level of indenting.  This second is indented even \\
 more than the previous one.
 
 Back to normal text.
@@ -194,19 +194,19 @@ Back to normal text.
 
 SmashWordsTogether to create a page link.
 
-You can force a WikiPage name '''not''' to be clickable by putting \
+You can force a WikiPage name '''not''' to be clickable by putting \\
 an exclamation mark in front of it.
 
 {{{WikiPage !WikiPage}}}
 
 WikiPage !WikiPage
 
-(Note: existing wiki pages must be in the Text_Wiki {{pages}} option array, \
+(Note: existing wiki pages must be in the Text_Wiki {{pages}} option array, \\
 and the {{view_url}} option must be set for the linking to work.)
 
 You can refer to an anchor on a WikiPage using a hash mark: WikiPage#named_anchor
 
-You can make a "described" wiki link by putting it in brackets and following it \
+You can make a "described" wiki link by putting it in brackets and following it \\
 with a nice text label:
 
 {{{This is a [WikiPage#named_anchor link to a wiki page] -- cool!}}}
@@ -216,7 +216,7 @@ This is a [WikiPage#named_anchor link to a wiki page] -- cool!
 
 === Interwiki Links
 
-Interwiki links are links to pages on other Wiki sites. \
+Interwiki links are links to pages on other Wiki sites. \\
 Type the {{``SiteName:PageName``}} like this:
 
 * MeatBall:RecentChanges
@@ -229,7 +229,7 @@ Type the {{``SiteName:PageName``}} like this:
 
 Create a remote link simply by typing its URL: http://ciaweb.net.
 
-If you like, enclose it in brackets to create a numbered reference \
+If you like, enclose it in brackets to create a numbered reference \\
 and avoid cluttering the page; {{{##[[http://ciaweb.net/free/]]##}}} becomes ##[[http://ciaweb.net/free/]]##.
 
 Or you can have a described-reference instead of a numbered reference:
@@ -240,7 +240,7 @@ Or you can have a described-reference instead of a numbered reference:
 
 === Images
 
-You can put a picture in a page by typing the URL to the picture \
+You can put a picture in a page by typing the URL to the picture \\
 (it must end in gif, jpg, or png).
 <<code>>
 {{http://c2.com/sig/wiki.gif}}
@@ -266,8 +266,8 @@ This is an example code block!
 </code>
 
 
-To create PHP blocks that get automatically colorized when you use PHP tags, \
-simply surround the code with {{<php>...</php>}} tags (the tags themselves \
+To create PHP blocks that get automatically colorized when you use PHP tags, \\
+simply surround the code with {{<php>...</php>}} tags (the tags themselves \\
 should each be on their own lines, and no need for the {{<?php ... ?>}} tags).
 
 <code>
