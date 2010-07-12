@@ -217,13 +217,14 @@ td { padding: 2px; }
 	font : 85% sans-serif;
 }
 #metanav ul {
-	padding : 0.75em 4em;
+	padding: 0.75em 4em;
 }
 #metanav li {
 	display : inline;
 }
 #metanav li a {
-	padding : 0.75em 0.5em;
+    text-decoration: none;
+    border-bottom: 1px dotted #2b548c ;
 }
 
 #content {
