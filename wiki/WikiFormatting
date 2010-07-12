@@ -152,35 +152,35 @@ You can create a definition (description) list with the following syntax:
 
 == Block Quotes
 
-You can mark a blockquote by starting a line with one or more '>' \
+You can mark a blockquote by starting a line with one or more '>' \\
 characters, followed by a space and the text to be quoted.
 
-<code>
+<<code>>
 This is normal text here.
 
-> Indent me! The quick brown fox jumps over the lazy dog. \
-Now this the time for all good men to come to the aid of \
-their country. Notice how we can continue the block-quote \
-in the same "paragraph" by using a backslash at the end of \
+> Indent me! The quick brown fox jumps over the lazy dog. \\
+Now this the time for all good men to come to the aid of \\
+their country. Notice how we can continue the block-quote \\
+in the same "paragraph" by using a backslash at the end of \\
 the line.
 >
 > Another block, leading to...
->> Second level of indenting.  This second is indented even \
+>> Second level of indenting.  This second is indented even \\
 more than the previous one.
 
 Back to normal text.
-</code>
+<</code>>
 
 This is normal text here.
 
-> Indent me! The quick brown fox jumps over the lazy dog. \
-Now this the time for all good men to come to the aid of \
-their country. Notice how we can continue the block-quote \
-in the same "paragraph" by using a backslash at the end of \
+> Indent me! The quick brown fox jumps over the lazy dog. \\
+Now this the time for all good men to come to the aid of \\
+their country. Notice how we can continue the block-quote \\
+in the same "paragraph" by using a backslash at the end of \\
 the line.
 >
 > Another block, leading to...
->> Second level of indenting.  This second is indented even \
+>> Second level of indenting.  This second is indented even \\
 more than the previous one.
 
 Back to normal text.
@@ -192,35 +192,25 @@ Back to normal text.
 
 === Wiki Links
 
-SmashWordsTogether to create a page link.
+Internal links to other wiki pages can be created simply by making a link with the page name.
 
-You can force a WikiPage name '''not''' to be clickable by putting \
-an exclamation mark in front of it.
+{{{[[WikiFormatting]] WikiFormatting}}}
 
-<code>
-WikiPage !WikiPage
-</code>
-
-WikiPage !WikiPage
-
-(Note: existing wiki pages must be in the Text_Wiki {{pages}} option array, \
-and the {{view_url}} option must be set for the linking to work.)
+[[WikiFormatting]] WikiFormatting
 
 You can refer to an anchor on a WikiPage using a hash mark: WikiPage#named_anchor
 
-You can make a "described" wiki link by putting it in brackets and following it \
+You can make a "described" wiki link by putting it in brackets and following it \\
 with a nice text label:
 
-<code>
-This is a [WikiPage#named_anchor link to a wiki page] -- cool!
-</code>
+{{{This is a [[WikiFormatting#named_anchor link to a wiki page|cool!]]}}}
 
-This is a [WikiPage#named_anchor link to a wiki page] -- cool!
+This is a [[WikiFormatting#named_anchor link to a wiki page|cool!]]
 
 
 === Interwiki Links
 
-Interwiki links are links to pages on other Wiki sites. \
+Interwiki links are links to pages on other Wiki sites. \\
 Type the {{``SiteName:PageName``}} like this:
 
 * MeatBall:RecentChanges
@@ -233,49 +223,49 @@ Type the {{``SiteName:PageName``}} like this:
 
 Create a remote link simply by typing its URL: http://ciaweb.net.
 
-If you like, enclose it in brackets to create a numbered reference \
-and avoid cluttering the page; {{``[http://ciaweb.net/free/]``}} becomes [http://ciaweb.net/free/].
+If you like, enclose it in brackets to create a numbered reference \\
+and avoid cluttering the page; {{{##[[http://ciaweb.net/free/]]##}}} becomes ##[[http://ciaweb.net/free/]]##.
 
 Or you can have a described-reference instead of a numbered reference:
-<code>
-[http://pear.php.net PEAR]
-</code>
-[http://pear.php.net PEAR]
+
+{{{##[[http://pear.php.net|PEAR]]##}}}
+
+##[[http://pear.php.net|PEAR]]##
 
 === Images
 
-You can put a picture in a page by typing the URL to the picture \
+You can put a picture in a page by typing the URL to the picture \\
 (it must end in gif, jpg, or png).
-<code>
-http://c2.com/sig/wiki.gif
-</code>
+<<code>>
+{{http://c2.com/sig/wiki.gif}}
+<</code>>
 
-http://c2.com/sig/wiki.gif
+{{http://c2.com/sig/wiki.gif}}
 
 You can use the described-reference URL markup to give the image an ALT tag:
-<code>
-[http://www.netropolisusa.biz/billthemarmet/MT/index/images/sunset_07_10_03.jpg Sunset]
-</code>
+<<code>>
+{{+download/fuckcat.jpg|F**K YOU I'm a Cat!}}
+<</code>>
 
-[http://www.netropolisusa.biz/billthemarmet/MT/index/images/sunset_07_10_03.jpg Sunset]
+{{+download/fuckcat.jpg|F**K YOU I'm a Cat!}}
 
 
 ----
 == Code Blocks
 
-Create code blocks by using {{<code>...</code>}} tags (each on its own line).
+Create code blocks by using {{{<<code>>...<</code>>}}} tags (each on its own line).
 
-<code>
+<<code>>
 This is an example code block!
-</code>
+<</code>>
 
 
-To create PHP blocks that get automatically colorized when you use PHP tags, \
-simply surround the code with {{<php>...</php>}} tags (the tags themselves \
-should each be on their own lines, and no need for the {{<?php ... ?>}} tags).
+To create PHP blocks that get automatically colorized when you use PHP tags, \\
+simply surround the code with {{{<<code lang="php">>...<</code>>}}} tags. The language selection can be any supported by Pygments.
 
-<code>
-<php>
+{{{
+<<code lang="php">>
+<?php
 // Set up the wiki options
 $options = array();
 $options['view_url'] = "index.php?page=";
@@ -288,10 +278,12 @@ $wiki = new Text_Wiki($options);
 
 // transform the wiki text.
 echo $wiki->transform($text);
-</php>
-</code>
+?>
+<</code>>
+}}}
 
-<php>
+<<code lang="php">>
+<?php
 // Set up the wiki options
 $options = array();
 $options['view_url'] = "index.php?page=";
@@ -304,7 +296,8 @@ $wiki = new Text_Wiki($options);
 
 // transform the wiki text.
 echo $wiki->transform($text);
-</php>
+?>
+<</code>>
 
 ----
 
@@ -312,25 +305,25 @@ echo $wiki->transform($text);
 
 You can create tables using pairs of vertical bars:
 
-<code>
+<<code>>
 || **column one** || **column two** ||
 |||| extended line ||
 || cell four || cell five ||
 || cell six || here's a very long cell ||
-</code>
+<</code>>
 
 || **column one** || **column two** ||
 |||| extended line ||
 || cell four || cell five ||
 || cell six || here's a very long cell ||
 
-<code>
+<<code>>
 || lines must start and end || with double vertical bars || nothing ||
 || cells are separated by || double vertical bars || nothing ||
 |||| you can span multiple columns by || starting each cell ||
 || with extra cell |||| separators ||
 |||||| but perhaps an example is the easiest way to see ||
-</code>
+<</code>>
 
 || lines must start and end || with double vertical bars || nothing ||
 || cells are separated by || double vertical bars || nothing ||
