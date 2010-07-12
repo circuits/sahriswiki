@@ -4,7 +4,5 @@
  xmlns:py="http://genshi.edgewall.org/">
  <xi:include href="layout.html" />
  <head></head>
- <body>
-  ${environ.parser.generate(page["text"], environ=(environ, locals().get("__data__"),))}
- </body>
+ <body>${html}</body>
 </html>
