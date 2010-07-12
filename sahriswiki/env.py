@@ -66,7 +66,7 @@ class Environment(BaseComponent):
 
         self.templates = TemplateLoader((
             self.storage.path,
-            os.path.join(self.config.get("theme"), "templates"),
+            os.path.join(self.config.get("theme"), "tpl"),
         ), auto_reload=True)
 
         self.macros = macros.loadMacros()
