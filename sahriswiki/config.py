@@ -60,9 +60,16 @@ class Config(object):
                 dest="theme", metavar="DIR", type="string",
                 help="Set theme (static and templates) path to DIR")
 
-        add("-i", "--index", action="store", default="FrontPage",
-                dest="index", metavar="PAGE", type="string",
-                help="Set index page to PAGE")
+        add("-i", "--indexes", action="append",
+                default=[
+                    "FrontPage",
+                    "Home",
+                    "Index",
+                    "index.html",
+                    "index.rst"
+                ],
+                dest="indexes", metavar="LIST", type="string",
+                help="Set default indexes to LIST")
 
         add("-e", "--encoding", action="store", default="utf-8",
                 dest="encoding", metavar="ENC", type="string",

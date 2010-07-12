@@ -489,3 +489,25 @@ class WikiSubdirectoryStorage(WikiStorage):
                 if (os.path.isfile(os.path.join(self.path, filename))
                     and not filename.startswith('.')):
                     yield url_unquote(filename)
+
+class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
+    """
+    A version of WikiSubdirectoryStorage that defaults to a set of indexes.
+    """
+
+    def __init__(self, path, charset=None, indexes=["FrontPage", "Index"]):
+        super(WikiSubdirectoryIndexesStorage, self).__init__(path, charset)
+
+        self.indexes = indexes
+
+    def _file_path(self, title):
+        root = super(WikiSubdirectoryIndexesStorage, self)._file_path(title)
+
+        if os.path.isfile(root) and not os.path.islink(root):
+            return root
+        elif os.path.isdir(root):
+            for index in self.indexes:
+                path = os.path.join(root, index)
+                if os.path.isfile(path) and not os.path.islink(path):
+                    return path
+        return "" # File does not exist!

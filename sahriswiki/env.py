@@ -11,7 +11,7 @@ import macros
 import sahriswiki
 from utils import page_mime
 from search import WikiSearch
-from storage import WikiStorage
+from storage import WikiSubdirectoryIndexesStorage
 from pagetypes import WikiPageWiki, WikiPageFile, WikiPageHello
 from pagetypes import WikiPageText, WikiPageHTML, WikiPageImage
 from pagetypes import WikiPageColorText, WikiPageCSV, WikiPageRST
@@ -44,9 +44,10 @@ class Environment(BaseComponent):
 
         self.config = config
 
-        self.storage = WikiStorage(
+        self.storage = WikiSubdirectoryIndexesStorage(
             self.config.get("data"),
-            self.config.get("encoding")
+            self.config.get("encoding"),
+            indexes=self.config.get("indexes")
         )
 
         self.search = WikiSearch(
