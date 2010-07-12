@@ -27,6 +27,8 @@ def set_title(macro, environ, context, *args, **kwargs):
         context["title"] = title
         if kwargs.get("display", False):
             return title
+        else:
+            return u""
 
 def title(macro, environ, context, *args, **kwargs):
     """Renders the current title of the page
