@@ -69,6 +69,8 @@ You can make various levels of heading by putting equals-signs before and after 
 == Horizontal Rules
 Use four dashes ({{{----}}}) to create a horizontal rule:
 
+----
+
 == Lists ==
 
 === Bullet Lists ==
