@@ -61,7 +61,9 @@
          </h1>
         </py:when>
         <py:otherwise>
-         <h1>${(defined('title') and title) or page['name']}</h1>
+         <h1>
+          ${(defined('title') and title) or (defined('page') and page['name'])}
+         </h1>
         </py:otherwise>
        </py:choose>
      <div id="search">

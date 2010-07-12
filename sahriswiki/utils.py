@@ -30,10 +30,15 @@ def external_link(addr):
             or addr.startswith('ftp://')
             or addr.startswith('mailto:'))
 
-def page_mime(title):
+def page_mime(title, types=[("+", "type")], default="text/x-wiki"):
     """
     Guess page's mime type ased on corresponding file name.
-    Default ot text/x-wiki for files without an extension.
+
+    Files that start with a type prefix (the first item of each item
+    in the type list) then the type if returned for that file (the
+    second item of th matching item in the type list).
+
+    If nothing else matches, default is returned.
 
     >>> page_mime(u'something.txt')
     'text/plain'
@@ -47,14 +52,21 @@ def page_mime(title):
     'text/css'
     >>> page_mime(u'archive.tar.gz')
     'archive/gzip'
+    >>> page_mime(u'+history')
+    'type/history'
     """
 
     addr = title.encode('utf-8') # the encoding doesn't relly matter here
     mime, encoding = mimetypes.guess_type(addr, strict=False)
+
     if encoding:
-        mime = 'archive/%s' % encoding
+        return 'archive/%s' % encoding
+
     if mime is None:
-        mime = 'text/x-wiki'
+        for prefix, type in types:
+            if title.startswith(prefix):
+                return "/".join([type, title[title.find(prefix) + 1:]])
+        return default
     return mime
 
 def extract_links(text):

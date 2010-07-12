@@ -92,6 +92,16 @@ class WikiPage(object):
     def view(self):
         raise NotImplemented()
 
+class WikiPageHello(WikiPage):
+    """Pages of mime type +hello/* use this for display."""
+
+    def view(self):
+        data = {
+            "title": "Hello",
+            "html": Markup("Hello World!"),
+        }
+        return self.render("view.html", **data)
+        
 class WikiPageText(WikiPage):
     """Pages of mime type text/* use this for display."""
 
