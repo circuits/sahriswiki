@@ -5,15 +5,41 @@ import time
 
 from genshi.builder import tag
 
-def title(macro, environ, context, *args, **kwargs):
-    """Return the title of the current page."""
+def set_title(macro, environ, context, *args, **kwargs):
+    """Set the title of the page
+    
+    **Arguments:**
+    * title (//the title//)
+    * display=False (//True to render the title//)
+
+    **Example(s):**
+    {{{
+    <<set-title "My Title">>
+    }}}
+
+    {{{
+    <<set-title "My Title", display=True>>
+    }}}
+    """
 
     if args and args[0]:
         title = args[0]
         context["title"] = title
-        return title
+        if kwargs.get("display", False):
+            return title
 
-    return environ.page["name"]
+def title(macro, environ, context, *args, **kwargs):
+    """Renders the current title of the page
+    
+    **Arguments:** //None//
+
+    **Example(s):**
+    {{{
+    <<title>>
+    }}}
+    """
+
+    return context.get("title", context.get("page", None)["name"])
 
 def add_comment(macro, environ, context, *args, **kwargs):
     """..."""
