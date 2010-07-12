@@ -79,14 +79,14 @@ p {
 	margin-bottom: 18px; 
 }
 
-ul,
-ol {
+#content ul,
+#content ol {
 	padding : 1em 1em 0 3em;
 	padding-top: 0px; 
 	margin-bottom: 15px;
 }
 
-li { font-family: Helvetica; font-size: 12px; line-height: 16px;  }
+#content li { font-family: Helvetica; font-size: 12px; line-height: 16px;  }
 
 code, pre {
     font-size: 12px;
