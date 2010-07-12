@@ -253,7 +253,7 @@ You can use the described-reference URL markup to give the image an ALT tag:
 ----
 == Code Blocks
 
-Create code blocks by using {{<<code>>...<</code>>}} tags (each on its own line).
+Create code blocks by using {{{<<code>>...<</code>>}}} tags (each on its own line).
 
 <<code>>
 This is an example code block!
@@ -278,8 +278,8 @@ $wiki = new Text_Wiki($options);
 
 // transform the wiki text.
 echo $wiki->transform($text);
-<</code>>
 ?>
+<</code>>
 }}}
 
 <<code lang="php">>
