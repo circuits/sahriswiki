@@ -137,7 +137,7 @@ class Environment(BaseComponent):
 
     def render(self, template, **data):
         data["environ"] = self
-        data["metanav"] = self._get_metanav()
+        data["metanav"] = list(self._get_metanav())
         t = self.templates.load(template)
         return t.generate(**data).render("xhtml", doctype="html")
 
