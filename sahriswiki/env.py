@@ -12,7 +12,7 @@ import sahriswiki
 from utils import page_mime
 from search import WikiSearch
 from storage import WikiStorage
-from pagetypes import WikiPageWiki, WikiPageFile
+from pagetypes import WikiPageWiki, WikiPageFile, WikiPageHello
 from pagetypes import WikiPageText, WikiPageHTML, WikiPageImage
 from pagetypes import WikiPageColorText, WikiPageCSV, WikiPageRST
 
@@ -36,6 +36,7 @@ class Environment(BaseComponent):
         "text/x-wiki":              WikiPageWiki,
         "image":                    WikiPageImage,
         "":                         WikiPageFile,
+        "type/hello":               WikiPageHello,
     }
 
     def __init__(self, config):
@@ -110,18 +111,9 @@ class Environment(BaseComponent):
                     page_class = self.mime_map[mime]
                 except KeyError:
                     try:
-                        plus_pos = minor.find("+")
-                        if plus_pos>0:
-                            minor_base = minor[plus_pos:]
-                        else:
-                            minor_base = ""
-                        base_mime = "/".join([major, minor_base])
-                        page_class = self.mime_map[base_mime]
+                        page_class = self.mime_map[major]
                     except KeyError:
-                        try:
-                            page_class = self.mime_map[major]
-                        except KeyError:
-                                page_class = self.mime_map[""]
+                        page_class = self.mime_map[""]
         else:
             page_class = WikiPage
             mime = ""
