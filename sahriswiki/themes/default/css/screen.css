@@ -134,6 +134,7 @@ table {
     border: 2px solid #ccc;
     border-collapse: collapse;
     border-spacing: 0;
+    margin-bottom: 10px; 
 }
 
 td { padding: 2px; }
@@ -214,17 +215,27 @@ td { padding: 2px; }
 
 #metanav {
     text-align: right;
-	font : 85% sans-serif;
 }
 #metanav ul {
-	padding: 0.75em 4em;
+	/* padding: 0.75em 4em; */
+	/* padding-right: 5px;  */
 }
 #metanav li {
+    font-family: Helvetica;
+    font-size: 11px;
+    line-height: 14px;
+    height: 18px;
 	display : inline;
+	padding-right: 2px;
+	padding-left: 2px;
+	text-align: right;
 }
 #metanav li a {
     text-decoration: none;
     border-bottom: 1px dotted #2b548c ;
+    font-family: Helvetica;
+    font-size: 11px;
+    margin-left: 5px;
 }
 
 #content {
@@ -232,7 +243,7 @@ td { padding: 2px; }
 	height : auto !important;
 	height : 1%;
 	overflow : hidden;
-	padding : 2em 0 0 0;
+	padding : 0px;
 }
 #content div {
 	padding : 0 4em 2em 4em;
