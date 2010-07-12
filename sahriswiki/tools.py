@@ -37,9 +37,6 @@ class Compression(BaseComponent):
     def _on_response_started(self, event, response_event):
         response = response_event[0]
         ct = response.headers.get("Content-Type", "text/html").split(";")[0]
-        print ct
-        import pdb
-        pdb.set_trace()
         gzip(response, mime_types=self.mime_types)
 
 class ErrorHandler(BaseComponent):
