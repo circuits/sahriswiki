@@ -83,8 +83,8 @@ class Environment(BaseComponent):
         self.request = None
         self.response = None
 
-    def url(self, url):
-        return self.request.url(url)
+    def url(self, *args):
+        return self.request.url("/".join(args))
 
     def staticurl(self, url):
         base = self.config.get("static-baseurl")

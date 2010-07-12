@@ -191,6 +191,8 @@ class WikiPageWiki(WikiPageColorText):
                 "comment": comment,
                 "preview": True,
             }
+            data["html"] = self.environ.parser.generate(
+                data["page"]["text"], environ=(self.environ, data))
             return self.render("edit.html", **data)
         elif action == "save":
             self.storage.reopen()

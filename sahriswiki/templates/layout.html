@@ -51,22 +51,19 @@
   <body py:attrs="select('@*')">
 	 	<div id="main">
 	 		<div id="header">
-     <py:choose test="defined('page') and 'backlinks' in page">
-      <py:when test="True">
-       <h1><a title="View BackLinks for ${page['name']}"
-        href="${page['backlinks']}">${page["name"]}</a></h1>
-      </py:when>
-      <py:otherwise>
-       <py:choose test="defined('title')">
+       <py:choose test="defined('page')">
         <py:when test="True">
-         <h1>${title}</h1>
+         <h1>
+          <a title="View BackLinks for ${page['name']}"
+           href="${environ.url('+backlinks', page['name'])}">
+           ${page["name"]}
+          </a>
+         </h1>
         </py:when>
         <py:otherwise>
-         <py:if test="defined('page')"><h1>${page['name']}</h1></py:if>
+         <h1>${(defined('title') and title) or page['name']}</h1>
         </py:otherwise>
        </py:choose>
-      </py:otherwise>
-     </py:choose>
      <div id="search">
       <form class="search" action="${environ.url('/+search')}">
        <input id="q" name="q" size="18" />
