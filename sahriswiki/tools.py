@@ -41,7 +41,7 @@ class ErrorHandler(BaseComponent):
         data = event.data.copy()
         data["title"] = "Error"
         data["traceback"] = Markup(data["traceback"])
-        data["description"] = Markup(data["description"])
+        data["description"] = Markup(data["description"] or u"")
         response.body = self.render("error.html", **data)
         return self.push(Response(response))
 
