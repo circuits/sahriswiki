@@ -155,7 +155,7 @@ You can create a definition (description) list with the following syntax:
 You can mark a blockquote by starting a line with one or more '>' \
 characters, followed by a space and the text to be quoted.
 
-<code>
+<<code>>
 This is normal text here.
 
 > Indent me! The quick brown fox jumps over the lazy dog. \
@@ -169,7 +169,7 @@ the line.
 more than the previous one.
 
 Back to normal text.
-</code>
+<</code>>
 
 This is normal text here.
 
@@ -197,9 +197,7 @@ SmashWordsTogether to create a page link.
 You can force a WikiPage name '''not''' to be clickable by putting \
 an exclamation mark in front of it.
 
-<code>
-WikiPage !WikiPage
-</code>
+{{{WikiPage !WikiPage}}}
 
 WikiPage !WikiPage
 
@@ -211,9 +209,7 @@ You can refer to an anchor on a WikiPage using a hash mark: WikiPage#named_ancho
 You can make a "described" wiki link by putting it in brackets and following it \
 with a nice text label:
 
-<code>
-This is a [WikiPage#named_anchor link to a wiki page] -- cool!
-</code>
+{{{This is a [WikiPage#named_anchor link to a wiki page] -- cool!}}}
 
 This is a [WikiPage#named_anchor link to a wiki page] -- cool!
 
@@ -234,13 +230,13 @@ Type the {{``SiteName:PageName``}} like this:
 Create a remote link simply by typing its URL: http://ciaweb.net.
 
 If you like, enclose it in brackets to create a numbered reference \
-and avoid cluttering the page; {{``[http://ciaweb.net/free/]``}} becomes [http://ciaweb.net/free/].
+and avoid cluttering the page; {{{##[[http://ciaweb.net/free/]]##}}} becomes ##[[http://ciaweb.net/free/]]##.
 
 Or you can have a described-reference instead of a numbered reference:
-<code>
-[http://pear.php.net PEAR]
-</code>
-[http://pear.php.net PEAR]
+
+{{{##[[http://pear.php.net PEAR]]##}}}
+
+##[[http://pear.php.net PEAR]]##
 
 === Images
 
