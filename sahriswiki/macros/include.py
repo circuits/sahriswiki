@@ -5,21 +5,15 @@ Macros for inclusion of other wiki pages
 
 from genshi import builder
 
+from sahriswiki.errors import NotFoundErr
+
 def include(macro, environ, context, name=None, *args, **kwargs):
     """Return the parsed content of the page identified by arg_string"""
     
     if name is None:
         return None
 
-    storage = environ.storage
-
-    if name in storage:
-        text = storage.page_text(name)
-
-        environ.page["name"] = name
-        environ.page["text"] = text
-
-        return environ.parser.generate(text, environ=environ)
+    return environ.include(name)
 
 def include_raw(macro, environ, context, name=None, *args, **kwargs):
     """Return the raw text of the page identified by arg_string, rendered
@@ -32,7 +26,10 @@ def include_raw(macro, environ, context, name=None, *args, **kwargs):
     storage = environ.storage
 
     if name in storage:
-        text = storage.page_text(name)
+        try:
+            text = storage.page_text(name)
+        except NotFoundErr:
+            text = u""
 
         return builder.tag.pre(text, class_="plain")
 
@@ -47,9 +44,11 @@ def include_source(macro, environ, context, name=None, *args, **kwargs):
     storage = environ.storage
 
     if name in storage:
-        text = storage.page_text(name)
+        try:
+            text = storage.page_text(name)
+        except NotFoundErr:
+            text = u""
 
-        environ.page["name"] = name
-
-        return builder.tag.pre(environ.parser.render(text,
-            environ=environ).decode("utf-8"))
+        return builder.tag.pre(
+            environ.parser.generate(text, environ=(environ, context))
+        )
