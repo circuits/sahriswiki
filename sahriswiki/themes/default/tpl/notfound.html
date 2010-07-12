@@ -7,14 +7,14 @@
  <body>
   <h1>Page Not Found</h1>
   <p>
-   The page <strong>${name}</strong> you have requested
+   The page <strong>${title}</strong> you have requested
    cannot be found.
   </p>
   <p py:if="not environ.config.get_bool('readonly')">
    You can:
    <ul>
-    <li><a href="${environ.url('/+edit', name)}">Create the Page</a></li>
-    <li><a href="${environ.url('+upload')}">Upload a File</a></li>
+    <li><a href="${environ.url('+edit', title)}">Create the Page</a></li>
+    <li><a href="${environ.url('+upload', title)}">Upload a File</a></li>
    </ul>
   </p>
  </body>

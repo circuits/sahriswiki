@@ -46,7 +46,7 @@ class Root(BaseController):
         try:
             return page.view()
         except NotFoundErr:
-            data = {"name": name}
+            data = {"title": name}
             return self.render("notfound.html", **data)
 
     @expose("+download")
