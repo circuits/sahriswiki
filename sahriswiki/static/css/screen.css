@@ -15,20 +15,6 @@ a:hover {
 	color : #ba8f43;
 }
 
-h2 {
-	color : #343434;
-	font : italic 200% sans-serif;
-}
-h3 {
-	color : #343434;
-	font : italic 160% sans-serif;
-}
-h4 {
-	color : #343434;
-	font : bold italic 110% sans-serif;
-	padding : 1em 1em 0 1em;
-}
-
 html {
 	color : #565656;
 	font : 70%/170% sans-serif;
@@ -87,25 +73,33 @@ form p.text {
 }
 
 p {
-	padding : 1em 1em 0 1em;
+	font-family: Helvetica;
+	font-size: 14px; line-height: 20px; 
+	/* padding : 1em 1em 0 1em; */
+	margin-bottom: 18px; 
 }
 
-ul,
-ol {
+#content ul,
+#content ol {
 	padding : 1em 1em 0 3em;
+	padding-top: 0px; 
+	margin-bottom: 15px;
 }
+
+#content li { font-family: Helvetica; font-size: 12px; line-height: 16px;  }
 
 code, pre {
-    font-size: 90%;
+    font-size: 12px;
     white-space: pre-wrap;
-    line-height: 1.2;
+    line-height: 16px;
     color: #666;
-    font-family: Droid Mono, DejaVu Mono, Lucida Console, Lucida Typewriter, monospace;
+    font-family: Lucida Console, Lucida Typewriter, monospace;
     background: #f7f7f7;
     border: 1px solid #d7d7d7;
-    margin: 1em 1.75em;
-    padding: .25em;
+    margin: 1.75em 0;
+    padding: 8px;and
     overflow: auto;
+    font-weight: normal;
 }
 
 img.smiley {
@@ -211,6 +205,17 @@ table {
 	padding : 0 4em 2em 4em;
 }
 
+h1, h2, h3, h4 {
+	font-family: Helvetica; color: #333;
+	font-weight: bold;
+	/* padding : 1em 1em 0 1em;	 */
+}
+
+h1 { font-size: 24px; line-height: 26px; margin-bottom: 15px; }
+h2 { font-size: 18px; line-height: 20px; margin-bottom: 10px; }
+h3 { font-size: 16px; line-height: 18px; margin-bottom: 10px; }
+h4 { font-size: 14px; line-height: 16px; margin-bottom: 5px; }
+
 div.left {
 	left : -1em;
 	float : left;
@@ -231,3 +236,5 @@ div.right {
 	text-align : center;
 	width : 65%;
 }
+
+#content div.highlight { padding: 0px; } 
