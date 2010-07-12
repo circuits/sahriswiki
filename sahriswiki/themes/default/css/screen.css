@@ -214,7 +214,6 @@ td { padding: 2px; }
 
 #metanav {
     text-align: right;
-	border-bottom : 1px solid #cfcfcf;
 	font : 85% sans-serif;
 }
 #metanav ul {
@@ -240,7 +239,6 @@ td { padding: 2px; }
 
 #ctxnav {
     text-align: right;
-	border-bottom : 1px solid #cfcfcf;
 	font : 85% sans-serif;
 }
 #ctxnav ul {
