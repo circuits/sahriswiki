@@ -128,9 +128,14 @@ class Root(BaseController):
         if not query:
             data = {
                 "title": "Page Index",
-                "pages": sorted(self.storage.all_pages()),
                 "ctxnav": list(self._get_ctxnav("history")),
             }
+            pages = self.storage.all_pages()
+            if isinstance(pages, dict):
+                data["pages"] = pages
+            else:
+                data["pages"] = sorted(pages)
+
             return self.render("index.html", **data)
 
         words = tuple(self.search.split_text(query, stop=False))
