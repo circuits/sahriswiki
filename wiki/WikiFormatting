@@ -246,18 +246,18 @@ Or you can have a described-reference instead of a numbered reference:
 
 You can put a picture in a page by typing the URL to the picture \
 (it must end in gif, jpg, or png).
-<code>
+<<code>>
 http://c2.com/sig/wiki.gif
-</code>
+<</code>>
 
 http://c2.com/sig/wiki.gif
 
 You can use the described-reference URL markup to give the image an ALT tag:
-<code>
-[http://www.netropolisusa.biz/billthemarmet/MT/index/images/sunset_07_10_03.jpg Sunset]
-</code>
+<<code>>
+[[http://www.netropolisusa.biz/billthemarmet/MT/index/images/sunset_07_10_03.jpg|Sunset]]
+<</code>>
 
-[http://www.netropolisusa.biz/billthemarmet/MT/index/images/sunset_07_10_03.jpg Sunset]
+[[http://www.netropolisusa.biz/billthemarmet/MT/index/images/sunset_07_10_03.jpg|Sunset]]
 
 
 ----
