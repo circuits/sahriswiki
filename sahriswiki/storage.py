@@ -518,4 +518,4 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
                 path = os.path.join(root, index)
                 if os.path.isfile(path) and not os.path.islink(path):
                     return path
-        return "" # File does not exist!
+        return root
