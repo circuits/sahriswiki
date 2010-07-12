@@ -6,6 +6,7 @@ from genshi import Markup
 from mercurial.node import short
 
 from circuits.web import Response
+from circuits.web.tools import gzip
 from circuits import handler, BaseComponent
 from circuits.web.tools import validate_etags
 
@@ -25,6 +26,21 @@ class CacheControl(BaseComponent):
         response = validate_etags(request, response)
         if response:
             return response
+
+class Compression(BaseComponent):
+
+    channel = "web"
+
+    mime_types = ["text/plain", "text/html", "text/css"]
+
+    @handler("response_started")
+    def _on_response_started(self, event, response_event):
+        response = response_event[0]
+        ct = response.headers.get("Content-Type", "text/html").split(";")[0]
+        print ct
+        import pdb
+        pdb.set_trace()
+        gzip(response, mime_types=self.mime_types)
 
 class ErrorHandler(BaseComponent):
 
