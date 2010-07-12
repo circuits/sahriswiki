@@ -5,7 +5,7 @@
  <xi:include href="layout.html" />
  <head></head>
  <body>
-  <h1>${page['name']}</h1>
+  <h1>${title}</h1>
   <ul>
    <li py:for="name in pages">
     <a href="${environ.url('/%s' % name)}">${name}</a>
