@@ -4,6 +4,7 @@ import re
 import time
 
 from genshi.builder import tag
+from genshi import Markup
 
 def set_title(macro, environ, context, *args, **kwargs):
     """Set the title of the page
@@ -28,7 +29,7 @@ def set_title(macro, environ, context, *args, **kwargs):
         if kwargs.get("display", False):
             return title
         else:
-            return u""
+            return Markup("<!-- %s -->" % title)
 
 def title(macro, environ, context, *args, **kwargs):
     """Renders the current title of the page
