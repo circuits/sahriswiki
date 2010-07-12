@@ -253,18 +253,18 @@ You can use the described-reference URL markup to give the image an ALT tag:
 ----
 == Code Blocks
 
-Create code blocks by using {{<code>...</code>}} tags (each on its own line).
+Create code blocks by using {{<<code>>...<</code>>}} tags (each on its own line).
 
-<code>
+<<code>>
 This is an example code block!
-</code>
+<</code>>
 
 
 To create PHP blocks that get automatically colorized when you use PHP tags, \\
-simply surround the code with {{<php>...</php>}} tags (the tags themselves \\
-should each be on their own lines, and no need for the {{<?php ... ?>}} tags).
+simply surround the code with {{{<<code lang="php">>...<</code>>}}} tags. The language selection can be any supported by Pygments.
 
-<code>
+{{{
+<<code lang="php">>
 <php>
 // Set up the wiki options
 $options = array();
@@ -279,8 +279,10 @@ $wiki = new Text_Wiki($options);
 // transform the wiki text.
 echo $wiki->transform($text);
 </php>
-</code>
+<</code>>
+}}}
 
+<<code lang="php">>
 <php>
 // Set up the wiki options
 $options = array();
@@ -295,6 +297,7 @@ $wiki = new Text_Wiki($options);
 // transform the wiki text.
 echo $wiki->transform($text);
 </php>
+<</code>>
 
 ----
 
