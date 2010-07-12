@@ -234,9 +234,9 @@ and avoid cluttering the page; {{{##[[http://ciaweb.net/free/]]##}}} becomes ##[
 
 Or you can have a described-reference instead of a numbered reference:
 
-{{{##[[http://pear.php.net PEAR]]##}}}
+{{{##[[http://pear.php.net|PEAR]]##}}}
 
-##[[http://pear.php.net PEAR]]##
+##[[http://pear.php.net|PEAR]]##
 
 === Images
 
