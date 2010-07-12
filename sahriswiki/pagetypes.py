@@ -209,6 +209,8 @@ class WikiPageWiki(WikiPageColorText):
             "page": self._get_page_data(),
             "ctxnav": list(self._get_ctxnav())
         }
+        data["html"] = self.environ.parser.generate(
+            data["page"]["text"], environ=(self.environ, data))
         return self.render("view.html", **data)
 
 class WikiPageFile(WikiPage):
