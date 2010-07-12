@@ -83,6 +83,10 @@ class Environment(BaseComponent):
         self.request = None
         self.response = None
 
+    def _get_metanav(self):
+        yield ("Login",    self.url("/+login"))
+        yield ("Register", self.url("/+register"))
+
     def url(self, *args):
         return self.request.url("/".join(args))
 
@@ -133,6 +137,7 @@ class Environment(BaseComponent):
 
     def render(self, template, **data):
         data["environ"] = self
+        data["metanav"] = self._get_metanav()
         t = self.templates.load(template)
         return t.generate(**data).render("xhtml", doctype="html")
 
