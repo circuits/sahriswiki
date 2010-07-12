@@ -13,7 +13,7 @@ from genshi.filters import HTMLSanitizer
 
 sanitizer = HTMLSanitizer()
 
-def pre(macro, environ, *args, **kwargs):
+def pre(macro, environ, context, *args, **kwargs):
     """Return the raw text of body, rendered in a <pre> block.
     
     **Arguments:** //None//
@@ -34,7 +34,7 @@ def pre(macro, environ, *args, **kwargs):
 
     return builder.tag.pre(macro.body)
 
-def code(macro, environ, *args, **kwargs):
+def code(macro, environ, context, *args, **kwargs):
     """Render syntax highlighted code"""
     
     if not macro.body:
@@ -64,7 +64,7 @@ def code(macro, environ, *args, **kwargs):
 
     return output
 
-def source(macro, environ, *args, **kwargs):
+def source(macro, environ, context, *args, **kwargs):
     """Return the parsed text of body, rendered in a <pre> block."""
     
     if macro.body is None:
@@ -73,7 +73,7 @@ def source(macro, environ, *args, **kwargs):
     return builder.tag.pre(environ.parser.render(
         macro.body, environ=environ).decode("utf-8"))
 
-def div(macro, environ, cls=None, float=None, id=None, style=None,
+def div(macro, environ, context, cls=None, float=None, id=None, style=None,
         *args, **kwargs):
 
     if macro.body is None:
@@ -95,7 +95,8 @@ def div(macro, environ, cls=None, float=None, id=None, style=None,
 
     return builder.tag.div(contents, id=id, class_=cls, style=style)
 
-def span(macro, environ, class_=None, id=None, style=None, *args, **kwargs):
+def span(macro, environ, context, cls=None, id=None, style=None,
+        *args, **kwargs):
     """..."""
 
     if macro.body is None:
@@ -107,4 +108,4 @@ def span(macro, environ, class_=None, id=None, style=None, *args, **kwargs):
     contents = environ.parser.generate(
             macro.body, environ=environ, context='inline')
 
-    return builder.tag.span(contents, id=id, class_=class_,style=style)
+    return builder.tag.span(contents, id=id, class_=cls, style=style)

@@ -5,7 +5,7 @@ Macros for inclusion of other wiki pages
 
 from genshi import builder
 
-def include(macro, environ, name=None, *args, **kwargs):
+def include(macro, environ, context, name=None, *args, **kwargs):
     """Return the parsed content of the page identified by arg_string"""
     
     if name is None:
@@ -21,7 +21,7 @@ def include(macro, environ, name=None, *args, **kwargs):
 
         return environ.parser.generate(text, environ=environ)
 
-def include_raw(macro, environ, name=None, *args, **kwargs):
+def include_raw(macro, environ, context, name=None, *args, **kwargs):
     """Return the raw text of the page identified by arg_string, rendered
     in a <pre> block.
     """
@@ -36,7 +36,7 @@ def include_raw(macro, environ, name=None, *args, **kwargs):
 
         return builder.tag.pre(text, class_="plain")
 
-def include_source(macro, environ, name=None, *args, **kwargs):
+def include_source(macro, environ, context, name=None, *args, **kwargs):
     """Return the parsed text of the page identified by arg_string, rendered
     in a <pre> block.
     """
