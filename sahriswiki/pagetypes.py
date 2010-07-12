@@ -38,6 +38,17 @@ class WikiPage(object):
         self.search = self.environ.search
         self.storage = self.environ.storage
 
+    def _get_ctxnav(self, type="view"):
+        if type == "view":
+            if not self.environ.config.get_bool("readonly"):
+                yield ("Edit", self.url("/+edit/%s" % self.name))
+            yield ("Download", self.url("/+download/%s" % self.name))
+            yield ("History",  self.url("/+history/%s" % self.name))
+        elif type == "history":
+            yield ("Index",    self.url("/+search"))
+            yield ("Orphaned", self.url("/+orphaned"))
+            yield ("Wanted",   self.url("/+wanteds"))
+
     def _get_text(self):
         return self.storage.page_text(self.name)
 
@@ -73,6 +84,7 @@ class WikiPage(object):
             "history": self.storage.page_history(self.name),
             "strftime": strftime,
             "gmtime": gmtime,
+            "ctxnav": list(self._get_ctxnav("history"))
         }
 
         return self.render("history.html", **data)
@@ -132,7 +144,10 @@ class WikiPageText(WikiPage):
             raise Exception("Invalid action %r" % action)
 
     def view(self):
-        data = {"page": self._get_page_data()}
+        data = {
+            "page": self._get_page_data(),
+            "ctxnav": list(self._get_ctxnav("history")),
+        }
         return self.render("view_plain.html", **data)
 
 class WikiPageColorText(WikiPageText):
@@ -140,13 +155,6 @@ class WikiPageColorText(WikiPageText):
 
 class WikiPageWiki(WikiPageColorText):
     """Pages of with wiki markup use this for display."""
-
-    def _get_ctxnav(self):
-        if not self.environ.config.get_bool("readonly"):
-            yield ("Edit", self.url("/+edit/%s" % self.name))
-
-        yield ("Download", self.url("/+download/%s" % self.name))
-        yield ("History",  self.url("/+history/%s" % self.name))
 
     def edit(self):
         if not self.request.kwargs:
@@ -254,7 +262,8 @@ class WikiPageImage(WikiPageFile):
             "image": {
                 "url": self.url("/+download/%s" % self.name),
                 "alt": self.name,
-            }
+            },
+            "ctxnav": list(self._get_ctxnav("history")),
         }
 
         return self.render("view_image.html", **data)
@@ -320,7 +329,10 @@ class WikiPageCSV(WikiPageFile):
             raise Exception("Invalid action %r" % action)
 
     def view(self):
-        data = {"page": self._get_page_data()}
+        data = {
+            "page": self._get_page_data(),
+            "ctxnav": list(self._get_ctxnav("history")),
+        }
         data["rows"] = csv.reader(StringIO(data["page"]["text"]))
         return self.render("view_csv.html", **data)
 
@@ -399,7 +411,10 @@ class WikiPageRST(WikiPageText):
         if not HAS_DOCUTILS:
             raise UnsupportedMediaTypeErr("No docutils support available")
 
-        data = {"page": self._get_page_data()}
+        data = {
+            "page": self._get_page_data(),
+            "ctxnav": list(self._get_ctxnav("history")),
+        }
         data["output"] = self._render()
         return self.render("view_rst.html", **data)
 
@@ -464,6 +479,9 @@ class WikiPageHTML(WikiPageColorText):
             raise Exception("Invalid action %r" % action)
 
     def view(self):
-        data = {"page": self._get_page_data()}
+        data = {
+            "page": self._get_page_data(),
+            "ctxnav": list(self._get_ctxnav("history")),
+        }
         data["html"] = Markup(self.render(self.name, **data))
         return self.render("view_html.html", **data)
