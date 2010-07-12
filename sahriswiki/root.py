@@ -33,7 +33,7 @@ class Root(BaseController):
         try:
             return page.view()
         except NotFoundErr:
-            data = {"page": {"name": name}}
+            data = {"name": name}
             return self.render("notfound.html", **data)
 
     @expose("+download")
@@ -49,7 +49,7 @@ class Root(BaseController):
 
         action = kwargs.get("action", None)
 
-        data = {"page": {"name": "Upload"}}
+        data = {"title": "Upload"}
 
         if action == "upload":
             file = kwargs.get("file", None)
@@ -118,7 +118,7 @@ class Root(BaseController):
 
         if not query:
             data = {
-                "page": {"name": "Index"},
+                "title": "Page Index",
                 "pages": sorted(self.storage.all_pages()),
             }
             return self.render("index.html", **data)
@@ -128,7 +128,7 @@ class Root(BaseController):
             words = (query,)
 
         data = {
-            "page": {"name": "Search"},
+            "title": "Search",
             "query": " ".join(words),
             "results": list(search(words)),
         }
@@ -143,7 +143,7 @@ class Root(BaseController):
         self.search.update(self.environ)
 
         data = {
-            "page": {"name": "BackLinks for \"%s\"" % name},
+            "title": "BackLinks for \"%s\"" % name,
             "pages": sorted(self.search.page_backlinks(name), key=itemgetter(0))
         }
         return self.render("index.html", **data)
@@ -216,7 +216,7 @@ class Root(BaseController):
             return page.history()
 
         data = {
-            "page": {"name": "Recent Changes"},
+            "title": "Recent Changes",
             "history": self.storage.history(),
             "strftime": strftime,
             "gmtime": gmtime,
@@ -279,7 +279,7 @@ class Root(BaseController):
             strftime(date_format, gmtime(to_date))))
 
         data = {
-            "page": {"name": "diff -r %s -r %s %s" % (from_rev, to_rev, name)},
+            "title": "diff -r %s -r %s %s" % (from_rev, to_rev, name),
             "diff": diff,
         }
 
