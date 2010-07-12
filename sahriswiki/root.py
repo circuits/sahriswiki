@@ -87,8 +87,12 @@ class Root(BaseController):
         def snippet(name, words):
             """Extract a snippet of text for search results."""
 
-            text = unicode(self.storage.open_page(name).read(), "utf-8",
-                    "replace")
+            try:
+                text = unicode(self.storage.open_page(name).read(),
+                    "utf-8", errors="replace")
+            except NotFoundErr:
+                return u""
+
             regexp = re.compile(u"|".join(re.escape(w) for w in words),
                     re.U | re.I)
             match = regexp.search(text)
