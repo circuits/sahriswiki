@@ -128,7 +128,7 @@ class Environment(BaseComponent):
             return self.parser.generate(self.storage.page_text(name),
                     environ=(self, context))
         else:
-            data = {"page": {"name": name}}
+            data = {"name": name}
             t = self.templates.load("notfound.html")
             return t.generate(**data)
 
