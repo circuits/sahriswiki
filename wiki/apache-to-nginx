@@ -1,5 +1,4 @@
-<<set-title "Sample Documentation from Kbeezie.com">>
-= <<title>> =
+= <<set-title "Sample Documentation from Kbeezie.com", Display=True>> =
 
 //For a simple beginning example configuration to start with please view my [[http://wiki.kbeezie.com/nginx-config/|example configuration]]//
  
