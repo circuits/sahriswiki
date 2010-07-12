@@ -6,10 +6,57 @@
  <head></head>
  <body>
   <h1>${title}</h1>
-  <ul>
-   <li py:for="name in pages">
-    <a href="${environ.url('/%s' % name)}">${name}</a>
+
+  <ul py:def="display_dict(d, f)">
+   <li py:for="k, v in d.items()">
+    <strong>${k}</strong>
+    <py:choose test="v">
+     <py:when test="isinstance(v, dict)">
+      ${display_dict(v)}
+     </py:when>
+     <py:otherwise>
+      ${f(v)}
+     </py:otherwise>
+    </py:choose>
    </li>
   </ul>
+
+  <py:def function="display(x)">
+   <py:choose test="type(x)">
+    <py:when test="dict">
+     <py:for each="k, v in x.items()">
+      <strong>${k}</strong>
+      <ul>${display(v)}</ul>
+     </py:for>
+    </py:when>
+    <py:when test="list">
+     <py:for each="i in x">
+      <li>${display(i)}</li>
+     </py:for>
+    </py:when>
+    <py:otherwise>
+     <py:choose test="type(x)">
+      <py:when test="tuple">
+       <a href="${environ.url(x[0])}">${x[1]}</a>
+      </py:when>
+      <py:otherwise>
+       <a href="${environ.url(x)}">${x}</a>
+      </py:otherwise>
+     </py:choose>
+    </py:otherwise>
+   </py:choose>
+  </py:def>
+
+  <ul>
+   <py:choose test="type(pages)">
+    <py:when test="dict">
+     ${display(pages["/"])}
+    </py:when>
+    <py:otherwise>
+     ${display(pages)}
+    </py:otherwise>
+   </py:choose>
+  </ul>
+
  </body>
 </html>
