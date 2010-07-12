@@ -324,13 +324,13 @@ You can create tables using pairs of vertical bars:
 || cell four || cell five ||
 || cell six || here's a very long cell ||
 
-<code>
+<<code>>
 || lines must start and end || with double vertical bars || nothing ||
 || cells are separated by || double vertical bars || nothing ||
 |||| you can span multiple columns by || starting each cell ||
 || with extra cell |||| separators ||
 |||||| but perhaps an example is the easiest way to see ||
-</code>
+<</code>>
 
 || lines must start and end || with double vertical bars || nothing ||
 || cells are separated by || double vertical bars || nothing ||
