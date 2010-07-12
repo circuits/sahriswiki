@@ -192,26 +192,20 @@ Back to normal text.
 
 === Wiki Links
 
-SmashWordsTogether to create a page link.
-
-You can force a WikiPage name '''not''' to be clickable by putting \\
-an exclamation mark in front of it.
+Internal links to other wiki pages can be created simply by making a link with the page name.
 
 {{{[[WikiFormatting]] WikiFormatting}}}
 
 [[WikiFormatting]] WikiFormatting
-
-(Note: existing wiki pages must be in the Text_Wiki [[pages]] option array, \\
-and the [[view_url]] option must be set for the linking to work.)
 
 You can refer to an anchor on a WikiPage using a hash mark: WikiPage#named_anchor
 
 You can make a "described" wiki link by putting it in brackets and following it \\
 with a nice text label:
 
-{{{This is a [WikiPage#named_anchor link to a wiki page] -- cool!}}}
+{{{This is a [[WikiFormatting#named_anchor link to a wiki page|cool!]]}}}
 
-This is a [WikiPage#named_anchor link to a wiki page] -- cool!
+This is a [[WikiFormatting#named_anchor link to a wiki page|cool!]]
 
 
 === Interwiki Links
