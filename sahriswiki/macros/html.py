@@ -91,7 +91,7 @@ def div(macro, environ, context, cls=None, float=None, id=None, style=None,
         context = "inline"
 
     contents = environ.parser.generate(
-            macro.body, environ=environ, context=context)
+            macro.body, environ=(environ, context))
 
     return builder.tag.div(contents, id=id, class_=cls, style=style)
 
