@@ -265,7 +265,7 @@ simply surround the code with {{{<<code lang="php">>...<</code>>}}} tags. The la
 
 {{{
 <<code lang="php">>
-<php>
+<?php
 // Set up the wiki options
 $options = array();
 $options['view_url'] = "index.php?page=";
@@ -278,12 +278,12 @@ $wiki = new Text_Wiki($options);
 
 // transform the wiki text.
 echo $wiki->transform($text);
-</php>
 <</code>>
+?>
 }}}
 
 <<code lang="php">>
-<php>
+<?php
 // Set up the wiki options
 $options = array();
 $options['view_url'] = "index.php?page=";
@@ -296,7 +296,7 @@ $wiki = new Text_Wiki($options);
 
 // transform the wiki text.
 echo $wiki->transform($text);
-</php>
+?>
 <</code>>
 
 ----
