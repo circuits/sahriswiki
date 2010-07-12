@@ -54,15 +54,11 @@ class Config(object):
                 dest="cache", metavar="DIR", type="string",
                 help="Store cache in DIR")
 
-        add("-s", "--static", action="store",
-                default=os.path.join(os.path.dirname(__file__), "static"),
-                dest="static", metavar="DIR", type="string",
-                help="Static files are located in DIR")
-
-        add("-t", "--templates", action="store",
-                default=os.path.join(os.path.dirname(__file__), "templates"),
-                dest="templates", metavar="DIR", type="string",
-                help="Templates are located in DIR")
+        add("-t", "--theme", action="store",
+                default=os.path.join(os.path.dirname(__file__),
+                    "themes", "default"),
+                dest="theme", metavar="DIR", type="string",
+                help="Set theme (static and templates) path to DIR")
 
         add("-i", "--index", action="store", default="FrontPage",
                 dest="index", metavar="PAGE", type="string",
