@@ -1,0 +1,22 @@
+<<div cls="right">>
+<<include "News">>
+<</div>>
+
+= [[SahrisWiki]] =
+
+Welcome to [[SahrisWiki]]'s development wiki and development environment. 
+
+[[SahrisWiki]] is a new wiki engine that uses the following libraries:
+* [[http://www.python.org|Python]]
+* [[http://bitbucket.org/prologic/circuits/|circuits]] //Application Server//
+* [[http://mercurial.selenic.com/|Mercurial]] //Wiki Storage//
+* [[http://sqlite.org/|SQLite]] //Search Index//
+* [[http://code.google.com/p/creoleparser/|creoleparser]] //Wiki Parser//
+* [[http://genshi.edgewall.org/|genshi]] //Templates//
+* [[http://code.google.com/p/feedformatter/|feedformatter]] //RSS/Atom Feeds//
+* [[http://www.oswd.org/design/preview/id/2945|Blue Rain]] //Default Theme//
+
+For more information see [[Docs]].
+
+To try this wiki out for yourself, feel free to edit the [[SandBox]].
+== [[apache-to-nginx|Apache to Nginx Migration Tips]] ==
