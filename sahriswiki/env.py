@@ -102,22 +102,19 @@ class Environment(BaseComponent):
     def get_page(self, name):
         """Creates a page object based on page"s mime type"""
 
-        if name:
+        try:
+            page_class, mime = self.filename_map[name]
+        except KeyError:
+            mime = page_mime(name)
+            major, minor = mime.split("/", 1)
             try:
-                page_class, mime = self.filename_map[name]
+                page_class = self.mime_map[mime]
             except KeyError:
-                mime = page_mime(name)
-                major, minor = mime.split("/", 1)
                 try:
-                    page_class = self.mime_map[mime]
+                    page_class = self.mime_map[major]
                 except KeyError:
-                    try:
-                        page_class = self.mime_map[major]
-                    except KeyError:
-                        page_class = self.mime_map[""]
-        else:
-            page_class = WikiPage
-            mime = ""
+                    page_class = self.mime_map[""]
+
         return page_class(self, name, mime)
 
     def include(self, name, context=None):
