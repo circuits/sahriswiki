@@ -256,8 +256,8 @@ div.left {
 	width : 50%;
 }
 div.right {
-	left : 1em;
-	float : left;
+	margin-left : 1em;
+	float : right;
 	position : relative;
 	width : 50%;
 }
