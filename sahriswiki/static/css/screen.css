@@ -1,0 +1,273 @@
+* {
+	margin : 0;
+	padding : 0;
+}
+
+a {
+	color : #437fda;
+	text-decoration : none;
+}
+a:visited {
+	color : #437fda;
+	text-decoration : none;
+}
+a:hover {
+	color : #437FDA;
+}
+
+html {
+	color : #565656;
+	font : 70%/170% sans-serif;
+	text-align : justify;
+}
+
+img {
+	margin : 1em 1em 0 1em;
+}
+img.left {
+	float : left;
+	margin : 1em 1em 0 0;
+}
+img.right {
+	float : right;
+	margin : 1em 0 0 1em;
+}
+
+/* blockquote {
+	font-style : italic;
+	margin : 1em 1em 0 1em;
+	padding : 0 0 1em 0;
+}
+blockquote span {
+	font-size : 200%;
+	line-height : 1%;
+	margin : 0 0.15em;
+	position : relative;
+	top : 0.25em;
+} */
+
+blockquote, q{quotes:none;}
+blockquote:before, blockquote:after, q:before, q:after{content:'';}
+blockquote{background-color:#f8f8f8;border-left:2px solid #eaeaea;color:#111;font-style:italic;margin:0 0 9px;padding:7px;}
+
+form button {
+	background : #ffffff;
+	border : 1px solid #cfcfcf;
+	padding : 0.25em;
+	margin : 0 0 0 0.75em;
+}
+form input {
+	border : none;
+	width : 100%;
+}
+form textarea {
+	border : none;
+	width : 100%;
+	height : 100%;
+}
+form p.button {
+	text-align : right;
+}
+form p.input,
+form p.text {
+	background : #ffffff;
+	border : 1px solid #cfcfcf;
+	padding : 0.25em;
+	margin : 0.25em 1em 0 1em;
+}
+
+p {
+	font-family: Helvetica;
+	font-size: 14px; line-height: 20px; 
+	/* padding : 1em 1em 0 1em; */
+	margin-bottom: 18px; 
+}
+
+#content ul,
+#content ol {
+	padding : 1em 1em 0 3em;
+	padding-top: 0px; 
+	margin-bottom: 15px;
+}
+
+#content li { font-family: Helvetica; font-size: 12px; line-height: 16px;  }
+
+/* code, pre {
+    font-size: 12px;
+    white-space: pre-wrap;
+    line-height: 16px;
+    color: #666;
+    font-family: Lucida Console, Lucida Typewriter, monospace;
+    background: #f7f7f7;
+    border: 1px solid #d7d7d7;
+    margin: 1.75em 0;
+    padding: 8px;and
+    overflow: auto;
+    font-weight: normal;
+} */
+
+code, pre {
+	background-color:#F4F8F9;
+	border-bottom:1px solid #E6F0F2;
+	border-top:1px solid #E6F0F2;
+	color:#3e5867;
+	display:block;
+	font-size:12px;
+	
+	line-height:19px;
+	/* margin:0 -28px; */
+	margin: 1.75em 0;
+	padding: 8px;
+	text-shadow:0px 1px 0px #fff;
+	white-space: pre-wrap;
+	line-height: 15px; 
+	overflow: auto;
+	font-weight: normal;
+}
+
+code { display: inline; padding: 0px; background-color: transparent; border: none; }
+img.smiley {
+ vertical-align: baseline;
+}
+
+table {
+    border: 2px solid #ccc;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+td { padding: 2px; }
+
+#main {
+	margin : auto;
+	max-width : 65em;
+	min-width : 40em;
+	width : auto !important;
+	width : 65em;
+}
+
+#header {
+	/* background : #2b548c url('../img/header_bg.png') repeat-x bottom left; */
+	/* padding : 6em 4em 1em 4em; */
+	padding-top: 20px;
+	
+    overflow: auto;
+}
+#header h1 {
+	color : #20b;
+	font-family: Helvetica;
+	font-size: 24px; font-weight: bold; margin-bottom: 20px;
+    float: left;
+    position: relative;
+}
+#header h1 a {
+	color : #00d;
+}
+#header h1 a:hover {
+	color : #00f;
+}
+
+#search {
+  float: right;
+  position: relative;
+  text-align: right;
+}
+
+#search form input {
+  width: 50%;
+  background : #ffffff;
+  border : 1px solid #cfcfcf;
+  padding : 0.35em;
+  margin : 0;
+}
+
+#search form button {
+  background : #ffffff;
+  border : 1px solid #cfcfcf;
+  padding : 0.35em;
+  margin : 0;
+  text-align: right;
+}
+
+#menu {
+	background : #fff;
+	border-bottom : 1px solid #2b548c;
+	font-family: Helvetica;
+	font-size: 12px;
+}
+#menu ul {
+	padding : 0.60em 4em;
+}
+#menu li {
+	display : inline;
+}
+#menu li a {
+	color : #00c;
+	padding : 0.75em 1.5em;
+}
+#menu li a:hover {
+	background : #c1d7ff;
+	color: #00c;
+	border : 1px solid #2b548c;
+    border-bottom : 1px solid #c1d7ff;
+}
+
+#ctxnav {
+    text-align: right;
+	border-bottom : 1px solid #cfcfcf;
+	font : 85% sans-serif;
+}
+#ctxnav ul {
+	padding : 0.75em 4em;
+}
+#ctxnav li {
+	display : inline;
+}
+#ctxnav li a {
+	padding : 0.75em 0.5em;
+}
+
+#content {
+	border-bottom : 1px solid #cfcfcf;
+	height : auto !important;
+	height : 1%;
+	overflow : hidden;
+	padding : 2em 0 0 0;
+}
+#content div {
+	padding : 0 4em 2em 4em;
+}
+
+h1, h2, h3, h4 {
+	font-family: Helvetica; color: #333;
+	font-weight: bold;
+	/* padding : 1em 1em 0 1em;	 */
+}
+
+h1 { font-size: 24px; line-height: 26px; margin-bottom: 15px; }
+h2 { font-size: 18px; line-height: 20px; margin-bottom: 10px; }
+h3 { font-size: 16px; line-height: 18px; margin-bottom: 10px; }
+h4 { font-size: 14px; line-height: 16px; margin-bottom: 5px; }
+
+div.left {
+	left : -1em;
+	float : left;
+	position : relative;
+	width : 50%;
+}
+div.right {
+	left : 1em;
+	float : left;
+	position : relative;
+	width : 50%;
+}
+
+#footer {
+	font-size : 85%;
+	margin : auto;
+	padding : 1em 0 3em 0;
+	text-align : center;
+	width : 65%;
+}
+
+#content div.highlight { padding: 0px; } 

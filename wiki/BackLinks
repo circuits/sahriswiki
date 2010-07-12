@@ -1,0 +1,7 @@
+= BackLinks =
+If page A links to page B, then a //back link// would be a link which goes back to page A from page B.
+
+On this wiki, the title of each page works as a back link. Clicking on the title of any page finds all the pages referring to that page. It works for //any// wiki page. Example: Tto find all pages that link to //this// page, click the title at the top of this page.
+
+Before you delete a page, it can be useful to check the BackLinks and clean them up to avoid creating broken links.
+
