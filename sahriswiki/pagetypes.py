@@ -106,7 +106,7 @@ class WikiPageLogin(WikiPage):
     """Pages of mime type +login/* use this for display."""
 
     def view(self):
-        users = self.environ.config.users
+        users = self.environ.users
         realm = self.environ.config.get("name")
 
         if not check_auth(self.request, self.response, realm, users):
