@@ -525,10 +525,17 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
     A version of WikiSubdirectoryStorage that defaults to a set of indexes.
     """
 
-    def __init__(self, path, charset=None, indexes=["FrontPage", "Index"]):
+    index = "Index" # Default index
+    indexes = ["FrontPage", "Index"] # Default list of search indexes
+
+    def __init__(self, path, charset=None, **kwargs):
         super(WikiSubdirectoryIndexesStorage, self).__init__(path, charset)
 
-        self.indexes = indexes
+        if "index" in kwargs:
+            self.index = kwargs["index"]
+
+        if "indexes" in kwargs:
+            self.indexes = kwargs["indexes"]
 
     def _file_path(self, title):
         root = super(WikiSubdirectoryIndexesStorage, self)._file_path(title)
@@ -550,11 +557,16 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
             file_path = os.path.join(self.repo_path, path)
             return os.path.isfile(file_path) and not os.path.islink(file_path)
 
+        def isdir(path):
+            file_path = os.path.join(self.repo_path, path)
+            return os.path.isdir(file_path) and not os.path.islink(file_path)
+
         if not exists(root):
             for index in self.indexes:
                 path = os.path.join(root, index)
                 if exists(path):
                     return path
-            return os.path.join(root, self.indexes[0])
+            if isdir(root):
+                return os.path.join(root, self.index)
 
         return root
