@@ -69,14 +69,14 @@
      </div>
 	 		</div>
 
-    <div id="menu">
-     ${include(config.get('menu'))}
-    </div>
-
     <div id="metanav" py:if="defined('metanav')">
      <ul>
       <li py:for="text, href in metanav"><a href="${href}">${text}</a></li>
      </ul>
+    </div>
+
+    <div id="menu">
+     ${include(config.get('menu'))}
     </div>
 
     <div id="content">${select('*|text()')}</div>
