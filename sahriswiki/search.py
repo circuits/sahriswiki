@@ -312,12 +312,17 @@ without would yet you your yours yourself yourselves""")).split())
         cursor = self.con.cursor()
         cursor.execute('BEGIN IMMEDIATE TRANSACTION;')
         try:
+            print "Reindexing..."
             for title in pages:
                 page = environ.get_page(title)
+                print " ", title, page
                 self.reindex_page(page, title, cursor)
             cursor.execute('COMMIT TRANSACTION;')
             self.empty = False
-        except:
+        except Exception, e:
+            print "ERROR: ", e
+            from traceback import format_exc
+            print format_exc()
             cursor.execute('ROLLBACK;')
             raise
 
