@@ -68,10 +68,18 @@ class Environment(BaseComponent):
             method="xhtml"
         )
 
-        self.templates = TemplateLoader((
-            self.storage.path,
-            os.path.join(self.config.get("theme"), "tpl"),
-        ), auto_reload=True)
+        template_config = {
+            "allow_exec": False,
+            "auto_reload": True,
+            "default_encoding": self.config.get("encoding"),
+            "search_path": [
+                self.storage.path,
+                os.path.join(self.config.get("theme"), "tpl"),
+            ],
+            "variable_lookup": "lenient",
+        }
+            
+        self.templates = TemplateLoader(**template_config)
 
         self.macros = macros.loadMacros()
 
