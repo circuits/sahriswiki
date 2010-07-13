@@ -156,7 +156,7 @@ class WikiPageText(WikiPage):
     def view(self):
         data = {
             "page": self._get_page_data(),
-            "ctxnav": list(self._get_ctxnav("history")),
+            "ctxnav": list(self._get_ctxnav("view")),
         }
         return self.render("view_plain.html", **data)
 
@@ -271,7 +271,7 @@ class WikiPageImage(WikiPageFile):
         data = {
             "title": self.name,
             "name": self.name,
-            "ctxnav": list(self._get_ctxnav("history")),
+            "ctxnav": list(self._get_ctxnav("view")),
         }
 
         return self.render("view_image.html", **data)
@@ -339,7 +339,7 @@ class WikiPageCSV(WikiPageFile):
     def view(self):
         data = {
             "page": self._get_page_data(),
-            "ctxnav": list(self._get_ctxnav("history")),
+            "ctxnav": list(self._get_ctxnav("view")),
         }
         data["rows"] = csv.reader(StringIO(data["page"]["text"]))
         return self.render("view_csv.html", **data)
@@ -421,7 +421,7 @@ class WikiPageRST(WikiPageText):
 
         data = {
             "page": self._get_page_data(),
-            "ctxnav": list(self._get_ctxnav("history")),
+            "ctxnav": list(self._get_ctxnav("view")),
         }
         data["output"] = self._render()
         return self.render("view_rst.html", **data)
@@ -489,7 +489,7 @@ class WikiPageHTML(WikiPageColorText):
     def view(self):
         data = {
             "page": self._get_page_data(),
-            "ctxnav": list(self._get_ctxnav("history")),
+            "ctxnav": list(self._get_ctxnav("view")),
         }
         data["html"] = Markup(self.render(self.name, **data))
         return self.render("view_html.html", **data)
