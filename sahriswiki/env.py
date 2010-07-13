@@ -107,7 +107,7 @@ class Environment(BaseComponent):
         return self.request.session.get("login", self.request.login)
 
     def _user(self):
-        return self.login or self.request.headers.get(
+        return self._login() or self.request.headers.get(
                 "X-Forwarded-For", self.request.remote.ip)
 
     def _ctxnav(self, type="view"):
