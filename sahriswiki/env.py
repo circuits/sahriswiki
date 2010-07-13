@@ -46,10 +46,10 @@ class Environment(BaseComponent):
 
         self.config = config
 
-        self.storage = WikiSubdirectoryStorage(
+        self.storage = WikiSubdirectoryIndexesStorage(
             self.config.get("data"),
             self.config.get("encoding"),
-            #indexes=self.config.get("indexes"),
+            indexes=self.config.get("indexes"),
         )
 
         self.search = WikiSearch(
