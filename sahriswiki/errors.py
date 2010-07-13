@@ -1,3 +1,11 @@
+# Module:   errors
+# Date:     12th July 2010
+# Author:   James Mills, prologic at shortcircuit dot net dot au
+
+"""Error Definitions
+
+...
+"""
 
 from circuits.web.exceptions import HTTPException
 
