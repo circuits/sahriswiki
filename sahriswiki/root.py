@@ -42,7 +42,7 @@ class Root(BaseController):
                 if name in self.storage:
                     break
             if not name in self.storage:
-                name = self.config.get("indexes")[0]
+                name = self.config.get("frontpage")
 
         page = self.environ.get_page(name)
 
