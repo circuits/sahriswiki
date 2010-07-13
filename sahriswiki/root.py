@@ -40,6 +40,8 @@ class Root(BaseController):
             for name in self.config.get("indexes"):
                 if name in self.storage:
                     break
+            if not name in self.storage:
+                name = self.config.get("indexes")[0]
 
         page = self.environ.get_page(name)
 
