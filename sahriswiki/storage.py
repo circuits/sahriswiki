@@ -481,9 +481,23 @@ class WikiSubdirectoryStorage(WikiStorage):
     def all_pages(self):
         """
         Iterate over the titles of all pages in the wiki.
+        Include subdirector
+        """
+
+        for (dirpath, dirnames, filenames) in os.walk(self.path):
+            path = dirpath[len(self.path)+1:]
+            for name in filenames:
+                filename = os.path.join(path, name)
+                if (os.path.isfile(os.path.join(self.path, filename))
+                    and not filename.startswith('.')):
+                    yield url_unquote(filename)
+
+    def all_pages_tree(self):
+        """
+        Iterate over the titles of all pages in the wiki.
         Include subdirectories.
 
-        Return a list of lsits
+        Return a tree of al pages.
         """
 
         def generate(root):
@@ -495,7 +509,7 @@ class WikiSubdirectoryStorage(WikiStorage):
                     rel = os.path.relpath(path, self.path)
                     yield url_unquote(rel),  url_unquote(name)
 
-        return {"/": sorted(generate(self.path))}
+        return generate(self.path)
 
 class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
     """

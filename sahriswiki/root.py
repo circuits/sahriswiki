@@ -30,7 +30,7 @@ class Root(BaseController):
         if type in ("history", "index", "search"):
             yield ("Index",    self.url("/+search"))
             yield ("Orphaned", self.url("/+orphaned"))
-            yield ("Wanted",   self.url("/+wanteds"))
+            yield ("Wanted",   self.url("/+wanted"))
 
     @expose("index")
     def index(self, *args, **kwargs):
@@ -137,11 +137,10 @@ class Root(BaseController):
                 "title": "Page Index",
                 "ctxnav": list(self._get_ctxnav("history")),
             }
-            pages = self.storage.all_pages()
-            if isinstance(pages, dict):
-                data["pages"] = pages
+            if hasattr(self.storage, "all_pages_tree"):
+                data["pages"] = sorted(self.storage.all_pages_tree())
             else:
-                data["pages"] = sorted(pages)
+                data["pages"] = sorted(self.storage.all_pages())
 
             return self.render("index.html", **data)
 
@@ -218,21 +217,29 @@ class Root(BaseController):
 
     @expose("+orphaned")
     def orphaned(self, *args, **kwargs):
+        self.storage.reopen()
+        self.search.update(self.environ)
+
         data = {
             "title": "Orphaned Pages",
             "pages": sorted(self.search.orphaned_pages(), key=itemgetter(0)),
             "ctxnav": list(self._get_ctxnav("history")),
         }
+
         return self.render("orphaned.html", **data)
 
     @expose("+wanted")
     def wanted(self, *args, **kwargs):
+        self.storage.reopen()
+        self.search.update(self.environ)
+
         data = {
             "title": "Wanted Pages",
             "pages": sorted(self.search.wanted_pages(),
                 key=itemgetter(0), reverse=True),
             "ctxnav": list(self._get_ctxnav("history")),
         }
+
         return self.render("wanted.html", **data)
 
     @expose("+history")

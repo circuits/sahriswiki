@@ -40,23 +40,21 @@
        <a href="${environ.url(x[0])}">${x[1]}</a>
       </py:when>
       <py:otherwise>
-       <a href="${environ.url(x)}">${x}</a>
+       <a href="${environ.url('/%s' % x)}">${x}</a>
       </py:otherwise>
      </py:choose>
     </py:otherwise>
    </py:choose>
   </py:def>
 
-  <ul>
-   <py:choose test="type(pages)">
-    <py:when test="dict">
-     ${display(pages["/"])}
-    </py:when>
-    <py:otherwise>
-     ${display(pages)}
-    </py:otherwise>
-   </py:choose>
-  </ul>
+  <py:choose test="type(pages)">
+   <py:when test="dict">
+    ${display(pages)}
+   </py:when>
+   <py:when test="list">
+    <ul>${display(pages)}</ul>
+   </py:when>
+  </py:choose>
 
  </body>
 </html>
