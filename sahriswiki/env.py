@@ -103,6 +103,19 @@ class Environment(BaseComponent):
         self.request = None
         self.response = None
 
+    def _login(self):
+        return self.request.session.get("login", self.request.login)
+
+    def _user(self):
+        return self.login or self.request.headers.get(
+                "X-Forwarded-For", self.request.remote.ip)
+
+    def _ctxnav(self, type="view"):
+        if type in ("history", "index", "search"):
+            yield ("Index",    self.url("/+search"))
+            yield ("Orphaned", self.url("/+orphaned"))
+            yield ("Wanted",   self.url("/+wanted"))
+
     def _create_users(self):
         # Default admin password is "admin"
         users = {"admin": "21232f297a57a5a743894a0e4a801fc3"}
