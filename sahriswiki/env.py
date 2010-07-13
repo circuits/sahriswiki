@@ -15,7 +15,9 @@ from search import WikiSearch
 from storage import WikiStorage
 from storage import WikiSubdirectoryStorage
 from storage import WikiSubdirectoryIndexesStorage
-from pagetypes import WikiPageWiki, WikiPageFile, WikiPageHello
+
+from pagetypes import WikiPageHello
+from pagetypes import WikiPageWiki, WikiPageFile, WikiPageLogin
 from pagetypes import WikiPageText, WikiPageHTML, WikiPageImage
 from pagetypes import WikiPageColorText, WikiPageCSV, WikiPageRST
 
@@ -40,6 +42,7 @@ class Environment(BaseComponent):
         "image":                    WikiPageImage,
         "":                         WikiPageFile,
         "type/hello":               WikiPageHello,
+        "type/login":               WikiPageLogin,
     }
 
     def __init__(self, config):
