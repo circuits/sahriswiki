@@ -33,7 +33,7 @@ def main():
     manager = Manager()
 
     if config.get_bool("debug"):
-        manager += Debugger(events=False)
+        manager += Debugger(events=config.get("verbose"))
 
     environ = Environment(config)
 
