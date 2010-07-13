@@ -80,7 +80,7 @@ class Environment(BaseComponent):
             "default_encoding": self.config.get("encoding"),
             "search_path": [
                 self.storage.path,
-                os.path.join(self.config.get("theme"), "tpl"),
+                os.path.join(self.config.get("theme"), "templates"),
             ],
             "variable_lookup": "lenient",
         }

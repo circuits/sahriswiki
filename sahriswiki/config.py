@@ -55,8 +55,7 @@ class Config(object):
                 help="Store cache in DIR")
 
         add("-t", "--theme", action="store",
-                default=os.path.join(os.path.dirname(__file__),
-                    "themes", "default"),
+                default=os.path.join(os.path.dirname(__file__)),
                 dest="theme", metavar="DIR", type="string",
                 help="Set theme (static and templates) path to DIR")
 

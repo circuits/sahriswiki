@@ -56,7 +56,7 @@ def main():
             + PluginManager(environ))
 
     if not environ.config.get_bool("disable-static"):
-        manager += Static(docroot=config.get("theme"))
+        manager += Static(docroot=os.path.join(config.get("theme"), "htdocs"))
 
     if not environ.config.get_bool("disable-hgweb"):
         manager += Gateway(hgweb(environ.storage.repo_path), "/+hg")
@@ -86,7 +86,9 @@ else:
             + PluginManager(environ))
 
     if not environ.config.get_bool("disable-static"):
-        application += Static(docroot=config.get("theme"))
+        application += Static(
+            docroot=os.path.join(config.get("theme"), "htdocs")
+        )
 
     if not environ.config.get_bool("disable-hgweb"):
         application += Gateway(hgweb(environ.storage.repo_path), "/+hg")
