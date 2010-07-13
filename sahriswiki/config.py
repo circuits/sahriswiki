@@ -1,3 +1,12 @@
+# Module:   config
+# Date:     12th July 2010
+# Author:   James Mills, prologic at shortcircuit dot net dot au
+
+"""Configuration Handling
+
+...
+"""
+
 import os
 import optparse
 import ConfigParser
@@ -34,7 +43,7 @@ class Config(object):
             self.options.append(kwargs["dest"])
             parser.add_option(*args, **kwargs)
 
-        add("-C", "--config", action="store", default=None,
+        add("", "--config", action="store", default=None,
                 dest="config", metavar="FILE", type="string",
                 help="Read configuration from FILE")
 
@@ -59,20 +68,26 @@ class Config(object):
                 dest="theme", metavar="DIR", type="string",
                 help="Set theme (static and templates) path to DIR")
 
-        add("-m", "--menu", action="store", default="SiteMenu",
-                dest="menu", metavar="PAGE", type="string",
-                help="Set site menu's page to PAGE")
+        add("", "--frontpage", action="store", default="FrontPage",
+                dest="frontpage", metavar="PAGE", type="string",
+                help="Set default front page to PAGE")
 
-        add("-i", "--indexes", action="append",
+        add("", "--index", action="store", default="Index",
+                dest="index", metavar="PAGE", type="string",
+                help="Set default index page to PAGE")
+
+        add("", "--indexes", action="append",
                 default=[
-                    "FrontPage",
-                    "Home",
                     "Index",
                     "index.html",
-                    "index.rst"
+                    "index.rst",
                 ],
                 dest="indexes", metavar="LIST", type="string",
-                help="Set default indexes to LIST")
+                help="Set index search list to LIST")
+
+        add("-m", "--menu", action="store", default="SiteMenu",
+                dest="menu", metavar="PAGE", type="string",
+                help="Set default site menu page to PAGE")
 
         add("-e", "--encoding", action="store", default="utf-8",
                 dest="encoding", metavar="ENC", type="string",

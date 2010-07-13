@@ -1,3 +1,12 @@
+# Module:   env
+# Date:     12th July 2010
+# Author:   James Mills, prologic at shortcircuit dot net dot au
+
+"""Environment Container
+
+...
+"""
+
 import os
 from urllib import basejoin
 from itertools import chain
@@ -52,6 +61,7 @@ class Environment(BaseComponent):
         self.storage = DefaultStorage(
             self.config.get("data"),
             self.config.get("encoding"),
+            index=self.config.get("index"),
             indexes=self.config.get("indexes"),
         )
 
@@ -108,6 +118,10 @@ class Environment(BaseComponent):
     def _user(self):
         return self._login() or self.request.headers.get(
                 "X-Forwarded-For", self.request.remote.ip)
+
+    def _permissions(self):
+        if self._login():
+            yield "PAGE_EDIT"
 
     def _nav(self):
         yield
@@ -190,6 +204,7 @@ class Environment(BaseComponent):
             "config": self.config,
             "include": self.include,
             "staticurl": self.staticurl,
+            "permissions": self._permissions(),
             "nav": chain(self._nav(), data.get("nav", [])),
             "crxnav": chain(self._ctxnav(), data.get("ctxnav", [])),
             "metanav": chain(self._metanav(), data.get("metanav", [])),
