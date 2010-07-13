@@ -110,6 +110,9 @@ class Environment(BaseComponent):
         return self._login() or self.request.headers.get(
                 "X-Forwarded-For", self.request.remote.ip)
 
+    def _metanav(self):
+        yield ("Login",    self.url("/+login"))
+
     def _ctxnav(self, type="view"):
         if type in ("history", "index", "search"):
             yield ("Index",    self.url("/+search"))
@@ -137,10 +140,6 @@ class Environment(BaseComponent):
             return self.url("/+download", path)
         else:
             return path
-
-    def _get_metanav(self):
-        yield ("Login",    self.url("/+login"))
-        yield ("Register", self.url("/+register"))
 
     def url(self, *args):
         return self.request.url("/".join(args))
@@ -179,7 +178,7 @@ class Environment(BaseComponent):
 
     def render(self, template, **data):
         data["environ"] = self
-        data["metanav"] = list(self._get_metanav())
+        data["metanav"] = list(self._metanav())
         t = self.templates.load(template)
         return t.generate(**data).render("xhtml", doctype="html")
 
