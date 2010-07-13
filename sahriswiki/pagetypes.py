@@ -1,3 +1,12 @@
+# Module:   pagetypes
+# Date:     12th July 2010
+# Author:   James Mills, prologic at shortcircuit dot net dot au
+
+"""Page Types and Handling
+
+...
+"""
+
 import csv
 from StringIO import StringIO
 from time import strftime, gmtime
