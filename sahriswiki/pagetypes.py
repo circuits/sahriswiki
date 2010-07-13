@@ -14,6 +14,7 @@ from genshi.template import Template
 from mercurial.node import short
 
 from circuits.web.tools import serve_file
+from circuits.web.tools import check_auth, basic_auth
 from circuits.web.exceptions import NotImplemented, Redirect
 
 from utils import FIXLINES
@@ -70,6 +71,10 @@ class WikiPage(object):
 
         return data
 
+    def _get_user(self):
+        return self.request.login or self.request.headers.get(
+                "X-Forwarded-For", self.request.remote.ip)
+
     def download(self):
         path = self.storage._file_path(self.name)
         return serve_file(self.request, self.response, path, type=self.mime)
@@ -91,6 +96,22 @@ class WikiPage(object):
 
     def view(self):
         raise NotImplemented()
+
+class WikiPageLogin(WikiPage):
+    """Pages of mime type +login/* use this for display."""
+
+    users = {"admin": "21232f297a57a5a743894a0e4a801fc3"}
+
+    def view(self):
+        realm = self.environ.config.get("name")
+        users = self.users
+        if not check_auth(self.request, self.response, realm, users):
+            return basic_auth(self.request, self.response, realm, users)
+        data = {
+            "title": "Login",
+            "html": Markup("Login successful.")
+        }
+        return self.render("view.html", **data)
 
 class WikiPageHello(WikiPage):
     """Pages of mime type +hello/* use this for display."""
@@ -114,12 +135,7 @@ class WikiPageText(WikiPage):
                 data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit_plain.html", **data)
 
-        author = self.request.cookie.get("username")
-        if author:
-            author = author.value
-        else:
-            author = self.request.headers.get("X-Forwarded-For",
-                    self.request.remote.ip or "AnonymousUser")
+        author = self._get_user()
 
         action = self.request.kwargs.get("action", None)
         comment = self.request.kwargs.get("comment", "")
@@ -175,12 +191,7 @@ class WikiPageWiki(WikiPageColorText):
                 data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit.html", **data)
 
-        author = self.request.cookie.get("username")
-        if author:
-            author = author.value
-        else:
-            author = self.request.headers.get("X-Forwarded-For",
-                    self.request.remote.ip or "AnonymousUser")
+        author = self._get_user()
 
         action = self.request.kwargs.get("action", None)
         comment = self.request.kwargs.get("comment", "")
@@ -243,12 +254,7 @@ class WikiPageImage(WikiPageFile):
         if not self.request.kwargs:
             raise NotImplemented()
 
-        author = self.request.cookie.get("username")
-        if author:
-            author = author.value
-        else:
-            author = self.request.headers.get("X-Forwarded-For",
-                    self.request.remote.ip or "AnonymousUser")
+        author = self._get_user()
 
         action = self.request.kwargs.get("action", None)
 
@@ -288,12 +294,7 @@ class WikiPageCSV(WikiPageFile):
                 data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit_csv.html", **data)
 
-        author = self.request.cookie.get("username")
-        if author:
-            author = author.value
-        else:
-            author = self.request.headers.get("X-Forwarded-For",
-                    self.request.remote.ip or "AnonymousUser")
+        author = self._get_user()
 
         action = self.request.kwargs.get("action", None)
         comment = self.request.kwargs.get("comment", "")
@@ -367,12 +368,7 @@ class WikiPageRST(WikiPageText):
                 data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit_rst.html", **data)
 
-        author = self.request.cookie.get("username")
-        if author:
-            author = author.value
-        else:
-            author = self.request.headers.get("X-Forwarded-For",
-                    self.request.remote.ip or "AnonymousUser")
+        author = self._get_user()
 
         action = self.request.kwargs.get("action", None)
         comment = self.request.kwargs.get("comment", "")
@@ -438,12 +434,7 @@ class WikiPageHTML(WikiPageColorText):
                 data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit_html.html", **data)
 
-        author = self.request.cookie.get("username")
-        if author:
-            author = author.value
-        else:
-            author = self.request.headers.get("X-Forwarded-For",
-                    self.request.remote.ip or "AnonymousUser")
+        author = self._get_user()
 
         action = self.request.kwargs.get("action", None)
         comment = self.request.kwargs.get("comment", "")
