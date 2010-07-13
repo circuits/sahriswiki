@@ -96,6 +96,10 @@ class Config(object):
                 dest="keywords", metavar="KEYWORDS", type="string",
                 help="Set site keywords to KEYWORDS")
 
+        add("", "--htpasswd", action="store", default=None,
+                dest="htpasswd", metavar="FILE", type="string",
+                help="Read credentials for HTTP Auth from FILE")
+
         add("", "--readonly", action="store_true", default=False,
                 dest="readonly", help="Set the wiki into readonly mode")
 
