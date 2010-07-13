@@ -25,9 +25,9 @@ from utils import page_mime
 from search import WikiSearch
 from storage import WikiSubdirectoryIndexesStorage as DefaultStorage
 
-from pagetypes import WikiPageHello
-from pagetypes import WikiPageWiki, WikiPageFile, WikiPageLogin
+from pagetypes import WikiPageHello, WikiPageLogin
 from pagetypes import WikiPageText, WikiPageHTML, WikiPageImage
+from pagetypes import WikiPageWiki, WikiPageFile, WikiPageLogout
 from pagetypes import WikiPageColorText, WikiPageCSV, WikiPageRST
 
 class Environment(BaseComponent):
@@ -52,6 +52,7 @@ class Environment(BaseComponent):
         "":                         WikiPageFile,
         "type/hello":               WikiPageHello,
         "type/login":               WikiPageLogin,
+        "type/logout":              WikiPageLogout,
     }
 
     def __init__(self, config):
@@ -128,7 +129,11 @@ class Environment(BaseComponent):
         yield
 
     def _metanav(self):
-        yield ("Login",       self.url("/+login"))
+        if not self._login():
+            yield ("Login", self.url("/+login"))
+        else:
+            yield ("Logout", self.url("/+logout"))
+
         yield ("Preferences", self.url("/+prefs"))
         yield ("Help/Guide",  self.url("/Help"))
         yield ("About",       self.url("/+about"))

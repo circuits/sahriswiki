@@ -125,6 +125,23 @@ class WikiPageLogin(WikiPage):
 
         return self.render("view.html", **data)
 
+class WikiPageLogout(WikiPage):
+    """Pages of mime type +logout/* use this for display."""
+
+    def view(self):
+        if "login" in self.request.session:
+            del self.request.session["login"]
+
+        if "WWW-Authenticate" in self.response.headers:
+            del self.response.headers["WWW-Authenticate"]
+
+        data = {
+            "title": "Logout",
+            "html": Markup("Logout successful.")
+        }
+
+        return self.render("view.html", **data)
+
 class WikiPageHello(WikiPage):
     """Pages of mime type +hello/* use this for display."""
 
