@@ -119,6 +119,10 @@ class Environment(BaseComponent):
         return self._login() or self.request.headers.get(
                 "X-Forwarded-For", self.request.remote.ip)
 
+    def _permissions(self):
+        if self._login():
+            yield "PAGE_EDIT"
+
     def _nav(self):
         yield
 
@@ -200,6 +204,7 @@ class Environment(BaseComponent):
             "config": self.config,
             "include": self.include,
             "staticurl": self.staticurl,
+            "permissions": self._permissions(),
             "nav": chain(self._nav(), data.get("nav", [])),
             "crxnav": chain(self._ctxnav(), data.get("ctxnav", [])),
             "metanav": chain(self._metanav(), data.get("metanav", [])),
