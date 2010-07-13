@@ -216,10 +216,6 @@ td { padding: 2px; }
 #metanav {
     text-align: right;
 }
-#metanav ul {
-	/* padding: 0.75em 4em; */
-	/* padding-right: 5px;  */
-}
 #metanav li {
     font-family: Helvetica;
     font-size: 11px;
@@ -252,9 +248,6 @@ td { padding: 2px; }
 #ctxnav {
     text-align: left;
 	font : 85% sans-serif;
-}
-#ctxnav ul {
-	padding : 0.75em 4em;
 }
 #ctxnav li {
 	display : inline;
