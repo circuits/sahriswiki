@@ -1,7 +1,5 @@
-* {
-	margin : 0;
-	padding : 0;
-}
+html * { margin: 0px; padding: 0px; outline: none; }
+body {  margin: 0px; padding: 0px; outline: none; background-color: #fcfcfc; }
 
 a {
 	color : #437fda;
@@ -51,7 +49,7 @@ blockquote:before, blockquote:after, q:before, q:after{content:'';}
 blockquote{background-color:#f8f8f8;border-left:2px solid #eaeaea;color:#111;font-style:italic;margin:0 0 9px;padding:7px;}
 
 form button {
-	background : #ffffff;
+	background : #f8f8f8;
 	border : 1px solid #cfcfcf;
 	padding : 0.25em;
 	margin : 0 0 0 0.75em;
@@ -191,7 +189,7 @@ td { padding: 2px; }
 }
 
 #menu {
-	background : #fff;
+	background : #fcfcfc;
 	border-bottom : 1px solid #2b548c;
 	font-family: Helvetica;
 	font-size: 12px;
@@ -240,6 +238,7 @@ td { padding: 2px; }
 	height : 1%;
 	overflow : hidden;
 	padding : 0px;
+	padding-top: 10px;
 }
 #content div {
 	padding : 0 4em 2em 4em;
