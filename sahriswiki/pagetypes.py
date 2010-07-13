@@ -39,9 +39,18 @@ class WikiPage(object):
         self.search = self.environ.search
         self.storage = self.environ.storage
 
+    @property
+    def login(self):
+        return self.request.session.get("login", self.request.login)
+
+    @property
+    def user(self):
+        return self.login or self.request.headers.get(
+                "X-Forwarded-For", self.request.remote.ip)
+
     def _get_ctxnav(self, type="view"):
         if type == "view":
-            if not self.environ.config.get_bool("readonly"):
+            if self.login or not self.environ.config.get_bool("readonly"):
                 yield ("Edit", self.url("/+edit/%s" % self.name))
             yield ("Download", self.url("/+download/%s" % self.name))
             yield ("History",  self.url("/+history/%s" % self.name))
@@ -71,10 +80,6 @@ class WikiPage(object):
 
         return data
 
-    def _get_user(self):
-        return self.request.login or self.request.headers.get(
-                "X-Forwarded-For", self.request.remote.ip)
-
     def download(self):
         path = self.storage._file_path(self.name)
         return serve_file(self.request, self.response, path, type=self.mime)
@@ -103,14 +108,19 @@ class WikiPageLogin(WikiPage):
     users = {"admin": "21232f297a57a5a743894a0e4a801fc3"}
 
     def view(self):
-        realm = self.environ.config.get("name")
         users = self.users
+        realm = self.environ.config.get("name")
+
         if not check_auth(self.request, self.response, realm, users):
             return basic_auth(self.request, self.response, realm, users)
+        else:
+            self.request.session["login"] = self.request.login
+
         data = {
             "title": "Login",
             "html": Markup("Login successful.")
         }
+
         return self.render("view.html", **data)
 
 class WikiPageHello(WikiPage):
@@ -135,8 +145,6 @@ class WikiPageText(WikiPage):
                 data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit_plain.html", **data)
 
-        author = self._get_user()
-
         action = self.request.kwargs.get("action", None)
         comment = self.request.kwargs.get("comment", "")
         parent = self.request.kwargs.get("parent", None)
@@ -151,7 +159,7 @@ class WikiPageText(WikiPage):
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.delete_page(self.name, author, comment)
+            self.storage.delete_page(self.name, self.user, comment)
             self.search.update_page(self, self.name, text=text)
 
             raise Redirect(self.url("/%s" % self.name))
@@ -161,7 +169,7 @@ class WikiPageText(WikiPage):
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.save_text(self.name, text, author, comment,
+            self.storage.save_text(self.name, text, self.user, comment,
                     parent=parent)
             self.search.update_page(self, self.name, text=text)
 
@@ -191,8 +199,6 @@ class WikiPageWiki(WikiPageColorText):
                 data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit.html", **data)
 
-        author = self._get_user()
-
         action = self.request.kwargs.get("action", None)
         comment = self.request.kwargs.get("comment", "")
         parent = self.request.kwargs.get("parent", None)
@@ -207,7 +213,7 @@ class WikiPageWiki(WikiPageColorText):
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.delete_page(self.name, author, comment)
+            self.storage.delete_page(self.name, self.user, comment)
             self.search.update_page(self, self.name, text=text)
 
             raise Redirect(self.url("/%s" % self.name))
@@ -216,7 +222,7 @@ class WikiPageWiki(WikiPageColorText):
         elif action == "preview":
             data = {
                 "page": {"name": self.name, "text": text},
-                "author": author,
+                "author": self.user,
                 "comment": comment,
                 "preview": True,
             }
@@ -227,7 +233,7 @@ class WikiPageWiki(WikiPageColorText):
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.save_text(self.name, text, author, comment,
+            self.storage.save_text(self.name, text, self.user, comment,
                     parent=parent)
             self.search.update_page(self, self.name, text=text)
 
@@ -254,15 +260,13 @@ class WikiPageImage(WikiPageFile):
         if not self.request.kwargs:
             raise NotImplemented()
 
-        author = self._get_user()
-
         action = self.request.kwargs.get("action", None)
 
         if action == "delete":
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.delete_page(self.name, author, "deleted")
+            self.storage.delete_page(self.name, self.user, "deleted")
             self.search.update_page(self, self.name, "")
 
             raise Redirect(self.url("/%s" % self.name))
@@ -294,8 +298,6 @@ class WikiPageCSV(WikiPageFile):
                 data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit_csv.html", **data)
 
-        author = self._get_user()
-
         action = self.request.kwargs.get("action", None)
         comment = self.request.kwargs.get("comment", "")
         parent = self.request.kwargs.get("parent", None)
@@ -310,7 +312,7 @@ class WikiPageCSV(WikiPageFile):
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.delete_page(self.name, author, comment)
+            self.storage.delete_page(self.name, self.user, comment)
             self.search.update_page(self, self.name, text=text)
 
             raise Redirect(self.url("/%s" % self.name))
@@ -320,7 +322,7 @@ class WikiPageCSV(WikiPageFile):
             data = {
                 "page": {"name": self.name, "text": text},
                 "rows": csv.reader(StringIO(text)),
-                "author": author,
+                "author": self.user,
                 "comment": comment,
                 "preview": True,
             }
@@ -329,7 +331,7 @@ class WikiPageCSV(WikiPageFile):
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.save_text(self.name, text, author, comment,
+            self.storage.save_text(self.name, text, self.user, comment,
                     parent=parent)
             self.search.update_page(self, self.name, text=text)
 
@@ -368,8 +370,6 @@ class WikiPageRST(WikiPageText):
                 data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit_rst.html", **data)
 
-        author = self._get_user()
-
         action = self.request.kwargs.get("action", None)
         comment = self.request.kwargs.get("comment", "")
         parent = self.request.kwargs.get("parent", None)
@@ -384,7 +384,7 @@ class WikiPageRST(WikiPageText):
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.delete_page(self.name, author, comment)
+            self.storage.delete_page(self.name, self.user, comment)
             self.search.update_page(self, self.name, text=text)
 
             raise Redirect(self.url("/%s" % self.name))
@@ -394,7 +394,7 @@ class WikiPageRST(WikiPageText):
             data = {
                 "page": {"name": self.name, "text": text},
                 "output": self._render(text),
-                "author": author,
+                "author": self.user,
                 "comment": comment,
                 "preview": True,
             }
@@ -403,7 +403,7 @@ class WikiPageRST(WikiPageText):
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.save_text(self.name, text, author, comment,
+            self.storage.save_text(self.name, text, self.user, comment,
                     parent=parent)
             self.search.update_page(self, self.name, text=text)
 
@@ -434,8 +434,6 @@ class WikiPageHTML(WikiPageColorText):
                 data = {"page": {"name": self.name, "text": ""}}
                 return self.render("edit_html.html", **data)
 
-        author = self._get_user()
-
         action = self.request.kwargs.get("action", None)
         comment = self.request.kwargs.get("comment", "")
         parent = self.request.kwargs.get("parent", None)
@@ -450,7 +448,7 @@ class WikiPageHTML(WikiPageColorText):
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.delete_page(self.name, author, comment)
+            self.storage.delete_page(self.name, self.user, comment)
             self.search.update_page(self, self.name, text=text)
 
             raise Redirect(self.url("/%s" % self.name))
@@ -459,7 +457,7 @@ class WikiPageHTML(WikiPageColorText):
         elif action == "preview":
             data = {
                 "page": {"name": self.name, "text": text},
-                "author": author,
+                "author": self.user,
                 "comment": comment,
                 "preview": True,
                 "html": Template(text).render(**data),
@@ -469,7 +467,7 @@ class WikiPageHTML(WikiPageColorText):
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.save_text(self.name, text, author, comment,
+            self.storage.save_text(self.name, text, self.user, comment,
                     parent=parent)
             self.search.update_page(self, self.name, text=text)
 
