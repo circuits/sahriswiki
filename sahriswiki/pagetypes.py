@@ -265,15 +265,12 @@ class WikiPageImage(WikiPageFile):
 
     def view(self):
         if self.name not in self.storage:
-            data = {"page": {"name": self.name}}
+            data = {"name": self.name}
             return self.render("notfound.html", **data)
 
         data = {
             "title": self.name,
-            "image": {
-                "url": self.url("/+download/%s" % self.name),
-                "alt": self.name,
-            },
+            "name": self.name,
             "ctxnav": list(self._get_ctxnav("history")),
         }
 
