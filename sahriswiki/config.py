@@ -118,6 +118,10 @@ class Config(object):
                 dest="htpasswd", metavar="FILE", type="string",
                 help="Read credentials for HTTP Auth from FILE")
 
+        add("", "--password", action="store", default="admin",
+                dest="password", metavar="PASSWORD", type="string",
+                help="Set default admin password to PASSWORD")
+
         add("", "--readonly", action="store_true", default=False,
                 dest="readonly", help="Set the wiki into readonly mode")
 

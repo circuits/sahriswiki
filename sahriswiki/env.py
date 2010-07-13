@@ -8,6 +8,7 @@
 """
 
 import os
+from hashlib import md5
 from urllib import basejoin
 from itertools import chain
 
@@ -139,8 +140,7 @@ class Environment(BaseComponent):
             yield ("Wanted",   self.url("/+wanted"))
 
     def _create_users(self):
-        # Default admin password is "admin"
-        users = {"admin": "21232f297a57a5a743894a0e4a801fc3"}
+        users = {"admin": md5(self.config.get("password")).hexdigest()}
         htpasswd = self.config.get("htpasswd", None)
         if htpasswd:
             f = open(htpasswd, "r")
