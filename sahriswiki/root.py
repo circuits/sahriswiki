@@ -308,6 +308,7 @@ class Root(BaseController):
 
         data = {
             "title": "diff -r %s -r %s %s" % (from_rev, to_rev, name),
+            "name": self.name,
             "diff": diff,
         }
 
