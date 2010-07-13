@@ -26,7 +26,14 @@ class Root(BaseController):
         self.search = self.environ.search
         self.storage = self.environ.storage
 
-    def _get_ctxnav(self, type="view"):
+    def _login(self):
+        return self.request.session.get("login", self.request.login)
+
+    def _user(self):
+        return self.login or self.request.headers.get(
+                "X-Forwarded-For", self.request.remote.ip)
+
+    def _ctxnav(self, type="view"):
         if type in ("history", "index", "search"):
             yield ("Index",    self.url("/+search"))
             yield ("Orphaned", self.url("/+orphaned"))
@@ -59,14 +66,14 @@ class Root(BaseController):
 
     @expose("+upload")
     def upload(self, *args, **kwargs):
-        if self.config.get_bool("readonly"):
+        if not self._login() and self.config.get_bool("readonly"):
             raise ForbiddenErr("This wiki is in readonly mode.")
 
         action = kwargs.get("action", None)
 
         data = {
             "title": "Upload",
-            "ctxnav": list(self._get_ctxnav("history")),
+            "ctxnav": list(self._ctxnav("history")),
         }
 
         if action == "upload":
@@ -92,7 +99,7 @@ class Root(BaseController):
 
     @expose("+edit")
     def edit(self, *args, **kwargs):
-        if self.config.get_bool("readonly"):
+        if not self._login() and self.config.get_bool("readonly"):
             raise ForbiddenErr("This wiki is in readonly mode.")
 
         name = os.path.sep.join(args)
@@ -137,7 +144,7 @@ class Root(BaseController):
         if not query:
             data = {
                 "title": "Page Index",
-                "ctxnav": list(self._get_ctxnav("history")),
+                "ctxnav": list(self._ctxnav("history")),
             }
             if hasattr(self.storage, "all_pages_tree"):
                 data["pages"] = sorted(self.storage.all_pages_tree())
@@ -154,7 +161,7 @@ class Root(BaseController):
             "title": "Search",
             "query": " ".join(words),
             "results": list(search(words)),
-            "ctxnav": list(self._get_ctxnav("history")),
+            "ctxnav": list(self._ctxnav("history")),
         }
 
         return self.render("search.html", **data)
@@ -170,7 +177,7 @@ class Root(BaseController):
             "title": "BackLinks for \"%s\"" % name,
             "pages": sorted(self.search.page_backlinks(name),
                 key=itemgetter(0)),
-            "ctxnav": list(self._get_ctxnav("history")),
+            "ctxnav": list(self._ctxnav("history")),
         }
         return self.render("index.html", **data)
 
@@ -225,7 +232,7 @@ class Root(BaseController):
         data = {
             "title": "Orphaned Pages",
             "pages": sorted(self.search.orphaned_pages(), key=itemgetter(0)),
-            "ctxnav": list(self._get_ctxnav("history")),
+            "ctxnav": list(self._ctxnav("history")),
         }
 
         return self.render("orphaned.html", **data)
@@ -239,7 +246,7 @@ class Root(BaseController):
             "title": "Wanted Pages",
             "pages": sorted(self.search.wanted_pages(),
                 key=itemgetter(0), reverse=True),
-            "ctxnav": list(self._get_ctxnav("history")),
+            "ctxnav": list(self._ctxnav("history")),
         }
 
         return self.render("wanted.html", **data)
@@ -256,7 +263,7 @@ class Root(BaseController):
             "history": self.storage.history(),
             "strftime": strftime,
             "gmtime": gmtime,
-            "ctxnav": list(self._get_ctxnav("history")),
+            "ctxnav": list(self._ctxnav("history")),
         }
 
         return self.render("recentchanges.html", **data)

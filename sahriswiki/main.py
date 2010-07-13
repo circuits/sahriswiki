@@ -16,8 +16,8 @@ from mercurial.hgweb import hgweb
 from circuits.app import Daemon
 from circuits import Manager, Debugger
 
-from circuits.web import Logger, Server, Static
 from circuits.web.wsgi import Application, Gateway
+from circuits.web import Logger, Server, Sessions, Static
 
 from root import Root
 from config import Config
@@ -48,7 +48,7 @@ def main():
 
     bind = (address, port)
 
-    manager += (Server(bind) + Logger()
+    manager += (Logger() + Server(bind) + Sessions()
             + Root(environ)
             + CacheControl(environ)
             + ErrorHandler(environ)
@@ -78,7 +78,7 @@ else:
 
     environ = Environment(config)
 
-    application = (Application()
+    application = (Application() + Sessions()
             + environ
             + Root(environ)
             + CacheControl(environ)

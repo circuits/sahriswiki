@@ -1,5 +1,7 @@
 import os
 import signal
+from hashlib import md5
+from marshal import dumps
 
 from genshi import Markup
 
@@ -19,10 +21,11 @@ class CacheControl(BaseComponent):
 
         self.environ = environ
 
-    @handler("request", filter=True, priority=100.0)
+    @handler("request", filter=True, priority=1.0)
     def _on_request(self, request, response):
-        node = short(self.environ.storage.repo_node())
-        response.headers.add_header("ETag", node)
+        repo = short(self.environ.storage.repo_node())
+        sess = md5(dumps(request.session)).hexdigest()
+        response.headers.add_header("ETag", "%s/%s" % (repo, sess))
         response = validate_etags(request, response)
         if response:
             return response
