@@ -261,7 +261,7 @@ class Root(BaseController):
             return self.download("favicon.ico")
         else:
             return self.serve_file(
-                os.path.join(self.config.get("theme"), "favicon.ico")
+                os.path.join(self.config.get("theme"), "htdocs", "favicon.ico")
             )
 
     @expose("robots.txt")
