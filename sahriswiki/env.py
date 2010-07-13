@@ -110,7 +110,7 @@ class Environment(BaseComponent):
         if htpasswd:
             f = open(htpasswd, "r")
             for line in f:
-                username, password = f.strip().split(":")
+                username, password = line.strip().split(":")
                 users["username"] = password
             f.close()
         return users
