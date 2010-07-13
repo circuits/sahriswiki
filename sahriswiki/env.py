@@ -3,6 +3,7 @@ from urllib import basejoin
 
 from circuits import handler, BaseComponent
 
+from genshi import Markup
 from genshi.template import TemplateLoader
 
 from creoleparser import create_dialect, creole11_base, Parser
@@ -124,8 +125,7 @@ class Environment(BaseComponent):
             return self.parser.generate(self.storage.page_text(name),
                 environ=(self, context))
         else:
-            data = {"name": name}
-            return self.templates.load("notfound.html").generate(**data)
+            return Markup("<!-- SiteMenu Not Found -->")
 
     def render(self, template, **data):
         data["environ"] = self
