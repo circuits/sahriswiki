@@ -247,7 +247,7 @@ You can put a picture in a page by typing the URL to the picture \\
 
 You can use the described-reference URL markup to give the image an ALT tag:
 <<code>>
-{{+download/fuckcat.jpg|F**K YOU I'm a Cat!}}
+{{+download/Images/fuckcat.jpg|F**K YOU I'm a Cat!}}
 <</code>>
 
 {{+download/fuckcat.jpg|F**K YOU I'm a Cat!}}
@@ -333,6 +333,3 @@ You can create tables using pairs of vertical bars:
 |||| you can span multiple columns by || starting each cell ||
 || with extra cell |||| separators ||
 |||||| but perhaps an example is the easiest way to see ||
-
-
-
