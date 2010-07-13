@@ -98,8 +98,22 @@ class Environment(BaseComponent):
             "description": self.config.get("description")
         }
 
+        self.users = self._create_users()
+
         self.request = None
         self.response = None
+
+    def _create_users(self):
+        # Default admin password is "admin"
+        users = {"admin": "21232f297a57a5a743894a0e4a801fc3"}
+        htpasswd = self.config.get("htpasswd", None)
+        if htpasswd:
+            f = open(htpasswd, "r")
+            for line in f:
+                username, password = f.strip().split(":")
+                users["username"] = password
+            f.close()
+        return users
 
     def _wiki_links_class_func(self, name):
         if name not in self.storage:
