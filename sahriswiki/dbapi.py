@@ -107,7 +107,7 @@ class BaseSession(object):
         self._cx.close()
 
     def rollback(self):
-        elf._cx.rollback()
+        self._cx.rollback()
 
     def _execute(self, sql=None, *args, **kwargs):
         pass
