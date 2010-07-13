@@ -272,6 +272,9 @@ without would yet you your yours yourself yourselves""")).split())
     def reindex_page(self, page, title, cursor, text=None):
         """Updates the content of the database, needs locks around."""
 
+        print "Reindexing:"
+        print " ", page, title
+
         if text is None:
             _get_text = getattr(page, '_get_text', lambda: u'')
             try:

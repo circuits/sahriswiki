@@ -47,7 +47,7 @@ class WikiPage(object):
         elif type == "history":
             yield ("Index",    self.url("/+search"))
             yield ("Orphaned", self.url("/+orphaned"))
-            yield ("Wanted",   self.url("/+wanteds"))
+            yield ("Wanted",   self.url("/+wanted"))
 
     def _get_text(self):
         return self.storage.page_text(self.name)
