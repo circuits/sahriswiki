@@ -13,9 +13,7 @@ import macros
 import sahriswiki
 from utils import page_mime
 from search import WikiSearch
-from storage import WikiStorage
-from storage import WikiSubdirectoryStorage
-from storage import WikiSubdirectoryIndexesStorage
+from storage import WikiSubdirectoryIndexesStorage as DefaultStorage
 
 from pagetypes import WikiPageHello
 from pagetypes import WikiPageWiki, WikiPageFile, WikiPageLogin
@@ -51,7 +49,7 @@ class Environment(BaseComponent):
 
         self.config = config
 
-        self.storage = WikiSubdirectoryIndexesStorage(
+        self.storage = DefaultStorage(
             self.config.get("data"),
             self.config.get("encoding"),
             indexes=self.config.get("indexes"),
