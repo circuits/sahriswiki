@@ -518,3 +518,18 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
                 if os.path.isfile(path) and not os.path.islink(path):
                     return path
         return root
+
+    def _title_to_file(self, title):
+        root = super(WikiSubdirectoryIndexesStorage, self)._title_to_file(title)
+
+        def exists(path):
+            file_path = os.path.join(self.repo_path, path)
+            return os.path.isfile(file_path) and not os.path.islink(file_path)
+
+        if not exists(root):
+            for index in self.indexes:
+                path = os.path.join(root, index)
+                if exists(path):
+                    return path
+
+        return root
