@@ -13,8 +13,8 @@
   <p py:if="not environ.config.get_bool('readonly')">
    You can:
    <ul>
-    <li><a href="${environ.url('+edit', title)}">Create the Page</a></li>
-    <li><a href="${environ.url('+upload', title)}">Upload a File</a></li>
+    <li><a href="${environ.url('/+edit', title)}">Create the Page</a></li>
+    <li><a href="${environ.url('/+upload', title)}">Upload a File</a></li>
    </ul>
   </p>
  </body>

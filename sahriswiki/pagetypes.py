@@ -79,8 +79,8 @@ class WikiPage(object):
 
     def history(self):
         data = {
-            "title": "History of \"%s\"" % self.name,
-            "page": {"name": self.name},
+            "name": self.name,
+            "title": "History of %s" % self.name,
             "history": self.storage.page_history(self.name),
             "strftime": strftime,
             "gmtime": gmtime,
