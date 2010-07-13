@@ -109,6 +109,9 @@ class Config(object):
         add("", "--debug", action="store_true", default=False,
                 dest="debug", help="Enable debugging mode")
 
+        add("", "--verbose", action="store_true", default=False,
+                dest="verbose", help="Enable verbose debugging")
+
         add("", "--daemon", action="store_true", default=False,
                 dest="daemon", help="Run as a background process")
 
