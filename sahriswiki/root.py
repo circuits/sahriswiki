@@ -6,8 +6,6 @@ from time import gmtime, strftime
 
 from feedformatter import Feed
 
-from mercurial.node import short
-
 from circuits.web.controllers import expose, BaseController
 
 from errors import ForbiddenErr, NotFoundErr

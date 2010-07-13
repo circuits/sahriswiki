@@ -8,8 +8,6 @@ and ease of use.
 """
 
 import os
-import warnings
-import optparse
 
 from mercurial.hgweb import hgweb
 
