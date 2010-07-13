@@ -56,7 +56,7 @@ class Environment(BaseComponent):
         self.search = WikiSearch(
             self.config.get("cache"),
             self.config.get("language"),
-            self.storage
+            self.storage,
         )
 
         self.parser = Parser(
