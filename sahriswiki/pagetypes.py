@@ -351,7 +351,7 @@ class WikiPageRST(WikiPageText):
 
         SAFE_DOCUTILS = dict(file_insertion_enabled=False, raw_enabled=False)
 
-        return Markup(publish_parts(text, writer_name="html",
+        return Markup(docutils.core.publish_parts(text, writer_name="html",
             settings_overrides=SAFE_DOCUTILS)["html_body"])
 
     def edit(self):
