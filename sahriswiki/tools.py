@@ -1,3 +1,12 @@
+# Module:   tools
+# Date:     12th July 2010
+# Author:   James Mills, prologic at shortcircuit dot net dot au
+
+"""Tools and Filters
+
+...
+"""
+
 import os
 import signal
 from hashlib import md5

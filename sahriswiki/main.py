@@ -1,10 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# Module:   main
+# Date:     12th July 2010
+# Author:   James Mills, prologic at shortcircuit dot net dot au
 
-"""SahrisWiki - The logical wiki!
+"""Main
 
-SahrisWiki is a new WikiWiki Engine designed for simplicity, flexibility
-and ease of use.
+...
 """
 
 import os
