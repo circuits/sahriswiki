@@ -531,6 +531,7 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
                 path = os.path.join(root, index)
                 if os.path.isfile(path) and not os.path.islink(path):
                     return path
+            return os.path.join(root, self.indexes[0])
         return root
 
     def _title_to_file(self, title):
@@ -545,5 +546,6 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
                 path = os.path.join(root, index)
                 if exists(path):
                     return path
+            return os.path.join(root, self.indexes[0])
 
         return root
