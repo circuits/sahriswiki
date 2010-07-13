@@ -37,7 +37,7 @@
     <py:otherwise>
      <py:choose test="type(x)">
       <py:when test="tuple">
-       <a href="${environ.url(x[0])}">${x[1]}</a>
+       <a href="${environ.url('/%s' % x[0])}">${x[1]}</a>
       </py:when>
       <py:otherwise>
        <a href="${environ.url('/%s' % x)}">${x}</a>
