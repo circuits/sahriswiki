@@ -1,5 +1,6 @@
 import os
 from urllib import basejoin
+from itertools import chain
 
 from circuits import handler, BaseComponent
 
@@ -110,8 +111,14 @@ class Environment(BaseComponent):
         return self._login() or self.request.headers.get(
                 "X-Forwarded-For", self.request.remote.ip)
 
+    def _nav(self):
+        yield
+
     def _metanav(self):
-        yield ("Login",    self.url("/+login"))
+        yield ("Login",       self.url("/+login"))
+        yield ("Preferences", self.url("/+prefs"))
+        yield ("Help/Guide",  self.url("/Help"))
+        yield ("About",       self.url("/+about"))
 
     def _ctxnav(self, type="view"):
         if type in ("history", "index", "search"):
@@ -177,8 +184,16 @@ class Environment(BaseComponent):
             return Markup("<!-- SiteMenu Not Found -->")
 
     def render(self, template, **data):
-        data["environ"] = self
-        data["metanav"] = list(self._metanav())
+        data.update({
+            "url": self.url,
+            "site": self.site,
+            "config": self.config,
+            "include": self.include,
+            "staticurl": self.staticurl,
+            "nav": chain(self._nav(), data.get("nav", [])),
+            "crxnav": chain(self._ctxnav(), data.get("ctxnav", [])),
+            "metanav": chain(self._metanav(), data.get("metanav", [])),
+        })
         t = self.templates.load(template)
         return t.generate(**data).render("xhtml", doctype="html")
 

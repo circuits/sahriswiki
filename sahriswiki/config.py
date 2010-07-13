@@ -60,6 +60,10 @@ class Config(object):
                 dest="theme", metavar="DIR", type="string",
                 help="Set theme (static and templates) path to DIR")
 
+        add("-m", "--menu", action="store", default="SiteMenu",
+                dest="menu", metavar="PAGE", type="string",
+                help="Set site menu's page to PAGE")
+
         add("-i", "--indexes", action="append",
                 default=[
                     "FrontPage",

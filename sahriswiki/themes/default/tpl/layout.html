@@ -1,23 +1,18 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
- xmlns:py="http://genshi.edgewall.org/" py:strip="">
+<!DOCTYPE html
+ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:py="http://genshi.edgewall.org/"
+ py:strip="">
  <py:match path="head" once="true">
   <head py:attrs="select('@*')">
    <title py:with="_title = list(select('title/text()'))">
-    ${_title}
-    <py:choose test="defined('title')">
-     <py:when test="True">
-      ${title}
-     </py:when>
-     <py:otherwise>
-      <py:if test="defined('page')">${page['name']}</py:if>
-     </py:otherwise>
-    </py:choose>
-    :: ${environ.site["name"]}
+    ${_title} ${(defined('title') and title) or (defined('page') and page['name']) or ''} :: ${site['name']}
    </title>
-   <meta name="description" content="${environ.site['description']}" />
-   <meta name="keywords" content="${environ.site['keywords']}" />
-   <meta name="author" content="${environ.site['author']}" />
+   <meta name="description" content="${site['description']}" />
+   <meta name="keywords" content="${site['keywords']}" />
+   <meta name="author" content="${site['author']}" />
    <meta http-equiv="Content-Type"
     content="application/xhtml+xml; charset=utf-8" />
    <py:if test="defined('page')">
@@ -25,11 +20,11 @@
      href="${page['feed']}" type="application/xml" />
    </py:if>
    <link rel="stylesheet" title="Normal" type="text/css" media="screen"
-    href="${environ.staticurl('css/screen.css')}" />
+    href="${staticurl('css/screen.css')}" />
     <link rel="stylesheet" type="text/css"
-     href="${environ.staticurl('css/pygments.css')}" />
-   <link py:for="stylesheet in environ.stylesheets" rel="stylesheet"
-    type="text/css" href="${environ.staticurl(stylesheet)}" />
+     href="${staticurl('css/pygments.css')}" />
+   <link py:for="stylesheet in stylesheets" rel="stylesheet"
+    type="text/css" href="${staticurl(stylesheet)}" />
    <py:if test="defined('page')">
     <style type="text/css">
      #menu li a[href="/${page['name']}"] {
@@ -55,7 +50,7 @@
         <py:when test="True">
          <h1>
           <a title="View BackLinks for ${page['name']}"
-           href="${environ.url('/+backlinks', page['name'])}">
+           href="${url('/+backlinks', page['name'])}">
            ${page["name"]}
           </a>
          </h1>
@@ -67,14 +62,15 @@
         </py:otherwise>
        </py:choose>
      <div id="search">
-      <form class="search" action="${environ.url('/+search')}">
+      <form class="search" action="${url('/+search')}">
        <input id="q" name="q" size="18" />
        <button type="submit">Search</button>
 		    </form>
      </div>
 	 		</div>
+
     <div id="menu">
-     ${environ.include("SiteMenu")}
+     ${include(config.get('menu'))}
     </div>
 
     <div id="metanav" py:if="defined('metanav')">
@@ -92,8 +88,7 @@
     </div>
 
 	 		<div id="footer">
-     <p>Powered by
-     <a href="http://sahriswiki.org/">sahriswiki - $environ.version</a></p>
+     Powered by <a href="http://sahriswiki.org/">sahriswiki - $version</a>
     </div>
 	 	</div>
 	 </body>
