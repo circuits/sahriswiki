@@ -61,6 +61,7 @@ class Environment(BaseComponent):
         self.storage = DefaultStorage(
             self.config.get("data"),
             self.config.get("encoding"),
+            index=self.config.get("index"),
             indexes=self.config.get("indexes"),
         )
 
