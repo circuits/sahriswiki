@@ -63,7 +63,9 @@ class Environment(BaseComponent):
             create_dialect(
                 creole11_base,
                 macro_func=macros.dispatcher,
-                wiki_links_base_url="/"
+                wiki_links_base_url="/",
+                wiki_links_class_func=self._wiki_links_class_func,
+                wiki_links_path_func=self._wiki_links_path_func,
             ),
             method="xhtml"
         )
@@ -95,6 +97,16 @@ class Environment(BaseComponent):
 
         self.request = None
         self.response = None
+
+    def _wiki_links_class_func(self, name):
+        if name not in self.storage:
+            return "new"
+
+    def _wiki_links_path_func(self, tag, path):
+        if tag == "img":
+            return self.url("/+download", path)
+        else:
+            return path
 
     def _get_metanav(self):
         yield ("Login",    self.url("/+login"))
