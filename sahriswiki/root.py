@@ -13,6 +13,9 @@ from operator import itemgetter
 from difflib import unified_diff
 from time import gmtime, strftime
 
+import genshi
+from genshi.builder import Markup
+
 from feedformatter import Feed
 
 from circuits.web.controllers import expose, BaseController
@@ -120,7 +123,7 @@ class Root(BaseController):
             position = match.start()
             min_pos = max(position - 60, 0)
             max_pos = min(position + 60, len(text))
-            highlighted = "**%s**" % match.group(0)
+            highlighted = "<span class=\"highlight\">%s</span>" % match.group(0)
             return regexp.sub(highlighted, text[min_pos:max_pos])
 
         def search(words):
@@ -129,7 +132,7 @@ class Root(BaseController):
             results = list(self.search.find(words))
             results.sort(key=itemgetter(0), reverse=True)
             for score, name in results:
-                yield score, name, snippet(name, words)
+                yield score, name, Markup(snippet(name, words))
 
         query = kwargs.get("q", None)
         if query is not None:

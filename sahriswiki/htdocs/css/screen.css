@@ -81,6 +81,10 @@ p {
 	margin-bottom: 18px; 
 }
 
+span.highlight {
+  background-color: #ffff00;
+}
+
 #content ul,
 #content ol {
 	padding : 1em 1em 0 3em;
