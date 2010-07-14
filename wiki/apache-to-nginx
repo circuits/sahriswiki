@@ -205,4 +205,10 @@ server {
 ==== Comment by 208.54.35.84 on Thu Jul 15 00:12:01 2010 ====
 This is a Comment
 
+==== Comment by 208.54.35.39 on Thu Jul 15 00:16:52 2010 ====
+<script language="javascript">
+alert('test');
+</script>
+
 <<add-comment>>
+
