@@ -202,20 +202,6 @@ server {
 
 **//This article is still being added on to, and will be updated as each new tip is added//**
 
-==== Comment by 208.54.35.84 on Thu Jul 15 00:12:01 2010 ====
-This is a Comment
-
-==== Comment by 208.54.35.39 on Thu Jul 15 00:16:52 2010 ====
-<script language="javascript">
-alert('test');
-</script>
-
-==== Comment by 208.54.35.84 on Thu Jul 15 00:17:23 2010 ====
-<<script language="javascript">alert('test');</script>
-
-==== Comment by 208.54.35.84 on Thu Jul 15 00:17:52 2010 ====
-<<script language="javascript">>alert('test');<</script>>
-
 <<add-comment>>
 
 
