@@ -485,7 +485,10 @@ class WikiSubdirectoryStorage(WikiStorage):
         file_path = self._file_path(title)
         self._check_path(file_path)
         dir_path = os.path.dirname(file_path)
-        os.removedirs(dir_path)
+        try:
+            os.removedirs(dir_path)
+        except OSError, e:
+            pass # Ignore possibly OSError (39) Directory not empty errors.
 
     def all_pages(self):
         """
