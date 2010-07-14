@@ -511,6 +511,8 @@ class WikiSubdirectoryStorage(WikiStorage):
 
         def generate(root):
             for name in os.listdir(root):
+                if name.startswith("."):
+                    continue
                 path = os.path.join(root, name)
                 if os.path.isdir(path):
                     yield {name: sorted(generate(path))}
