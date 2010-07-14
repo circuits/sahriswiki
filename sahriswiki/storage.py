@@ -607,7 +607,9 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
                 if os.path.isdir(path):
                     has_index = any([os.path.join(name, index)
                         for index in self.indexes])
-                    yield {(name, has_index): sorted(generate(path))}
+                    rel = os.path.relpath(path, self.path)
+                    yield {(url_unquote(rel), url_unquote(name), has_index):
+                            sorted(generate(path))}
                 elif os.path.isfile(path) and not os.path.islink(path) and \
                         name not in self.indexes:
                     rel = os.path.relpath(path, self.path)
