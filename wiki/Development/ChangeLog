@@ -4,6 +4,8 @@
 //SahrisWiki ChangeLog//
 
 == 0.8 ==
+* [+]: The page index (//searching for nothing//) now lists a tree
+* [+]: Can now search for specific pages (//not just words//)
 * [!]: --daemon now works
 * [!]: --readonly now works
 * [+]: Added support to specify logfile (//--logfile//)
