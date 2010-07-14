@@ -210,5 +210,9 @@ This is a Comment
 alert('test');
 </script>
 
+==== Comment by 208.54.35.84 on Thu Jul 15 00:17:23 2010 ====
+<<script language="javascript">alert('test');</script>
+
 <<add-comment>>
+
 
