@@ -355,6 +355,7 @@ class LinkElement(InlineElement):
         body = content_mo.group('body')
         arg_string = content_mo.group('arg_string')
         the_class = None
+        page_name = None
         if self.interwikilink_regexp.match(body):
             interwikilink_mo = self.interwikilink_regexp.match(body)
             link_type = 'interwiki'
@@ -382,8 +383,6 @@ class LinkElement(InlineElement):
                 the_path = self.path_func(self.tag, page_name)
             else:
                 the_path = urllib.quote(page_name.encode('utf-8'))
-            if self.class_func:
-                the_class = self.class_func(page_name)
             url = urlparse.urljoin(self.base_url, the_path)
         else:
             url = None
@@ -395,7 +394,10 @@ class LinkElement(InlineElement):
                 args, kw_args = [arg_string.strip()], {} #self.parse_args(arg_string)
             else:
                 args, kw_args = [], {}
+
             try:
+                if self.class_func:
+                    the_class = self.class_func(link_type, url, body, page_name)
                 return self.emit(element_store, environ,link_type,body,url,the_class, *args, **kw_args)
             except TypeError:
                 return mo.group(0)
