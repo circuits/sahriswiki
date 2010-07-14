@@ -1,17 +1,2 @@
 == Issues Found as of 8:33a EST (-5GMT) 7/14/2010 == 
 
-
-==== When trying to view a backlink of a page ====
-<<code lang="text">>
-ERROR: (<class 'sqlite3.OperationalError'>) cannot rollback - no transaction is active
-  File "/root/src/circuits/circuits/core/manager.py", line 442, in __handleEvent
-    retval = handler(*eargs, **ekwargs)
-  File "/root/src/circuits/circuits/web/controllers.py", line 42, in wrapper
-    return f(self, *args, **kwargs)
-  File "/opt/apps/wiki/sahriswiki/root.py", line 174, in backlinks
-    self.search.update(self.environ)
-  File "/opt/apps/wiki/sahriswiki/search.py", line 364, in update
-    self.reindex(environ, changed)
-  File "/opt/apps/wiki/sahriswiki/search.py", line 337, in reindex
-    cursor.execute('ROLLBACK;')
-<</code>>
