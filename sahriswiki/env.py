@@ -204,15 +204,18 @@ class Environment(BaseComponent):
 
     def render(self, template, **data):
         data.update({
-            "url": self.url,
-            "site": self.site,
-            "config": self.config,
-            "include": self.include,
-            "staticurl": self.staticurl,
+            "sahriswiki": {
+                "version": sahriswiki.__version__
+            },
+            "url":         self.url,
+            "site":        self.site,
+            "config":      self.config,
+            "include":     self.include,
+            "staticurl":   self.staticurl,
             "permissions": self._permissions(),
-            "nav": chain(self._nav(), data.get("nav", [])),
-            "crxnav": chain(self._ctxnav(), data.get("ctxnav", [])),
-            "metanav": chain(self._metanav(), data.get("metanav", [])),
+            "nav":         chain(self._nav(), data.get("nav", [])),
+            "crxnav":      chain(self._ctxnav(), data.get("ctxnav", [])),
+            "metanav":     chain(self._metanav(), data.get("metanav", [])),
         })
         t = self.templates.load(template)
         return t.generate(**data).render("xhtml", doctype="html")
