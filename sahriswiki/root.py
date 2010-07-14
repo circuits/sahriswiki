@@ -158,8 +158,9 @@ class Root(BaseController):
             words = (query,)
 
         data = {
-            "title": "Search",
-            "query": " ".join(words),
+            "title": "Search results for \"%s\"" % query,
+            "name": "Search",
+            "query": query,
             "results": list(search(words)),
             "ctxnav": list(self.environ._ctxnav("history")),
         }
