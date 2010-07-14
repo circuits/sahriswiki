@@ -51,12 +51,11 @@ def add_comment(macro, environ, context, *args, **kwargs):
     parser = environ.parser
     request = environ.request
 
-    user = request.remote.ip
+    user = environ._user()
 
-    page = environ.page
+    page = context["page"]
     page_name = page["name"]
     page_text = page["text"]
-    page_url = page["url"]
     
     # Can this user add a comment to this page?
     appendonly = ("appendonly" in args)
@@ -75,8 +74,8 @@ def add_comment(macro, environ, context, *args, **kwargs):
     # If we are submitting or previewing, inject comment as it should look
     if action == "preview":
         the_preview = tag.div(tag.h1("Preview"), id="preview")
-        the_preview += tag.div(parser.generate(comment, environ=environ),
-                class_="article")
+        the_preview += tag.div(parser.generate(comment,
+            environ=(environ, context)), class_="article")
 
     # When submitting, inject comment before macro
     if comment and action == "save":
@@ -92,14 +91,16 @@ def add_comment(macro, environ, context, *args, **kwargs):
         storage = environ.storage
 
         storage.reopen()
-        search.update()
+        search.update(environ)
 
         storage.save_text(page_name, new_text, user,
                 "Comment added by %s" % user)
 
-        search.update_page(page_name, text=new_text)
+        search.update_page(environ.get_page(page_name), page_name,
+                text=new_text)
 
-        the_comment = parser.generate(comment_text, environ=environ)
+        the_comment = parser.generate(comment_text,
+                environ=(environ, context))
 
     the_form = tag.form(
             tag.input(type="hidden", name="parent", value=page["node"]),
