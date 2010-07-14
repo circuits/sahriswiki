@@ -85,15 +85,19 @@ class Config(object):
                 dest="indexes", metavar="LIST", type="string",
                 help="Set index search list to LIST")
 
-        add("-m", "--menu", action="store", default="SiteMenu",
+        add("", "--logfile", action="store", default=None,
+                dest="logfile", metavar="FILE",
+                help="Store access logs in FILE")
+
+        add("", "--menu", action="store", default="SiteMenu",
                 dest="menu", metavar="PAGE", type="string",
                 help="Set default site menu page to PAGE")
 
-        add("-e", "--encoding", action="store", default="utf-8",
+        add("", "--encoding", action="store", default="utf-8",
                 dest="encoding", metavar="ENC", type="string",
                 help="Use encoding ENC to read and write pages")
 
-        add("-l", "--language", action="store", default="en",
+        add("", "--language", action="store", default="en",
                 dest="language", metavar="LANG", type="string",
                 help="Translate interface to LANG")
 
@@ -140,6 +144,9 @@ class Config(object):
 
         add("", "--disable-hgweb", action="store_true", default=False,
                 dest="disable-hgweb", help="Disable hgweb interface")
+
+        add("", "--disable-logging", action="store_true", default=False,
+                dest="disable-logging", help="Disable access logging")
 
         add("", "--disable-static", action="store_true", default=False,
                 dest="disable-static", help="Disable static file serving")
