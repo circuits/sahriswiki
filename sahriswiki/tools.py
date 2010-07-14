@@ -21,6 +21,8 @@ from circuits.web.tools import gzip
 from circuits import handler, BaseComponent
 from circuits.web.tools import validate_etags
 
+import sahriswiki
+
 class CacheControl(BaseComponent):
 
     channel = "web"
@@ -37,7 +39,8 @@ class CacheControl(BaseComponent):
 
         repo = short(self.environ.storage.repo_node())
         sess = md5(dumps(request.session)).hexdigest()
-        response.headers.add_header("ETag", "%s/%s" % (repo, sess))
+        etag = "%s/%s/%s" % (repo, sess, sahriswiki.__version__)
+        response.headers.add_header("ETag", etag)
         response = validate_etags(request, response)
         if response:
             return response
