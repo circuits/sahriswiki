@@ -159,9 +159,6 @@ class Environment(BaseComponent):
         return users
 
     def _wiki_links_class_func(self, type, url, body, name):
-        print "Link:"
-        print type, url, body, name
-
         if type == "wiki" and name:
             if name in self.storage:
                 return "wiki"
