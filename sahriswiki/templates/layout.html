@@ -43,37 +43,38 @@
 	 </head>
  </py:match>
  <py:match path="body" once="true">
-  <body py:attrs="select('@*')">
-	 	<div id="main">
-	 		<div id="header">
-       <py:choose test="defined('page')">
-        <py:when test="True">
-         <h1>
-          <a title="View BackLinks for ${page['name']}"
-           href="${url('/+backlinks', page['name'])}">
-           ${page["name"]}
-          </a>
-         </h1>
-        </py:when>
-        <py:otherwise>
-         <h1>
-          ${(defined('title') and title) or (defined('page') and page['name'])}
-         </h1>
-        </py:otherwise>
-       </py:choose>
-     <div id="search">
-      <form class="search" action="${url('/+search')}">
-       <input id="q" name="q" size="18" />
-       <button type="submit">Search</button>
-		    </form>
-     </div>
+	<body py:attrs="select('@*')">
+		<div id="main">
+			<div id="header">
+				<py:choose test="defined('page')">
+					<py:when test="True">
+						<h1>
+							<a title="View BackLinks for ${page['name']}"
+							href="${url('/+backlinks', page['name'])}">
+							${page["name"]}
+							</a>
+						</h1>
+					</py:when>
+					<py:otherwise>
+						<h1>
+							${(defined('title') and title) or (defined('page') and page['name'])}
+						</h1>
+					</py:otherwise>
+				</py:choose>
+				<div id="metanav" py:if="defined('metanav')">
+					<ul>
+						<li py:for="text, href in metanav"><a href="${href}">${text}</a></li>
+					</ul>
+				</div>
+				<div id="search" style="clear: right;">
+					<form class="search" action="${url('/+search')}">
+						<input id="q" name="q" size="42" />
+						<button type="submit">Search</button>
+					</form>
+				</div>				
 	 		</div>
 
-    <div id="metanav" py:if="defined('metanav')">
-     <ul>
-      <li py:for="text, href in metanav"><a href="${href}">${text}</a></li>
-     </ul>
-    </div>
+
 
     <div id="menu">
      ${include(config.get('menu'))}

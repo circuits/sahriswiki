@@ -160,10 +160,10 @@ td { padding: 2px; }
     position: relative;
 }
 #header h1 a {
-	color : #00d;
+	color : #437FDA;
 }
 #header h1 a:hover {
-	color : #00f;
+	color : #437FDA;
 }
 
 #search {
@@ -195,7 +195,7 @@ td { padding: 2px; }
 	font-size: 12px;
 }
 #menu ul {
-	padding : 0.60em 4em;
+	padding : 7px 25px;
 }
 #menu li {
 	display : inline;
@@ -226,11 +226,13 @@ td { padding: 2px; }
 }
 #metanav li a {
     text-decoration: none;
-    border-bottom: 1px dotted #2b548c ;
+    /* border-bottom: 1px dotted #2b548c ; */
     font-family: Helvetica;
     font-size: 11px;
     margin-left: 5px;
 }
+
+#metanav li a:hover { border-bottom: 1px dotted #2b548c; }
 
 #content {
 	border-bottom : 1px solid #cfcfcf;
