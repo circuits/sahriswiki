@@ -23,11 +23,11 @@ from genshi.template import Template
 from mercurial.node import short
 
 from circuits.web.tools import serve_file
+from circuits.web.exceptions import Redirect
 from circuits.web.tools import check_auth, basic_auth
-from circuits.web.exceptions import NotImplemented, Redirect
 
 from utils import FIXLINES
-from errors import UnsupportedMediaTypeErr
+from errors import NotImplementedErr, UnsupportedMediaTypeErr
 
 class WikiPage(object):
     """Everything needed for rendering a page."""
@@ -101,7 +101,7 @@ class WikiPage(object):
         return self.render("history.html", **data)
 
     def view(self):
-        raise NotImplemented()
+        raise NotImplementedErr()
 
 class WikiPageLogin(WikiPage):
     """Pages of mime type +login/* use this for display."""
