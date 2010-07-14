@@ -32,6 +32,9 @@ class CacheControl(BaseComponent):
 
     @handler("request", filter=True, priority=1.0)
     def _on_request(self, request, response):
+        if request.path in ("/+login", "/+logout"):
+            return
+
         repo = short(self.environ.storage.repo_node())
         sess = md5(dumps(request.session)).hexdigest()
         response.headers.add_header("ETag", "%s/%s" % (repo, sess))
