@@ -605,7 +605,7 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
                     continue
                 path = os.path.join(root, name)
                 if os.path.isdir(path):
-                    has_index = any([os.path.join(name, index)
+                    has_index = any([os.path.join(name, index) in self
                         for index in self.indexes])
                     rel = os.path.relpath(path, self.path)
                     yield {(url_unquote(rel), url_unquote(name), has_index):
