@@ -147,6 +147,9 @@ class Root(BaseController):
 
             return self.render("index.html", **data)
 
+        if query in self.storage:
+            return self.environ.get_page(query).view()
+
         words = tuple(self.search.split_text(query, stop=False))
         if not words:
             words = (query,)
