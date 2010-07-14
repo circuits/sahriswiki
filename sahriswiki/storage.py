@@ -485,7 +485,10 @@ class WikiSubdirectoryStorage(WikiStorage):
         file_path = self._file_path(title)
         self._check_path(file_path)
         dir_path = os.path.dirname(file_path)
-        os.removedirs(dir_path)
+        try:
+            os.removedirs(dir_path)
+        except OSError, e:
+            pass # Ignore possibly OSError (39) Directory not empty errors.
 
     def all_pages(self):
         """
@@ -605,9 +608,11 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
                     continue
                 path = os.path.join(root, name)
                 if os.path.isdir(path):
-                    has_index = any([os.path.join(name, index)
+                    has_index = any([os.path.join(name, index) in self
                         for index in self.indexes])
-                    yield {(name, has_index): sorted(generate(path))}
+                    rel = os.path.relpath(path, self.path)
+                    yield {(url_unquote(rel), url_unquote(name), has_index):
+                            sorted(generate(path))}
                 elif os.path.isfile(path) and not os.path.islink(path) and \
                         name not in self.indexes:
                     rel = os.path.relpath(path, self.path)
