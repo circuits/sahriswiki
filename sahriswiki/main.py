@@ -37,29 +37,33 @@ def main():
 
     manager += environ
 
-    bind = environ.config.get("bind")
+    bind = config.get("bind")
     if ":" in bind:
         address, port = bind.split(":")
         port = int(port)
     else:
-        address, port = bind, environ.config.get_int("port")
+        address, port = bind, config.get_int("port")
 
     bind = (address, port)
 
-    manager += (Logger() + Server(bind) + Sessions()
+    manager += (Server(bind)
+            + Sessions()
             + Root(environ)
             + CacheControl(environ)
             + ErrorHandler(environ)
             + SignalHandler(environ)
             + PluginManager(environ))
 
-    if not environ.config.get_bool("disable-static"):
+    if not config.get_bool("disable-logging"):
+        manager += Logger(file=config.get("logfile"))
+
+    if not config.get_bool("disable-static"):
         manager += Static(docroot=os.path.join(config.get("theme"), "htdocs"))
 
-    if not environ.config.get_bool("disable-hgweb"):
+    if not config.get_bool("disable-hgweb"):
         manager += Gateway(hgweb(environ.storage.repo_path), "/+hg")
 
-    if not environ.config.get_bool("disable-compression"):
+    if not config.get_bool("disable-compression"):
         manager += Compression(environ)
 
     if config.get_bool("daemon"):
@@ -83,10 +87,10 @@ else:
             + ErrorHandler(environ)
             + PluginManager(environ))
 
-    if not environ.config.get_bool("disable-static"):
+    if not config.get_bool("disable-static"):
         application += Static(
             docroot=os.path.join(config.get("theme"), "htdocs")
         )
 
-    if not environ.config.get_bool("disable-hgweb"):
+    if not config.get_bool("disable-hgweb"):
         application += Gateway(hgweb(environ.storage.repo_path), "/+hg")
