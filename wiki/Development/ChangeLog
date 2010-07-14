@@ -3,6 +3,14 @@
 = Change Log =
 //SahrisWiki ChangeLog//
 
+<<div cls="right">>
+**Legend:**
+* [+] Addition of something new.
+* [-] Removal of an existing feature.
+* [!] Fix of an existing broken feature.
+* [ ] Uncategorized
+<</div>>
+
 == 0.8 ==
 * [+]: The page index (//searching for nothing//) now lists a tree
 * [+]: Can now search for specific pages (//not just words//)
@@ -19,9 +27,3 @@
 ** //And many more...//
 * [+]: Subdirectory Storage with Indexes (//now the default//).
 * [ ]: Initial public documentation of changes: [[<<title>>]]
-----
-Legend:
-* [+] Addition of something new.
-* [-] Removal of an existing feature.
-* [!] Fix of an existing broken feature.
-* [ ] Uncategorized
