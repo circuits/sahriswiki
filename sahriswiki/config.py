@@ -18,7 +18,7 @@ VERSION = "%prog v" + sahriswiki.__version__
 
 class Config(object):
 
-    default_filename = u"sahris.conf"
+    filename = u"sahris.conf"
 
     def __init__(self, **kwargs):
         super(Config, self).__init__()
@@ -160,7 +160,7 @@ class Config(object):
 
     def parse_files(self, files=None):
         if files is None:
-            files = [self.get("config", self.default_filename)]
+            files = [self.get("config", self.filename)]
         parser = ConfigParser.SafeConfigParser()
         parser.read(files)
         for section in parser.sections():
@@ -170,7 +170,7 @@ class Config(object):
     def save_config(self, filename=None):
         """Saves configuration to a given file."""
         if filename is None:
-            filename = self.default_filename
+            filename = self.config.get("config", self.filename)
 
         parser = ConfigParser.RawConfigParser()
         section = self.config["name"]
