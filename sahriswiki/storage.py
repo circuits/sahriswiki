@@ -490,7 +490,7 @@ class WikiSubdirectoryStorage(WikiStorage):
     def all_pages(self):
         """
         Iterate over the titles of all pages in the wiki.
-        Include subdirector
+        Include subdirectories.
         """
 
         for (dirpath, dirnames, filenames) in os.walk(self.path):
@@ -572,3 +572,45 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
                 return os.path.join(root, self.index)
 
         return root
+
+    def all_pages(self):
+        """
+        Iterate over the titles of all pages in the wiki.
+        Include subdirectories but skip over indexes.
+        """
+
+        for (dirpath, dirnames, filenames) in os.walk(self.path):
+            path = dirpath[len(self.path)+1:]
+            for name in filenames:
+                if os.path.basename(name) in self.indexes:
+                    filename = os.path.join(path, os.path.dirname(name))
+                    yield url_unquote(filename)
+                else:
+                    filename = os.path.join(path, name)
+                    if (os.path.isfile(os.path.join(self.path, filename))
+                        and not filename.startswith('.')):
+                        yield url_unquote(filename)
+
+    def all_pages_tree(self):
+        """
+        Iterate over the titles of all pages in the wiki.
+        Include subdirectories but skip over indexes.
+
+        Return a tree of al pages.
+        """
+
+        def generate(root):
+            for name in os.listdir(root):
+                if name.startswith("."):
+                    continue
+                path = os.path.join(root, name)
+                if os.path.isdir(path):
+                    has_index = any([os.path.join(name, index)
+                        for index in self.indexes])
+                    yield {(name, has_index): sorted(generate(path))}
+                elif os.path.isfile(path) and not os.path.islink(path) and \
+                        name not in self.indexes:
+                    rel = os.path.relpath(path, self.path)
+                    yield url_unquote(rel),  url_unquote(name)
+
+        return generate(self.path)
