@@ -11,6 +11,7 @@ import os
 from hashlib import md5
 from urllib import basejoin
 from itertools import chain
+from urlparse import urlparse
 
 from circuits import handler, BaseComponent
 
@@ -157,9 +158,20 @@ class Environment(BaseComponent):
             f.close()
         return users
 
-    def _wiki_links_class_func(self, name):
-        if name not in self.storage:
-            return "new"
+    def _wiki_links_class_func(self, type, url, body, name):
+        print "Link:"
+        print type, url, body, name
+
+        if type == "wiki" and name:
+            if name in self.storage:
+                return "wiki"
+            else:
+                return "wiki new"
+        elif type == "url":
+            base = urlparse(self.url("/"))
+            link = urlparse(url)
+            if not all([base[i] == link[i] for i in range(2)]):
+                return "external"
 
     def _wiki_links_path_func(self, tag, path):
         if tag == "img":
