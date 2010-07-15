@@ -185,7 +185,11 @@ class Config(reprconf.Config):
             filename = os.path.abspath(os.path.expanduser(namespace.config))
             if os.path.exists(filename) and os.path.isfile(filename):
                 config = reprconf.as_dict(filename)
-                self.update(config.get(config.keys()[0], {}))
+                if config.keys():
+                    config = config[config.keys()[0]]
+                    for option, value in config.iteritems():
+                        if option in namespace:
+                            self[option] = value
 
         for option, value in namespace.__dict__.iteritems():
             if option not in self and value is not None:
