@@ -28,7 +28,7 @@ class Config(reprconf.Config):
 
     def check_options(self):
         paths = ("cache", "config", "data", "htpasswd", "logfile", "pidfile",
-                "theme",)
+                "sock", "theme",)
 
         for path in paths:
             path = self.get(path, None)
@@ -63,6 +63,10 @@ class Config(reprconf.Config):
         add("-p", "--port", action="store", default=8000,
                 dest="port", metavar="PORT", type=int,
                 help="Listen on port PORT")
+
+        add("-s", "--sock", action="store", default=None,
+                dest="sock", metavar="FILE", type=str,
+                help="Listen on socket FILE")
 
         add("-d", "--data", action="store", default="wiki",
                 dest="data", metavar="DIR", type=str,

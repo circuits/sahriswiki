@@ -36,7 +36,9 @@ def main():
 
     manager += environ
 
-    if ":" in config.get("bind"):
+    if config.get("sock") is not None:
+        bind = config.get("sock")
+    elif ":" in config.get("bind"):
         address, port = config.get("bind").split(":")
         bind = (address, int(port),)
     else:
