@@ -51,7 +51,7 @@ class WikiPage(object):
     def _get_ctxnav(self, type="view"):
         if type == "view":
             if self.environ._login() \
-                    or not self.environ.config.get_bool("readonly"):
+                    or not self.environ.config.get("readonly"):
                 yield ("Edit", self.url("/+edit/%s" % self.name))
             yield ("Download", self.url("/+download/%s" % self.name))
             yield ("History",  self.url("/+history/%s" % self.name))
@@ -76,6 +76,10 @@ class WikiPage(object):
             "comment": comment,
             "node": short(node),
         }
+
+        if hasattr(self.storage, "page_parent"):
+            data["parent"] = self.storage.page_parent(self.name)
+            print "parent:", self.name, data["parent"]
 
         self.environ.page = data
 
