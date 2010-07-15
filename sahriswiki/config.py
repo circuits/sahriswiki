@@ -27,8 +27,8 @@ class Config(reprconf.Config):
         self.check_options()
 
     def check_options(self):
-        paths = ("cache", "config", "data", "htpasswd", "logfile", "pidfile",
-                "sock", "theme",)
+        paths = ("accesslog", "cache", "config", "data", "errorlog",
+                "htpasswd", "pidfile", "sock", "theme",)
 
         for path in paths:
             path = self.get(path, None)
@@ -147,9 +147,13 @@ class Config(reprconf.Config):
                 dest="verbose",
                 help="Enable verbose debugging")
 
-        add("--logfile", action="store", default=None,
-                dest="logfile", metavar="FILE", type=str,
-                help="Store access logs in FILE")
+        add("--errorlog", action="store", default=None,
+                dest="errorlog", metavar="FILE", type=str,
+                help="Store debug and error information in FILE")
+
+        add("--accesslog", action="store", default=None,
+                dest="accesslog", metavar="FILE", type=str,
+                help="Store web server access logs in FILE")
 
         add("--pidfile", action="store", default="sahris.pid",
                 dest="pidfile", metavar="FILE", type=str,
