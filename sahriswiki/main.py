@@ -8,6 +8,7 @@
 """
 
 import os
+import sys
 
 from mercurial.hgweb import hgweb
 
