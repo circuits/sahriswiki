@@ -4,6 +4,8 @@
 //SahrisWiki ChangeLog//
 
 == 0.8 ==
+* [+]: If searching yields no results an option is given to create or
+       upload a page.
 * [+]: The page index (//searching for nothing//) now lists a tree
 * [+]: Can now search for specific pages (//not just words//)
 * [!]: --daemon now works
