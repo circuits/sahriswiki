@@ -1,14 +1,12 @@
 == Sahris configuration example with Nginx ==
 
 <<code lang="nginx">>
-
 server { 
 	access_log off;
 	error_log logs/wiki.kbeezie.error.log;
 	
 	server_name wiki.kbeezie.com;
 	root /opt/apps/wiki/sahriswiki/htdocs;
-
 
 	location / {
 		proxy_set_header X-Forwarded-For $remote_addr;
@@ -17,7 +15,6 @@ server {
 		proxy_pass http://unix:/opt/apps/wiki/sahris.sock:/;
 	}
 
-
 	# In the static configurations you can place options such as cache control	
 	location /css { }
 	location /img { }
@@ -25,5 +22,4 @@ server {
 	
 	include drop;
 }
-
 <</code>>
