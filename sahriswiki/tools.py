@@ -39,7 +39,11 @@ class CacheControl(BaseComponent):
 
         repo = short(self.environ.storage.repo_node())
         sess = md5(dumps(request.session)).hexdigest()
-        etag = "%s/%s/%s" % (repo, sess, sahriswiki.__version__)
+        config = md5(dumps(self.environ.config.copy())).hexdigest()
+        version = sahriswiki.__version__
+
+        etag = "%s/%s/%s/%s" % (repo, sess, config, version)
+
         response.headers.add_header("ETag", etag)
         response = validate_etags(request, response)
         if response:
@@ -91,5 +95,5 @@ class SignalHandler(BaseComponent):
 
     @handler("stopped", target="*")
     def _on_stopped(self, component):
-        if self.environ.config.get("config"):
+        if self.environ.config.get("config", None):
             self.environ.config.save_config()

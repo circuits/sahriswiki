@@ -619,3 +619,29 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
                     yield url_unquote(rel),  url_unquote(name)
 
         return generate(self.path)
+
+    def page_parent(self, title):
+        filename = self._file_path(title)
+        parent = os.path.dirname(filename)
+
+        if os.path.isdir(parent) and not os.path.islink(parent):
+            type = "dir"
+        elif os.path.isfile(parent) and not os.path.islink(parent):
+            type = "file"
+        else:
+            parent = None
+            type = None
+
+        if parent is not None:
+            parent = os.path.relpath(parent, self.path)
+
+        return parent, type
+
+    @locked_repo
+    def save_file(self, title, file_name, author=u'', comment=u'', parent=None):
+        """
+        Save the file and make the subdirectories if needed.
+        """
+
+        super(WikiSubdirectoryIndexesStorage, self).save_file(
+                title, file_name, author, comment, parent)
