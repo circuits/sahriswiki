@@ -86,7 +86,7 @@ class Config(object):
                 dest="indexes", metavar="LIST", type="string",
                 help="Set index search list to LIST")
 
-        add("", "--logfile", action="store", default=sys.stderr,
+        add("", "--logfile", action="store", default=None,
                 dest="logfile", metavar="FILE",
                 help="Store access logs in FILE")
 
