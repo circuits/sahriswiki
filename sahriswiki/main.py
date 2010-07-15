@@ -65,10 +65,6 @@ def main():
     if config.get("daemon"):
         manager += Daemon(config.get("pidfile"))
 
-    from circuits.tools import graph, inspect
-    print graph(manager)
-    print inspect(manager)
-
     manager.run()
 
 if __name__ == "__main__":
