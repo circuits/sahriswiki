@@ -55,7 +55,7 @@ def main():
             + PluginManager(environ))
 
     if not config.get_bool("disable-logging"):
-        manager += Logger(file=config.get("logfile"))
+        manager += Logger(file=config.get("logfile", sys.stderr))
 
     if not config.get_bool("disable-static"):
         manager += Static(docroot=os.path.join(config.get("theme"), "htdocs"))
