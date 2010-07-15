@@ -16,7 +16,7 @@ server {
 		proxy_pass http://unix:/opt/apps/wiki/sahris.sock:/;
 	}
 
-	
+	# In the static configurations you can place options such as cache control	
 	location /css { }
 	location /img { }
 	location /js { }
