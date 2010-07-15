@@ -107,7 +107,7 @@ class Environment(BaseComponent):
             "name": self.config.get("name"),
             "author": self.config.get("author"),
             "keywords": self.config.get("keywords"),
-            "description": self.config.get("description")
+            "description": self.config.get("description"),
         }
 
         self.users = self._create_users()
@@ -180,7 +180,7 @@ class Environment(BaseComponent):
         return self.request.url("/".join(args))
 
     def staticurl(self, url):
-        base = self.config.get("static-baseurl")
+        base = self.config.get("static-baseurl", None)
         if base:
             return basejoin(base, url)
         else:
