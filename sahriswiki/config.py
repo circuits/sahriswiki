@@ -8,7 +8,6 @@
 """
 
 import os
-import sys
 import optparse
 import ConfigParser
 
