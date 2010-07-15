@@ -53,6 +53,9 @@ class Root(BaseController):
             return page.view()
         except NotFoundErr:
             data = {"title": name}
+            if hasattr(self.storage, "page_parent"):
+                data["parent"] = self.storage.page_parent(name)
+            print "parent:", name, data["parent"]
             return self.render("notfound.html", **data)
 
     @expose("+download")
@@ -63,7 +66,7 @@ class Root(BaseController):
 
     @expose("+upload")
     def upload(self, *args, **kwargs):
-        if not self.environ._login() and self.config.get_bool("readonly"):
+        if not self.environ._login() and self.config.get("readonly"):
             raise ForbiddenErr("This wiki is in readonly mode.")
 
         action = kwargs.get("action", None)
@@ -96,7 +99,7 @@ class Root(BaseController):
 
     @expose("+edit")
     def edit(self, *args, **kwargs):
-        if not self.environ._login() and self.config.get_bool("readonly"):
+        if not self.environ._login() and self.config.get("readonly"):
             raise ForbiddenErr("This wiki is in readonly mode.")
 
         name = os.path.sep.join(args)
@@ -158,8 +161,9 @@ class Root(BaseController):
             words = (query,)
 
         data = {
-            "title": "Search",
-            "query": " ".join(words),
+            "title": "Search results for \"%s\"" % query,
+            "name": "Search",
+            "query": query,
             "results": list(search(words)),
             "ctxnav": list(self.environ._ctxnav("history")),
         }

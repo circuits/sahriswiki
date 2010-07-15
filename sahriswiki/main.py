@@ -8,6 +8,7 @@
 """
 
 import os
+import sys
 
 from mercurial.hgweb import hgweb
 
@@ -25,26 +26,23 @@ from tools import CacheControl, Compression, ErrorHandler, SignalHandler
 
 def main():
     config = Config()
-    config.parse_args()
-    config.parse_files()
 
     manager = Manager()
 
-    if config.get_bool("debug"):
+    if config.get("debug"):
         manager += Debugger(events=config.get("verbose"))
 
     environ = Environment(config)
 
     manager += environ
 
-    bind = config.get("bind")
-    if ":" in bind:
-        address, port = bind.split(":")
-        port = int(port)
+    if config.get("sock") is not None:
+        bind = config.get("sock")
+    elif ":" in config.get("bind"):
+        address, port = config.get("bind").split(":")
+        bind = (address, int(port),)
     else:
-        address, port = bind, config.get_int("port")
-
-    bind = (address, port)
+        bind = (config.get("bind"), config.get("port"),)
 
     manager += (Server(bind)
             + Sessions()
@@ -54,30 +52,27 @@ def main():
             + SignalHandler(environ)
             + PluginManager(environ))
 
-    if not config.get_bool("disable-logging"):
-        manager += Logger(file=config.get("logfile"))
+    if not config.get("disable-logging"):
+        manager += Logger(file=config.get("logfile", sys.stderr))
 
-    if not config.get_bool("disable-static"):
+    if not config.get("disable-static"):
         manager += Static(docroot=os.path.join(config.get("theme"), "htdocs"))
 
-    if not config.get_bool("disable-hgweb"):
+    if not config.get("disable-hgweb"):
         manager += Gateway(hgweb(environ.storage.repo_path), "/+hg")
 
-    if not config.get_bool("disable-compression"):
+    if not config.get("disable-compression"):
         manager += Compression(environ)
 
-    if config.get_bool("daemon"):
-        manager += Daemon(config.get("pid"))
+    if config.get("daemon"):
+        manager += Daemon(config.get("pidfile"))
 
     manager.run()
 
-if __name__ in "__main__":
+if __name__ == "__main__":
     main()
 else:
     config = Config()
-    config.parse_args()
-    config.parse_files()
-
     environ = Environment(config)
 
     application = (Application() + Sessions()
@@ -87,10 +82,10 @@ else:
             + ErrorHandler(environ)
             + PluginManager(environ))
 
-    if not config.get_bool("disable-static"):
+    if not config.get("disable-static"):
         application += Static(
             docroot=os.path.join(config.get("theme"), "htdocs")
         )
 
-    if not config.get_bool("disable-hgweb"):
+    if not config.get("disable-hgweb"):
         application += Gateway(hgweb(environ.storage.repo_path), "/+hg")
