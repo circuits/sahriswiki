@@ -85,10 +85,6 @@ class Config(object):
                 dest="indexes", metavar="LIST", type="string",
                 help="Set index search list to LIST")
 
-        add("", "--logfile", action="store", default=None,
-                dest="logfile", metavar="FILE",
-                help="Store access logs in FILE")
-
         add("", "--menu", action="store", default="SiteMenu",
                 dest="menu", metavar="PAGE", type="string",
                 help="Set default site menu page to PAGE")
@@ -132,15 +128,19 @@ class Config(object):
         add("", "--debug", action="store_true", default=False,
                 dest="debug", help="Enable debugging mode")
 
-        add("", "--verbose", action="store_true", default=False,
-                dest="verbose", help="Enable verbose debugging")
-
         add("", "--daemon", action="store_true", default=False,
                 dest="daemon", help="Run as a background process")
 
-        add("", "--pid", action="store", default="sahris.pid",
-                dest="pid", metavar="FILE", type="string",
-                help="Write pid to FILE")
+        add("", "--verbose", action="store_true", default=False,
+                dest="verbose", help="Enable verbose debugging")
+
+        add("", "--logfile", action="store", default=None,
+                dest="logfile", metavar="FILE",
+                help="Store access logs in FILE")
+
+        add("", "--pidfile", action="store", default="sahris.pid",
+                dest="pidfile", metavar="FILE", type="string",
+                help="Write process id to FILE")
 
         add("", "--disable-hgweb", action="store_true", default=False,
                 dest="disable-hgweb", help="Disable hgweb interface")
