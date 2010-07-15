@@ -17,3 +17,18 @@ class Root(Controlelr):
 
 ((Server(("0.0.0.0", 8000)) + Root()).run()
 <</code>>
+
+{{{
+from circuits.web import Controller, Server
+
+
+class Root(Controlelr):
+
+   def index(self):
+       return "Hello World!"
+
+
+((Server(("0.0.0.0", 8000)) + Root()).run()
+}}}
+
+##Testing 1 2 3##
