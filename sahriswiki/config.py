@@ -187,6 +187,12 @@ class Config(reprconf.Config):
             if option not in self and value is not None:
                 self[option] = value
 
+    def reload_config(self):
+        filename = self.get("config")
+        if filename is not None:
+            config = reprconf.as_dict(filename)
+            self.update(config.get(config.keys()[0], {}))
+
     def save_config(self, filename=None):
         if filename is None:
             filename = self.get("config", "sahris.conf")
