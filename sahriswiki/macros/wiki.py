@@ -51,18 +51,14 @@ def add_comment(macro, environ, context, *args, **kwargs):
     parser = environ.parser
     request = environ.request
 
-    user = environ._user()
-
     page = context["page"]
     page_name = page["name"]
     page_text = page["text"]
     
-    # Can this user add a comment to this page?
-    appendonly = ("appendonly" in args)
-
     # Get the data from the POST
     comment = request.kwargs.get("comment", "")
     action = request.kwargs.get("action", "")
+    author = request.kwargs.get("author", environ._user())
     
     # Ensure <<add-comment>> is not present in comment, so that infinite
     # recursion does not occur.
@@ -81,7 +77,7 @@ def add_comment(macro, environ, context, *args, **kwargs):
     if comment and action == "save":
         new_text = ""
         comment_text = "==== Comment by %s on %s ====\n%s\n\n" % (
-                user, time.strftime('%c', time.localtime()), comment)
+                author, time.strftime('%c', time.localtime()), comment)
         for line in page_text.split("\n"):
             if line.find("<<add-comment") == 0:
                 new_text += comment_text
@@ -93,8 +89,8 @@ def add_comment(macro, environ, context, *args, **kwargs):
         storage.reopen()
         search.update(environ)
 
-        storage.save_text(page_name, new_text, user,
-                "Comment added by %s" % user)
+        storage.save_text(page_name, new_text, author,
+                "Comment added by %s" % author)
 
         search.update_page(environ.get_page(page_name), page_name,
                 text=new_text)

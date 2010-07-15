@@ -23,11 +23,11 @@ from genshi.template import Template
 from mercurial.node import short
 
 from circuits.web.tools import serve_file
+from circuits.web.exceptions import Redirect
 from circuits.web.tools import check_auth, basic_auth
-from circuits.web.exceptions import NotImplemented, Redirect
 
 from utils import FIXLINES
-from errors import UnsupportedMediaTypeErr
+from errors import NotImplementedErr, UnsupportedMediaTypeErr
 
 class WikiPage(object):
     """Everything needed for rendering a page."""
@@ -51,7 +51,7 @@ class WikiPage(object):
     def _get_ctxnav(self, type="view"):
         if type == "view":
             if self.environ._login() \
-                    or not self.environ.config.get_bool("readonly"):
+                    or not self.environ.config.get("readonly"):
                 yield ("Edit", self.url("/+edit/%s" % self.name))
             yield ("Download", self.url("/+download/%s" % self.name))
             yield ("History",  self.url("/+history/%s" % self.name))
@@ -77,6 +77,10 @@ class WikiPage(object):
             "node": short(node),
         }
 
+        if hasattr(self.storage, "page_parent"):
+            data["parent"] = self.storage.page_parent(self.name)
+            print "parent:", self.name, data["parent"]
+
         self.environ.page = data
 
         return data
@@ -101,7 +105,7 @@ class WikiPage(object):
         return self.render("history.html", **data)
 
     def view(self):
-        raise NotImplemented()
+        raise NotImplementedErr()
 
 class WikiPageLogin(WikiPage):
     """Pages of mime type +login/* use this for display."""
