@@ -153,6 +153,12 @@ class WikiPageHello(WikiPage):
             "html": Markup("Hello World!"),
         }
         return self.render("view.html", **data)
+
+class WikiPageAbout(WikiPage):
+    """Pages of mime type +about/* use this for display."""
+
+    def view(self):
+        return self.render("about.html")
         
 class WikiPageText(WikiPage):
     """Pages of mime type text/* use this for display."""
