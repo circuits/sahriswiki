@@ -13,26 +13,18 @@ from genshi.filters import HTMLSanitizer
 
 sanitizer = HTMLSanitizer()
 
-def pre(macro, environ, context, *args, **kwargs):
-    """Return the raw text of body, rendered in a <pre> block.
-    
-    **Arguments:** //None//
+class HTMLFormatter(pygments.formatters.HtmlFormatter):
 
-    **Example:**
-    {{{
-    <<pre>>
-    def hello():
-        print "Hello World!"
+    def wrap(self, source, outfile):
+        return self._wrap_code(source)
 
-    hello()
-    <</pre>>
-    }}}
-    """
-    
-    if macro.body is None:
-        return None
-
-    return builder.tag.pre(macro.body)
+    def _wrap_code(self, source):
+        yield 0, "<pre xml:space=\"preserve\">"
+        for i, t in source:
+            if not t.strip():
+                t = "<br />"
+            yield i, t
+        yield 0, "</pre>"
 
 def code(macro, environ, context, *args, **kwargs):
     """Render syntax highlighted code"""
@@ -52,15 +44,17 @@ def code(macro, environ, context, *args, **kwargs):
     else:
         lexer = None
 
+    attrs = {
+        "xml:space": "preserve",
+    }
+
     if lexer:
-        text = pygments.highlight(macro.body, lexer,
-                pygments.formatters.HtmlFormatter())
+        text = pygments.highlight(macro.body, lexer, HTMLFormatter())
         output = genshi.core.Markup(text)
     elif macro.isblock:
-        output = genshi.builder.tag.pre(macro.body)
+        output = genshi.builder.tag.pre(macro.body, attrs)
     else:
-        output = genshi.builder.tag.code(macro.body,
-                style="white-space:pre-wrap", class_="highlight")
+        output = genshi.builder.tag.code(macro.body, attrs)
 
     return output
 
@@ -107,5 +101,3 @@ def span(macro, environ, context, cls=None, id=None, style=None,
 
     contents = environ.parser.generate(
             macro.body, environ=environ, context='inline')
-
-    return builder.tag.span(contents, id=id, class_=cls, style=style)
