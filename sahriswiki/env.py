@@ -127,6 +127,8 @@ class Environment(BaseComponent):
             if key in config:
                 del config[key]
 
+        return config
+
     def _login(self):
         return self.request.session.get("login", self.request.login)
 
