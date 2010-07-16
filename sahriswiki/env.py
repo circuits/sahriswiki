@@ -79,7 +79,7 @@ class Environment(BaseComponent):
             create_dialect(
                 creole11_base,
                 macro_func=macros.dispatcher,
-                wiki_links_base_url="/",
+                wiki_links_base_url="",
                 wiki_links_class_func=self._wiki_links_class_func,
                 wiki_links_path_func=self._wiki_links_path_func,
             ),
@@ -187,6 +187,11 @@ class Environment(BaseComponent):
     def _wiki_links_path_func(self, tag, path):
         if tag == "img":
             return self.url("/+download", path)
+        elif type == "wiki":
+            if hasattr(self.storage, "is_index"):
+                if self.storage.is_index(path):
+                    return os.path.join(path, "/")
+            return path
         else:
             return path
 
