@@ -31,9 +31,9 @@ class Config(reprconf.Config):
                 "htpasswd", "pidfile", "sock", "theme",)
 
         for path in paths:
-            path = self.get(path, None)
-            if path and not os.path.isabs(path):
-                self[path] = os.path.abspath(os.path.expanduser(path))
+            value = self.get(path, None)
+            if value and not os.path.isabs(value):
+                self[path] = os.path.abspath(os.path.expanduser(value))
 
     def parse_environ(self):
         """Check the environment variables for options."""
