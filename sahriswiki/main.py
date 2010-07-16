@@ -30,7 +30,10 @@ def main():
     manager = Manager()
 
     if config.get("debug"):
-        manager += Debugger(events=config.get("verbose"))
+        manager += Debugger(
+            events=config.get("verbose"),
+            file=config.get("errorlog"),
+        )
 
     environ = Environment(config)
 
@@ -53,7 +56,7 @@ def main():
             + PluginManager(environ))
 
     if not config.get("disable-logging"):
-        manager += Logger(file=config.get("logfile", sys.stderr))
+        manager += Logger(file=config.get("accesslog", sys.stdout))
 
     if not config.get("disable-static"):
         manager += Static(docroot=os.path.join(config.get("theme"), "htdocs"))

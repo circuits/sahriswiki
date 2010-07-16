@@ -26,10 +26,10 @@ from utils import page_mime
 from search import WikiSearch
 from storage import WikiSubdirectoryIndexesStorage as DefaultStorage
 
-from pagetypes import WikiPageHello, WikiPageLogin
 from pagetypes import WikiPageText, WikiPageHTML, WikiPageImage
 from pagetypes import WikiPageWiki, WikiPageFile, WikiPageLogout
 from pagetypes import WikiPageColorText, WikiPageCSV, WikiPageRST
+from pagetypes import WikiPageHello, WikiPageLogin, WikiPageAbout
 
 class Environment(BaseComponent):
 
@@ -54,6 +54,7 @@ class Environment(BaseComponent):
         "type/hello":               WikiPageHello,
         "type/login":               WikiPageLogin,
         "type/logout":              WikiPageLogout,
+        "type/about":               WikiPageAbout,
     }
 
     def __init__(self, config):
@@ -114,6 +115,19 @@ class Environment(BaseComponent):
 
         self.request = None
         self.response = None
+
+    def _config(self):
+        """Return a safe config dict (with sensitive data removed)"""
+
+        hidden = ("password",)
+
+        config = self.config.copy()
+
+        for key in hidden:
+            if key in config:
+                del config[key]
+
+        return config
 
     def _login(self):
         return self.request.session.get("login", self.request.login)
@@ -218,8 +232,8 @@ class Environment(BaseComponent):
             },
             "url":         self.url,
             "site":        self.site,
-            "config":      self.config,
             "include":     self.include,
+            "config":      self._config(),
             "staticurl":   self.staticurl,
             "permissions": self._permissions(),
             "nav":         chain(self._nav(), data.get("nav", [])),

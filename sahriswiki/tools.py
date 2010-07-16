@@ -92,8 +92,4 @@ class SignalHandler(BaseComponent):
     def _on_signal(self, sig, stack):
         if os.name == "posix" and sig == signal.SIGHUP:
             self.storage.reopen()
-
-    @handler("stopped", target="*")
-    def _on_stopped(self, component):
-        if self.environ.config.get("config", None):
-            self.environ.config.save_config()
+            self.environ.config.reload_config()

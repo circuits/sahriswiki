@@ -27,13 +27,13 @@ class Config(reprconf.Config):
         self.check_options()
 
     def check_options(self):
-        paths = ("cache", "config", "data", "htpasswd", "logfile", "pidfile",
-                "sock", "theme",)
+        paths = ("accesslog", "cache", "config", "data", "errorlog",
+                "htpasswd", "pidfile", "sock", "theme",)
 
         for path in paths:
-            path = self.get(path, None)
-            if path and not os.path.isabs(path):
-                self[path] = os.path.abspath(os.path.expanduser(path))
+            value = self.get(path, None)
+            if value and not os.path.isabs(value):
+                self[path] = os.path.abspath(os.path.expanduser(value))
 
     def parse_environ(self):
         """Check the environment variables for options."""
@@ -147,9 +147,13 @@ class Config(reprconf.Config):
                 dest="verbose",
                 help="Enable verbose debugging")
 
-        add("--logfile", action="store", default=None,
-                dest="logfile", metavar="FILE", type=str,
-                help="Store access logs in FILE")
+        add("--errorlog", action="store", default=None,
+                dest="errorlog", metavar="FILE", type=str,
+                help="Store debug and error information in FILE")
+
+        add("--accesslog", action="store", default=None,
+                dest="accesslog", metavar="FILE", type=str,
+                help="Store web server access logs in FILE")
 
         add("--pidfile", action="store", default="sahris.pid",
                 dest="pidfile", metavar="FILE", type=str,
@@ -181,11 +185,21 @@ class Config(reprconf.Config):
             filename = os.path.abspath(os.path.expanduser(namespace.config))
             if os.path.exists(filename) and os.path.isfile(filename):
                 config = reprconf.as_dict(filename)
-                self.update(config.get(config.keys()[0], {}))
+                if config.keys():
+                    config = config[config.keys()[0]]
+                    for option, value in config.iteritems():
+                        if option in namespace:
+                            self[option] = value
 
         for option, value in namespace.__dict__.iteritems():
             if option not in self and value is not None:
                 self[option] = value
+
+    def reload_config(self):
+        filename = self.get("config")
+        if filename is not None:
+            config = reprconf.as_dict(filename)
+            self.update(config.get(config.keys()[0], {}))
 
     def save_config(self, filename=None):
         if filename is None:
