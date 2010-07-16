@@ -158,7 +158,7 @@ class WikiPageAbout(WikiPage):
     """Pages of mime type +about/* use this for display."""
 
     def view(self):
-        return self.render("about.html")
+        return self.render("about.html", title="About SahrisWiki")
         
 class WikiPageText(WikiPage):
     """Pages of mime type text/* use this for display."""
