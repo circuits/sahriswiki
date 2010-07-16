@@ -93,10 +93,11 @@ class WikiPage(object):
         raise NotImplemented()
 
     def history(self):
+        history = list(self.storage.page_history(self.name))[:30]
         data = {
             "name": self.name,
             "title": "History of %s" % self.name,
-            "history": self.storage.page_history(self.name),
+            "history": history,
             "strftime": strftime,
             "gmtime": gmtime,
             "ctxnav": list(self._get_ctxnav("history"))
