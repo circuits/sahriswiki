@@ -12,67 +12,49 @@ from itertools import izip as zip
 
 from pyodict import odict
 
-ORACLE_ARRAYSIZE = 2048
+def mysql_session(*args, **kwargs):
+    try:
+        from MySQLdb import Connection
+    except:
+        raise DriverError("mysql", "No MySQL support available.")
 
-def create_connection(s, **kwargs):
-    d = parse_uri(s)
-    schema = d["schema"]
-    username = d["username"]
-    password = d["password"]
-    hostname = d["hostname"]
-    database = d["database"]
+    try:
+        return MySQLSession(Connection(*args, **kwargs))
+    except Exception, e:
+        raise ConnectionError("mysql", e)
 
-    if schema.lower() == "oracle":
-        try:
-            import cx_Oracle as oracle
-        except:
-            raise DriverError("oracle", "No Oracle support available.")
+def oracle_session(*args, **kwargs):
+    try:
+        from cx_Oracle import Connection
+    except:
+        raise DriverError("oracle", "No Oracle support available.")
 
-        try:
-            return OracleSession(oracle.connect(
-                dsn=hostname, user=username,
-                password=password), **kwargs)
-        except Exception, e:
-            raise ConnectionError("oracle", e)
+    try:
+        return OracleSession(Connection(*args, **kwargs))
+    except Exception, e:
+        raise ConnectionError("oracle", e)
 
-    elif schema.lower() == "mysql":
-        try:
-            import MySQLdb as mysql
-        except:
-            raise DriverError("mysql", "No MySQL support available.")
+def sqlite_session(*args, **kwargs):
+    try:
+        from sqlite3 import Connection
+    except:
+        raise DriverError("sqlite", "No SQLite support available.")
 
-        try:
-            return MySQLSession(mysql.connect(
-                host=hostname,  user=username,
-                passwd=password, db=database), **kwargs)
-        except Exception, e:
-            raise ConnectionError("mysql", e)
+    try:
+        return SQLiteSession(Connection(*args, **kwargs))
+    except sqlite.Error, e:
+        raise ConnectionError("sqlite", e)
 
-    elif schema.lower() == "sqlite":
-        try:
-            import sqlite3 as sqlite
-        except:
-            raise DriverError("sqlite", "No SQLite support available.")
+types = {
+    "mysql": mysql_session,
+    "oracle": oracle_session,
+    "sqlite": sqlite_session,
+}
 
-        if database.lower() == ":memory:":
-            filename = ":memory:"
-        else:
-            import os
-            filename = os.path.abspath(
-                    os.path.expanduser(database))
+def create_connection(type, *args, **kwargs):
+    return types[type](*args, **kwargs)
 
-        try:
-            return SQLiteSession(
-                    sqlite.connect(filename), **kwargs)
-        except sqlite.Error, e:
-            raise ConnectionError("sqlite", e)
-
-def parse_uri(s):
-    m = re.match("(?P<schema>oracle|mysql|sqlite)://"
-            "((?P<username>.*?):(?P<password>.*?)@(?P<hostname>.*?)/)?"
-            "(?P<database>.*)",
-            s, re.IGNORECASE)
-    return m.groupdict()
+Connection = create_connection
 
 class DriverError(Exception):
 
@@ -103,17 +85,8 @@ class BaseSession(object):
         self._cx = cx
         self._cu = self.cursor(True)
 
-    def close(self):
-        self._cx.close()
-
-    def rollback(self):
-        self._cx.rollback()
-
     def _execute(self, sql=None, *args, **kwargs):
         pass
-
-    def commit(self):
-        self._cx.commit()
 
     def cursor(self, create=False):
         if create:
@@ -121,10 +94,19 @@ class BaseSession(object):
         else:
             return self._cu
 
+    def close(self):
+        self._cx.close()
+
+    def rollback(self):
+        self._cx.rollback()
+
+    def commit(self):
+        self._cx.commit()
+
     def execute(self, sql=None, *args, **kwargs):
         try:
             self._execute(sql, *args, **kwargs)
-            return Records(self, self.getCursor())
+            return Records(self, self.cursor())
         except Exception, e:
             raise DatabaseError(sql, e)
 
@@ -142,15 +124,15 @@ class MySQLSession(BaseSession):
 
 class OracleSession(BaseSession):
 
+    ORACLE_ARRAYSIZE = 2048
+
     def __init__(self, *args, **kwargs):
         super(OracleSession, self).__init__(*args, **kwargs)
 
-        self.getCursor().arraysize = ORACLE_ARRAYSIZE
+        self.getCursor.arraysize = ORACLE_ARRAYSIZE
 
     def _execute(self, sql=None, *args, **kwargs):
         self._cu.execute(sql, *args, **kwargs)
-
-Connection = create_connection
 
 class Records(object):
 
@@ -166,6 +148,9 @@ class Records(object):
             self.fields = [x[0] for x in self.cursor.description]
         else:
             self.fields = []
+
+    def __repr__(self):
+        return "<%s %d rows>" % (self.__class__.__name__, len(self))
         
     def __iter__(self):
         "x.__iter__() <==> iter(x)"
@@ -195,10 +180,12 @@ class Record(odict):
 
         self.records = records
 
-        for k, v in data:
-            self.add(k, v)
-    
-    def add(self, k, v):
+        self.update(data)
+
+    def __repr__(self):
+        return "<%s (%r)>" % (self.__class__.__name__, self.keys())
+
+    def __setitem__(self, k, v):
         if type(k) == tuple:
             k = k[0]
 
@@ -207,9 +194,9 @@ class Record(odict):
                 fields = map(lambda x: x[0], v.description)
                 v = Records(self.records, v)
 
-        self[k] = v
+        super(Record, self).__setitem__(k, v)
         setattr(self, k, v)
 
-    def remove(self, k):
-        del self[k]
+    def __delitem__(self, k):
+        super(Record, self).__delitem__(k)
         delattr(self, k)
