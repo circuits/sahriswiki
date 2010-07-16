@@ -116,6 +116,17 @@ class Environment(BaseComponent):
         self.request = None
         self.response = None
 
+    def _config(self):
+        """Return a safe config dict (with sensitive data removed)"""
+
+        hidden = ("password",)
+
+        config = self.config.__dict__.copy()
+
+        for key in hidden:
+            if key in config:
+                del config[key]
+
     def _login(self):
         return self.request.session.get("login", self.request.login)
 
@@ -219,8 +230,8 @@ class Environment(BaseComponent):
             },
             "url":         self.url,
             "site":        self.site,
-            "config":      self.config,
             "include":     self.include,
+            "config":      self._config(),
             "staticurl":   self.staticurl,
             "permissions": self._permissions(),
             "nav":         chain(self._nav(), data.get("nav", [])),
