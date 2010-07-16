@@ -291,9 +291,9 @@ class Root(BaseController):
 
         return "\r\n".join((
             "User-agent: *",
-            "Disallow: /+*",
-            "Disallow: /%2b*",
-            "Disallow: /%2B*",
+            "Disallow: /+",
+            "Disallow: /%2b",
+            "Disallow: /%2B",
         ))
 
     @expose("+diff")
