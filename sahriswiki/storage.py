@@ -607,15 +607,15 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
                 if name.startswith("."):
                     continue
                 path = os.path.join(root, name)
+                rel = os.path.relpath(path, self.path)
+                base = os.path.dirname(rel)
                 if os.path.isdir(path):
-                    has_index = any([os.path.join(name, index) in self
+                    has_index = any([os.path.join(base, name, index) in self
                         for index in self.indexes])
-                    rel = os.path.relpath(path, self.path)
                     yield {(url_unquote(rel), url_unquote(name), has_index):
                             sorted(generate(path))}
                 elif os.path.isfile(path) and not os.path.islink(path) and \
                         name not in self.indexes:
-                    rel = os.path.relpath(path, self.path)
                     yield url_unquote(rel),  url_unquote(name)
 
         return generate(self.path)
