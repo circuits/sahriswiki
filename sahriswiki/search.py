@@ -280,9 +280,6 @@ without would yet you your yours yourself yourselves""")).split())
     def reindex_page(self, page, title, cursor, text=None):
         """Updates the content of the database, needs locks around."""
 
-        print "Reindexing:"
-        print " ", page, title
-
         if text is None:
             _get_text = getattr(page, '_get_text', lambda: u'')
             try:
@@ -323,17 +320,12 @@ without would yet you your yours yourself yourselves""")).split())
         cursor = self.con.cursor()
         cursor.execute('BEGIN IMMEDIATE TRANSACTION;')
         try:
-            print "Reindexing..."
             for title in pages:
                 page = environ.get_page(title)
-                print " ", title, page
                 self.reindex_page(page, title, cursor)
             cursor.execute('COMMIT TRANSACTION;')
             self.empty = False
         except Exception, e:
-            print "ERROR: ", e
-            from traceback import format_exc
-            print format_exc()
             cursor.execute('ROLLBACK;')
             raise
 

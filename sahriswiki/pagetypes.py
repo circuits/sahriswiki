@@ -79,7 +79,6 @@ class WikiPage(object):
 
         if hasattr(self.storage, "page_parent"):
             data["parent"] = self.storage.page_parent(self.name)
-            print "parent:", self.name, data["parent"]
 
         self.environ.page = data
 
