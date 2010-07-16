@@ -121,7 +121,7 @@ class Environment(BaseComponent):
 
         hidden = ("password",)
 
-        config = self.config.__dict__.copy()
+        config = self.config.copy()
 
         for key in hidden:
             if key in config:
