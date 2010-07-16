@@ -55,7 +55,6 @@ class Root(BaseController):
             data = {"title": name}
             if hasattr(self.storage, "page_parent"):
                 data["parent"] = self.storage.page_parent(name)
-            print "parent:", name, data["parent"]
             return self.render("notfound.html", **data)
 
     @expose("+download")
