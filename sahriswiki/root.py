@@ -72,7 +72,6 @@ class Root(BaseController):
 
         data = {
             "title": "Upload",
-            "ctxnav": list(self.environ._ctxnav("history")),
         }
 
         if action == "upload":
@@ -143,7 +142,7 @@ class Root(BaseController):
         if not query:
             data = {
                 "title": "Page Index",
-                "ctxnav": list(self.environ._ctxnav("history")),
+                "ctxnav": self.environ._ctxnav("index"),
             }
             if hasattr(self.storage, "all_pages_tree"):
                 data["pages"] = sorted(self.storage.all_pages_tree())
@@ -164,7 +163,7 @@ class Root(BaseController):
             "name": "Search",
             "query": query,
             "results": list(search(words)),
-            "ctxnav": list(self.environ._ctxnav("history")),
+            "ctxnav": self.environ._ctxnav("search"),
         }
 
         return self.render("search.html", **data)
@@ -180,7 +179,7 @@ class Root(BaseController):
             "title": "BackLinks for \"%s\"" % name,
             "pages": sorted(self.search.page_backlinks(name),
                 key=itemgetter(0)),
-            "ctxnav": list(self.environ._ctxnav("history")),
+            "ctxnav": self.environ._ctxnav("search"),
         }
         return self.render("index.html", **data)
 
@@ -237,7 +236,7 @@ class Root(BaseController):
         data = {
             "title": "Orphaned Pages",
             "pages": sorted(self.search.orphaned_pages(), key=itemgetter(0)),
-            "ctxnav": list(self.environ._ctxnav("history")),
+            "ctxnav": self.environ._ctxnav("index"),
         }
 
         return self.render("orphaned.html", **data)
@@ -251,7 +250,7 @@ class Root(BaseController):
             "title": "Wanted Pages",
             "pages": sorted(self.search.wanted_pages(),
                 key=itemgetter(0), reverse=True),
-            "ctxnav": list(self.environ._ctxnav("history")),
+            "ctxnav": self.environ._ctxnav("index"),
         }
 
         return self.render("wanted.html", **data)
@@ -268,7 +267,7 @@ class Root(BaseController):
             "history": self.storage.history(),
             "strftime": strftime,
             "gmtime": gmtime,
-            "ctxnav": list(self.environ._ctxnav("history")),
+            "ctxnav": self.environ._ctxnav("history"),
         }
 
         return self.render("recentchanges.html", **data)

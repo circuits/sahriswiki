@@ -153,11 +153,25 @@ class Environment(BaseComponent):
         yield ("Help/Guide",  self.url("/Help"))
         yield ("About",       self.url("/+about"))
 
-    def _ctxnav(self, type="view"):
-        if type in ("history", "index", "search"):
+    def _ctxnav(self, type="view", name=None):
+        if name and type == "view":
+            if self._login() or not self.config.get("readonly"):
+                yield ("Edit", self.url("/+edit/%s" % name))
+            yield ("Download", self.url("/+download/%s" % name))
+            yield ("History",  self.url("/+history/%s" % name))
+        elif type in ("index", "search"):
             yield ("Index",    self.url("/+search"))
             yield ("Orphaned", self.url("/+orphaned"))
             yield ("Wanted",   self.url("/+wanted"))
+        elif type == "history":
+            if name:
+                yield ("RSS 1.0", self.url("/+feed/%s/?format=rss1") % name)
+                yield ("RSS 2.0", self.url("/+feed/%s/?format=rss2") % name)
+                yield ("Atom",    self.url("/+feed/%s/?format=atom") % name)
+            else:
+                yield ("RSS 1.0", self.url("/+feed/?format=rss1"))
+                yield ("RSS 2.0", self.url("/+feed/?format=rss2"))
+                yield ("Atom",    self.url("/+feed/?format=atom"))
 
     def _create_users(self):
         users = {"admin": md5(self.config.get("password")).hexdigest()}
@@ -242,7 +256,7 @@ class Environment(BaseComponent):
             "staticurl":   self.staticurl,
             "permissions": self._permissions(),
             "nav":         chain(self._nav(), data.get("nav", [])),
-            "crxnav":      chain(self._ctxnav(), data.get("ctxnav", [])),
+            "ctxnav":      chain(self._ctxnav(), data.get("ctxnav", [])),
             "metanav":     chain(self._metanav(), data.get("metanav", [])),
         })
         t = self.templates.load(template)
