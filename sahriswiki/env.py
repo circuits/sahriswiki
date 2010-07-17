@@ -139,6 +139,7 @@ class Environment(BaseComponent):
     def _permissions(self):
         if self._login():
             yield "PAGE_EDIT"
+            yield "CONFIG_VIEW"
 
     def _nav(self):
         yield
