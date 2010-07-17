@@ -12,14 +12,14 @@
 ----
 
 == Breadcrumbs ==
-**Status**: Proposed
+**Status**: DONE
 
 When accessing a wiki in subpages (such as this Ideas wiki under Docs then Development), provide some means of linking to it's parents such as Docs / Development , being separate links back up to their default index.  
 
 ----
 
 == Embed Search to Not Found Results ==
-**Status**: Proposed
+**Status**: DONE
 
 When trying to access a wiki that does not exist (for example typing /wikiformatting vs /WikiFormatting), maybe have a brief "Did you mean:" listing out wiki pages that may match closely to the requested title.
 
@@ -39,7 +39,7 @@ The suggestion would be that if the location being requested is already a subfol
 ----
 
 == Remembering previously viewed page ==
-**Status**: Proposed
+**Status**: DONE
 
 Upon clicking 'login' you are simply taken to +login and told login is successful (if of course you entered proper credentials). It would instead be nice that upon clicking login, and providing proper credentials that you be taken back to the page you were viewing a the time of clicking Login. 
 
