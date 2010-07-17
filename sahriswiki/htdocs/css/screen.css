@@ -254,16 +254,94 @@ td { padding: 2px; }
 #content div {
 	padding : 0 4em 2em 4em;
 }
-
 #ctxnav {
     text-align: left;
 	font : 85% sans-serif;
 }
+/* 
 #ctxnav li {
 	display : inline;
 }
 #ctxnav li a {
 	padding : 0.75em 0.5em;
+}
+*/
+
+/*------------------------------------*\
+	NAV
+\*------------------------------------*/
+#ctxnav ul{
+	float:left;
+	width:100%;
+	list-style:none;
+	font-weight:bold;
+	margin-bottom:10px;
+}
+#ctxnav ul li{
+	float:left;
+	margin-right:10px;
+	position:relative;
+	display:block;
+}
+#ctxnav ul li a{
+	display:block;
+	padding:5px;
+	/* color:#90bffc; */
+	background:#fcfcfc;
+	text-decoration:none;
+
+	/* text-shadow:1px 1px 1px rgba(0,0,0,0.20); /* Text shadow to lift it a little */
+	-moz-border-radius:2px;
+	-webkit-border-radius:2px;
+	border-radius:2px;
+}
+#ctxnav ul li a:hover{
+	color:#fff;
+	background:#20b; /* Solid colour fall-back */
+	/* background:rgba(34,0,187,0.75); /* It'll look nice semi-transparent */
+	text-shadow:1px 1px 1px rgba(0,0,0,0.20);
+	text-decoration: none;
+}
+
+/*--- DROPDOWN ---*/
+#ctxnav ul ul{
+	list-style:none;
+	position:absolute;
+	left:-9999px; /* Hide off-screen when not needed (this is more accessible than display:none;) */
+	opacity:0; /* Set initial state to transparent */
+	-webkit-transition:0.25s linear opacity; /* Make the dropdown fade-in in Webkit */
+}
+#ctxnav ul ul li{
+	padding-top:1px; /* Introducing a padding between the li and the a give the illusion spaced items */
+	float:none;
+}
+#ctxnav ul ul a{
+	white-space:nowrap; /* Stop text wrapping and creating multi-line dropdown items */
+	display:block;
+}
+#ctxnav ul li:hover ul{ /* Display the dropdown on hover */
+	left:0; /* Bring back on-screen when needed */
+	opacity:1; /* Fade to opaque */
+}
+#ctxnav ul li:hover a{ /* Set styles for top level when dropdown is hovered */
+	background:#20b; /* Solid colour fall-back */
+	/* background:rgba(34,0,187,0.20	); /* It'll look nice semi-transparent */
+	color: #fff;
+	text-decoration: none;;
+}
+#ctxnav ul li:hover ul a{ /* Override some top level styles when dropdown is hovered */
+	text-decoration:none;
+	background-color: #e3dfff;
+	color: #437fda;
+	-webkit-transition:-webkit-transform 0.075s linear;
+}
+#ctxnav ul li:hover ul li a:hover{ /* Set styles for dropdown when items are hovered */
+	text-decoration: underline;
+	background-color: #c6beff;
+	color: #fff;
+	/* -moz-transform:scale(1.05);
+	-webkit-transform:scale(1.05); */
+	
 }
 
 
