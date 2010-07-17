@@ -158,13 +158,14 @@ class Environment(BaseComponent):
     def _ctxnav(self, type="view", name=None):
         if name and type == "view":
             if self._login() or not self.config.get("readonly"):
-                yield ("Edit", self.url("/+edit/%s" % name))
-            yield ("Download", self.url("/+download/%s" % name))
-            yield ("History",  self.url("/+history/%s" % name))
+                yield ("Edit",    self.url("/+edit/%s" % name))
+            yield ("Download",    self.url("/+download/%s" % name))
+            yield ("History",     self.url("/+history/%s" % name))
+            yield ("BackLinks",   self.url("/+backlinks/%s" % name))
         elif type in ("index", "search"):
-            yield ("Index",    self.url("/+search"))
-            yield ("Orphaned", self.url("/+orphaned"))
-            yield ("Wanted",   self.url("/+wanted"))
+            yield ("Index",       self.url("/+search"))
+            yield ("Orphaned",    self.url("/+orphaned"))
+            yield ("Wanted",      self.url("/+wanted"))
         elif type == "history":
             if name:
                 yield ("RSS 1.0", self.url("/+feed/%s/?format=rss1") % name)
