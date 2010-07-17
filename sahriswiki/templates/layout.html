@@ -47,9 +47,9 @@
 		<div id="main">
 			<div id="header">
 				<h1>
-     ${(defined('title') and title) \
-         or (defined('page') and page['base']) \
-         or config.get("frontpage")}
+      ${(defined('title') and title) \
+          or (defined('page') and page['base']) \
+          or config.get("frontpage")}
 				</h1>
 
 				<div id="metanav" py:if="defined('metanav')">
