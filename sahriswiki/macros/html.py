@@ -29,11 +29,15 @@ def source(macro, environ, context, *args, **kwargs):
     return tag.pre(environ.parser.render(
         macro.body, environ=environ).decode("utf-8"))
 
-def div(macro, environ, context, cls=None, float=None, id=None, style=None,
-        *args, **kwargs):
+def div(macro, environ, context, *args, **kwargs):
 
     if macro.body is None:
         return None
+
+    id = kwargs.get("id", None)
+    cls = kwargs.get("class", None)
+    float = kwargs.get("float", None)
+    style = kwargs.get("style", None)
 
     if float and float in ("left", "right"):
         style = "float: %s; %s" % (float, style)
