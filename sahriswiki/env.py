@@ -139,6 +139,9 @@ class Environment(BaseComponent):
     def _permissions(self):
         if self._login():
             yield "PAGE_EDIT"
+            yield "PAGE_MOVE"
+            yield "PAGE_DELETE"
+            yield "PAGE_UPLOAD"
             yield "CONFIG_VIEW"
 
     def _nav(self):
@@ -156,24 +159,30 @@ class Environment(BaseComponent):
         yield ("About",          self.url("/+about"),   )
 
     def _ctxnav(self, type="view", name=None):
+        permissions = self._permissions()
         if name and type == "view":
-            if self._login() or not self.config.get("readonly"):
-                yield ("Edit",    self.url("/+edit/%s" % name))
-            yield ("Download",    self.url("/+download/%s" % name))
-            yield ("History",     self.url("/+history/%s" % name))
+            yield ("Functions",     self._ctxnav("func", name),)
+            yield ("Information",   self._ctxnav("info", name),)
+            yield ("Miscellaneous", self._ctxnav("misc", name),)
         elif type in ("index", "search"):
-            yield ("Index",       self.url("/+search"))
-            yield ("Orphaned",    self.url("/+orphaned"))
-            yield ("Wanted",      self.url("/+wanted"))
+            yield ("Index",         self.url("/+search"))
+            yield ("Orphaned",      self.url("/+orphaned"))
+            yield ("Wanted",        self.url("/+wanted"))
         elif type == "history":
             if name:
-                yield ("RSS 1.0", self.url("/+feed/%s/?format=rss1") % name)
-                yield ("RSS 2.0", self.url("/+feed/%s/?format=rss2") % name)
-                yield ("Atom",    self.url("/+feed/%s/?format=atom") % name)
+                yield ("RSS 1.0",   self.url("/+feed/%s/?format=rss1") % name)
+                yield ("RSS 2.0",   self.url("/+feed/%s/?format=rss2") % name)
+                yield ("Atom",      self.url("/+feed/%s/?format=atom") % name)
             else:
-                yield ("RSS 1.0", self.url("/+feed/?format=rss1"))
-                yield ("RSS 2.0", self.url("/+feed/?format=rss2"))
-                yield ("Atom",    self.url("/+feed/?format=atom"))
+                yield ("RSS 1.0",   self.url("/+feed/?format=rss1"))
+                yield ("RSS 2.0",   self.url("/+feed/?format=rss2"))
+                yield ("Atom",      self.url("/+feed/?format=atom"))
+        elif type == "func":
+            if self._login() or not self.config.get("readonly"):
+                yield ("Edit",      self.url("/+edit/%s" % name))
+            yield ("Download",      self.url("/+download/%s" % name))
+        elif type == "info":
+            yield ("History",       self.url("/+history/%s" % name))
 
     def _breadcrumbs(self, page=None):
         yield ("", "Home", "Home",)
