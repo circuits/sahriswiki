@@ -79,26 +79,24 @@
     <div id="content">${select('*|text()')}</div>
 
     <py:def function="display_nav(nav)">
-     <ul>
-      <py:for each="item in nav">
-       <py:choose test="type(item[1])">
-        <py:when test="str">
-         <py:with vars="text, href = item">
-          <li><a href="${href}">${text}</a></li>
-         </py:with>
-        </py:when>
-        <py:otherwise>
-         <py:with vars="text, nav = item">
-          <li><a href="#">${text}</a><ul>${display_nav(nav)}</ul></li>
-         </py:with>
-        </py:otherwise>
-       </py:choose>
-      </py:for>
-     </ul>
+     <py:for each="item in nav">
+      <py:choose test="type(item[1])">
+       <py:when test="str">
+        <py:with vars="text, href = item">
+         <li><a href="${href}">${text}</a></li>
+        </py:with>
+       </py:when>
+       <py:otherwise>
+        <py:with vars="text, nav = item">
+         <li><a href="#">${text}</a><ul>${display_nav(nav)}</ul></li>
+        </py:with>
+       </py:otherwise>
+      </py:choose>
+     </py:for>
     </py:def>
 
     <div id="ctxnav" py:if="defined('ctxnav')">
-     ${display_nav(ctxnav)}
+     <ul>${display_nav(ctxnav)}</ul>
     </div>
 
 	 		<div id="footer">
