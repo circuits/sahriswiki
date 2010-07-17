@@ -57,10 +57,15 @@ class WikiPage(object):
         text = self._get_text()
         rev, node, date, author, comment = self.storage.page_meta(self.name)
 
+        base = os.path.basename(self.name)
+        parent = os.path.dirname(self.name)
+
         data = {
             "rev": rev,
+            "base": base,
             "date": date,
             "text": text,
+            "parent": parent,
             "author": author,
             "name": self.name,
             "comment": comment,
