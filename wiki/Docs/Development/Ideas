@@ -15,3 +15,21 @@
 **Status**: Proposed
 
 When accessing a wiki in subpages (such as this Ideas wiki under Docs then Development), provide some means of linking to it's parents such as Docs / Development , being separate links back up to their default index.  
+
+----
+
+== Embed Search to Not Found Results ==
+**Status**: Proposed
+
+When trying to access a wiki that does not exist (for example typing /wikiformatting vs /WikiFormatting), maybe have a brief "Did you mean:" listing out wiki pages that may match closely to the requested title.
+ 
+== Selective Note on New Pages ==
+**Status**: Proposed
+
+In the context of creating a new page under an already existing subfolder, the following note is shown.
+
+<<code lang="text">>
+NOTE: This page's parent is http://wiki.kbeezie.com/Docs/Development. If you create http://wiki.kbeezie.com/Docs/Development/RoadMap it's parent will be renamed to an index page.
+<</code>>
+
+The suggestion would be that if the location being requested is already a subfolder (ie: check to see if for example /Docs/Development/Index already exists), then do not show the Note, otherwise show the note when appropriate (either Index does not exist, or if easier to see if the parent is already a folder). 
