@@ -80,6 +80,16 @@
      ${include(config.get('menu'))}
     </div>
 
+    <div py:if="breadcrumb" id="breadcrumb" >
+     <p>You are here:
+      <ul>
+       <li py:for="name in breadcrumb">
+        <a href="${url('/%s' % name)}">${name}</a>
+       </li>
+      </ul>
+     </p>
+    </div>
+
     <div id="content">${select('*|text()')}</div>
 
     <div id="ctxnav" py:if="defined('ctxnav')">
