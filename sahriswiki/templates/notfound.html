@@ -10,6 +10,16 @@
    The page <strong>${title}</strong> you have requested
    cannot be found.
   </p>
+  <py:if test="results">
+   <p>Did you mean of one:
+    <ol>
+     <li py:for="score, name in results">
+      <b><a href="${url('/%s' % name)}">${name}</a></b>
+      <i>${score}</i>
+     </li>
+    </ol>
+   </p>
+  </py:if>
   <py:if test="'PAGE_EDIT in permissions'">
    <p>
     You can:
