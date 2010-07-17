@@ -67,6 +67,7 @@ form p.button {
 	text-align : right;
 	margin-right: 1em;
 	padding-top: 7px;
+	margin-bottom: 7px;
 }
 form p.input,
 form p.text {
