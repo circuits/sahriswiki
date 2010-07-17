@@ -20,6 +20,7 @@ from feedformatter import Feed
 
 from circuits.web.controllers import expose, BaseController
 
+from highlight import highlight
 from errors import ForbiddenErr, NotFoundErr
 
 FIXLINES = re.compile("(\r[^\n])|(\r\n)")
@@ -333,7 +334,7 @@ class Root(BaseController):
         data = {
             "title": "diff -r %s -r %s %s" % (from_rev, to_rev, name),
             "name": self.name,
-            "diff": diff,
+            "diff": highlight(diff, lang="diff"),
         }
 
         return self.render("diff.html", **data)
