@@ -5,13 +5,31 @@
  <xi:include href="layout.html" />
  <head></head>
  <body>
+  <py:if test="'PAGE_EDIT in permissions'">
+  	<div class="sidebar">
+	<h4>Options</h4>
+	<p>
+		<a href="${url('/+edit', title)}">Create the Page</a><br/>
+		<a href="${url('/+upload', title)}">Upload a File</a>
+    </p>
+	<py:if test="defined('parent')">
+    <p py:with="parent, type = parent" if="type == 'dir' and not parent == '.'">
+     <strong>NOTE:</strong>
+     This page's parent is <a href="${url('/%s' % parent)}">${parent}</a>.
+     If you create <a href="${url('/%s' % title)}">${title}</a> it's parent
+     will be renamed to an index page.
+    </p>
+   </py:if>
+   </div>
+  </py:if> 
+ 
   <h1>Page Not Found</h1>
   <p>
    The page <strong>${title}</strong> you have requested
    cannot be found.
   </p>
   <py:if test="results">
-   <p>Did you mean of one:
+   <p>Did you mean:
     <ol>
      <li py:for="score, name in results">
       <b><a href="${url('/%s' % name)}">${name}</a></b>
@@ -20,22 +38,6 @@
     </ol>
    </p>
   </py:if>
-  <py:if test="'PAGE_EDIT in permissions'">
-   <p>
-    You can:
-    <ul>
-     <li><a href="${url('/+edit', title)}">Create the Page</a></li>
-     <li><a href="${url('/+upload', title)}">Upload a File</a></li>
-    </ul>
-   </p>
-   <py:if test="defined('parent')">
-    <p py:with="parent, type = parent" if="type == 'dir' and not parent == '.'">
-     <strong>NOTE:</strong>
-     This page's parent is <a href="${url('/%s' % parent)}">${parent}</a>.
-     If you create <a href="${url('/%s' % title)}">${title}</a> it's parent
-     will be renamed to an index page.
-    </p>
-   </py:if>
-  </py:if>
+  <br class="clearside"/>
  </body>
 </html>
