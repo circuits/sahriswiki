@@ -147,9 +147,6 @@ class Environment(BaseComponent):
             yield "PAGE_UPLOAD"
             yield "CONFIG_VIEW"
 
-    def _nav(self):
-        yield
-
     def _metanav(self):
         if not self._login():
             yield ("Login",      self.url("/+login"),   )
@@ -180,17 +177,17 @@ class Environment(BaseComponent):
                 yield ("RSS 1.0",   self.url("/+feed/?format=rss1"))
                 yield ("RSS 2.0",   self.url("/+feed/?format=rss2"))
                 yield ("Atom",      self.url("/+feed/?format=atom"))
-        elif type == "func":
+        elif name and type == "func":
             if "PAGE_EDIT" in permissions:
                 yield ("Edit",      self.url("/+edit/%s" % name))
             if "PAGE_MOVE" in permissions:
                 yield ("Move",      self.url("/+move/%s" % name))
             if "PAGE_DELETE" in permissions:
                 yield ("Delete",    self.url("/+delete/%s" % name))
-        elif type == "info":
+        elif name and type == "info":
             yield ("History",       self.url("/+history/%s" % name))
             yield ("Feeds",          self._ctxnav("history", name))
-        elif type == "misc":
+        elif name and type == "misc":
             yield ("Download",      self.url("/+download/%s" % name))
             if "PAGE_UPLOAD" in permissions:
                 yield ("Upload",    self.url("/+upload/%s" % name))
@@ -295,10 +292,9 @@ class Environment(BaseComponent):
             "config":      self._config(),
             "staticurl":   self.staticurl,
             "permissions": self._permissions(),
-            "breadcrumbs": list(self._breadcrumbs(data.get("page", None))),
-            "nav":         chain(self._nav(), data.get("nav", [])),
-            "ctxnav":      chain(self._ctxnav(), data.get("ctxnav", [])),
+            "ctxnav":      chain((self._ctxnav(), data.get("ctxnav", [])),
             "metanav":     chain(self._metanav(), data.get("metanav", [])),
+            "breadcrumbs": list(self._breadcrumbs(data.get("page", None))),
         })
         t = self.templates.load(template)
         return t.generate(**data).render("xhtml", doctype="html")
