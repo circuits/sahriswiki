@@ -44,17 +44,13 @@ def code(macro, environ, context, *args, **kwargs):
     else:
         lexer = None
 
-    attrs = {
-        "xml:space": "preserve",
-    }
-
     if lexer:
         text = pygments.highlight(macro.body, lexer, HTMLFormatter())
         output = genshi.core.Markup(text)
     elif macro.isblock:
         output = genshi.builder.tag.pre(macro.body)
     else:
-        output = genshi.builder.tag.code(macro.body, attrs)
+        output = genshi.builder.tag.code(macro.body)
 
     return output
 
