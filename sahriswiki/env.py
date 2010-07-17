@@ -174,6 +174,9 @@ class Environment(BaseComponent):
                 yield ("RSS 2.0", self.url("/+feed/?format=rss2"))
                 yield ("Atom",    self.url("/+feed/?format=atom"))
 
+    def _breadcrumb(self, name):
+        return name.split("/")
+
     def _create_users(self):
         users = {"admin": md5(self.config.get("password")).hexdigest()}
         htpasswd = self.config.get("htpasswd", None)
@@ -262,6 +265,7 @@ class Environment(BaseComponent):
             "config":      self._config(),
             "staticurl":   self.staticurl,
             "permissions": self._permissions(),
+            "breadcrumb":  self._breadcrumb(data["page"]["name"]),
             "nav":         chain(self._nav(), data.get("nav", [])),
             "ctxnav":      chain(self._ctxnav(), data.get("ctxnav", [])),
             "metanav":     chain(self._metanav(), data.get("metanav", [])),
