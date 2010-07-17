@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:py="http://genshi.edgewall.org/">
+ <xi:include href="layout.html" />
+ <head></head>
+ <body>
+  <div py:if="defined('filename')" id="message">
+   <a href="${url('/%s' % filename)}">${filename}</a>
+    uploaded successfully.
+  </div>
+  <div id="uploader">
+   <form method="post" action="" enctype="multipart/form-data">
+		 	<h4><label for="file">Browse for file::</label></h4>
+		 	<p class="input">
+    <input id="file" name="file" type="file" />
+		 	</p>
+		 	<p class="button">
+     <button name="action" type="submit" value="upload">Upload</button>
+		 	</p>
+   </form>
+  </div>
+ </body>
+</html>
