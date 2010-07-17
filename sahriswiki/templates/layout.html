@@ -88,14 +88,19 @@
        </py:when>
        <py:otherwise>
         <py:with vars="text, nav = item">
-         <li><a href="#">${text}</a><ul>${display_nav(nav)}</ul></li>
+         <li>
+          <a href="#">${text}</a>
+          <ul>
+            ${display_nav(nav)}
+          </ul>
+         </li>
         </py:with>
        </py:otherwise>
       </py:choose>
      </py:for>
     </py:def>
 
-    <div id="ctxnav" py:if="defined('ctxnav')">
+    <div id="ctxnav" class="nav" py:if="defined('ctxnav')">
      <ul>${display_nav(ctxnav)}</ul>
     </div>
 
