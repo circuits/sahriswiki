@@ -291,6 +291,19 @@ div.right {
 	width : 50%;
 }
 
+#content div.sidebar { 
+	margin-left: 1em;
+	float: right;
+	position: relative;
+	width: 30%;
+	padding: 0px; 
+	margin-right: 10px;
+}
+
+div.sidebar p { font-size: 12px; test-align: justify; margin-bottom: 10px; }
+div.sidebar h4 { font-size: 14px; font-weight: bold; margin-bottom: 10px; }
+div.sidebar ul { margin-bottom: 5px; margin-top: 5px; padding: 0px; }
+br.clearside { clear: right; }
 #footer {
 	font-size : 85%;
 	margin : auto;
