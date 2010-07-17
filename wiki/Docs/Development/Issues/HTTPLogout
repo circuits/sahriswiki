@@ -1,0 +1,13 @@
+= HTTP Logout =
+**Status**: WONTFIX
+
+When 'Logout' is clicked, you are logged out. However you are immediately prompted to login again. Ideally it would be nice if you are simply sent to the page you were viewing (like the idea above) after you are logged out. 
+
+PS: Attempting to re-enter your credentials on +logout will simply cause you to loop infinitely until you cancel. 
+
+> This can't be done. SahrisWiki uses HTTP Auth at it's core and
+> in order for the browser to forget about it's previous HTTP AUth
+> credentials a 401 Unauthorized error response must be returned.
+> --[[JamesMills]]
+----
+[[..|Issues]]
