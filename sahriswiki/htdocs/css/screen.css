@@ -256,7 +256,8 @@ td { padding: 2px; }
 }
 #ctxnav {
     text-align: left;
-	font : 85% sans-serif;
+	font-size: 11px;
+	font-family: Helvetica;
 }
 /* 
 #ctxnav li {
@@ -277,12 +278,13 @@ td { padding: 2px; }
 	font-weight:bold;
 	margin-bottom:10px;
 }
-#ctxnav ul li{
+#ctxnav ul li {
 	float:left;
-	margin-right:10px;
+	margin-right: 10px;
 	position:relative;
 	display:block;
 }
+
 #ctxnav ul li a{
 	display:block;
 	padding:5px;
@@ -314,6 +316,7 @@ td { padding: 2px; }
 #ctxnav ul ul li{
 	padding-top:1px; /* Introducing a padding between the li and the a give the illusion spaced items */
 	float:none;
+	margin-right: 0px; 
 }
 #ctxnav ul ul a{
 	white-space:nowrap; /* Stop text wrapping and creating multi-line dropdown items */
