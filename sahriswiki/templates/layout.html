@@ -70,10 +70,10 @@
      ${include(config.get('menu'))}
     </div>
 
-    <div py:if="breadcrumb" id="breadcrumb" >
-     <span py:with="last = len(breadcrumb) - 1"
-      py:for="i, (page, name) in enumerate(breadcrumb)">
-      <a href="${url('/%s' % page)}">${name}</a>
+    <div py:if="breadcrumbs" id="breadcrumbs" >
+     <span py:with="last = len(breadcrumbs) - 1"
+      py:for="i, (page, name, title) in enumerate(breadcrumbs)">
+      <a href="${url('/%s' % page)}" title="${title}">${name}</a>
       <py:if test="not i == last">&gt;</py:if>
      </span>
     </div>

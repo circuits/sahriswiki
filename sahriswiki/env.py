@@ -161,7 +161,6 @@ class Environment(BaseComponent):
                 yield ("Edit",    self.url("/+edit/%s" % name))
             yield ("Download",    self.url("/+download/%s" % name))
             yield ("History",     self.url("/+history/%s" % name))
-            yield ("BackLinks",   self.url("/+backlinks/%s" % name))
         elif type in ("index", "search"):
             yield ("Index",       self.url("/+search"))
             yield ("Orphaned",    self.url("/+orphaned"))
@@ -176,14 +175,17 @@ class Environment(BaseComponent):
                 yield ("RSS 2.0", self.url("/+feed/?format=rss2"))
                 yield ("Atom",    self.url("/+feed/?format=atom"))
 
-    def _breadcrumb(self, page=None):
+    def _breadcrumbs(self, page=None):
+        yield ("", "Home", "Home",)
         if page and "name" in page:
             xs = []
             name = page["name"]
-            yield ("", "Home",)
-            for x in name.split("/")[:-1]:
+            parts = name.split("/")
+            for x in parts[:-1]:
                 xs.append(x)
-                yield ("/".join(xs), x,)
+                yield ("/".join(xs), x, x,)
+            base = os.path.basename(name)
+            yield ("+backlinks/%s" % name, base, "View BackLinks",)
 
     def _create_users(self):
         users = {"admin": md5(self.config.get("password")).hexdigest()}
@@ -273,7 +275,7 @@ class Environment(BaseComponent):
             "config":      self._config(),
             "staticurl":   self.staticurl,
             "permissions": self._permissions(),
-            "breadcrumb":  list(self._breadcrumb(data.get("page", None))),
+            "breadcrumbs": list(self._breadcrumbs(data.get("page", None))),
             "nav":         chain(self._nav(), data.get("nav", [])),
             "ctxnav":      chain(self._ctxnav(), data.get("ctxnav", [])),
             "metanav":     chain(self._metanav(), data.get("metanav", [])),
