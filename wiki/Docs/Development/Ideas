@@ -10,3 +10,10 @@
   displayed.
 
 ----
+
+== Breadcrumbs ==
+**Status**: Proposed
+
+When accessing a wiki in subpages (such as this Ideas wiki under Docs then Development), provide some means of linking to it's parents such as Docs / Development , being separate links back up to their default index.  
+
+----
