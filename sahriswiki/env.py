@@ -146,13 +146,14 @@ class Environment(BaseComponent):
 
     def _metanav(self):
         if not self._login():
-            yield ("Login", self.url("/+login"))
+            yield ("Login",      self.url("/+login"),   )
         else:
-            yield ("Logout", self.url("/+logout"))
+            yield ("Logout",     self.url("/+logout"),  )
 
-        yield ("Preferences", self.url("/+prefs"))
-        yield ("Help/Guide",  self.url("/Help"))
-        yield ("About",       self.url("/+about"))
+        yield ("Preferences",    self.url("/+prefs"),   )
+        yield ("Recent Changes", self.url("/+history"), )
+        yield ("Help/Guide",     self.url("/Help"),     )
+        yield ("About",          self.url("/+about"),   )
 
     def _ctxnav(self, type="view", name=None):
         if name and type == "view":
