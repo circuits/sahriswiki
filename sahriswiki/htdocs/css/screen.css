@@ -312,6 +312,11 @@ br.clearside { clear: right; }
 	width : 65%;
 }
 
+#content #breadcrumb { padding: 0px; margin: 0px; margin-bottom: 8px; }
+#breadcrumb p { font-size: 11px; font-family: Helvetica; text-align: left; margin-bottom: 2px; line-height: 12px; }
+#breadcrumb p a { font-size: 11px; font-family: Helvetica; text-decoration: none; }
+#breadcrumb p a:hover { text-decoration: underline; }
+
 #content div.highlight { padding: 0px; } 
 
 hr { margin-bottom: 10px; }
