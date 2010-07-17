@@ -292,7 +292,7 @@ class Environment(BaseComponent):
             "config":      self._config(),
             "staticurl":   self.staticurl,
             "permissions": self._permissions(),
-            "ctxnav":      chain((self._ctxnav(), data.get("ctxnav", [])),
+            "ctxnav":      chain(self._ctxnav(), data.get("ctxnav", [])),
             "metanav":     chain(self._metanav(), data.get("metanav", [])),
             "breadcrumbs": list(self._breadcrumbs(data.get("page", None))),
         })
