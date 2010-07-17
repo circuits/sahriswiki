@@ -50,6 +50,8 @@ Upon clicking 'login' you are simply taken to +login and told login is successfu
 
 When 'Logout' is clicked, you are logged out. However you are immediately prompted to login again. Ideally it would be nice if you are simply sent to the page you were viewing (like the idea above) after you are logged out. 
 
+PS: Attempting to re-enter your credentials on +logout will simply cause you to loop infinitely until you cancel. 
+
 ----
 
 == Render History with Pygments ==
