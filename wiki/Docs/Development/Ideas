@@ -1,0 +1,17 @@
+= Development Ideas =
+//[[SahrisWiki]] Development Ideas//
+
+== Index Fallback ==
+**Status**: DONE
+
+* **-i/--index** option/config to be a list of defaults to fallback to.
+* If a user tries to view ##/foo/bar/## and bar is a sub-directory of foo then an
+  index (//as specified by the -i/--index option//) will be searched for and
+  displayed.
+
+----
+
+== Breadcrumbs ==
+**Status**: Proposed
+
+When accessing a wiki in subpages (such as this Ideas wiki under Docs then Development), provide some means of linking to it's parents such as Docs / Development , being separate links back up to their default index.  
