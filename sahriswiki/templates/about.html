@@ -63,7 +63,7 @@
      </table>
     </div>
 
-    <div py:if="config" id="config">
+    <div py:if="config and 'CONFIG_VIEW' in permissions" id="config">
      <h2>Configuration</h2>
      <table class="listing">
       <thead>
