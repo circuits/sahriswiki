@@ -82,8 +82,8 @@
 
     <div py:if="breadcrumb" id="breadcrumb" >
      <span py:with="last = len(breadcrumb) - 1"
-      py:for="i, name in enumerate(breadcrumb)">
-      <a href="${url('/%s' % name)}">${name}</a>
+      py:for="i, (page, name) in enumerate(breadcrumb)">
+      <a href="${url('/%s' % page)}">${name}</a>
       <py:if test="not i == last">&gt;</py:if>
      </span>
     </div>

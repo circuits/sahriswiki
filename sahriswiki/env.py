@@ -175,11 +175,13 @@ class Environment(BaseComponent):
                 yield ("Atom",    self.url("/+feed/?format=atom"))
 
     def _breadcrumb(self, page=None):
-        if page:
-            name = page.get("name", None)
-            if name:
-                return name.split("/")
-        return []
+        if page and "name" in page:
+            xs = []
+            name = page["name"]
+            yield ("", "Home",)
+            for x in name.split("/")[:-1]:
+                xs.append(x)
+                yield ("/".join(xs), x,)
 
     def _create_users(self):
         users = {"admin": md5(self.config.get("password")).hexdigest()}
@@ -269,7 +271,7 @@ class Environment(BaseComponent):
             "config":      self._config(),
             "staticurl":   self.staticurl,
             "permissions": self._permissions(),
-            "breadcrumb":  self._breadcrumb(data.get("page", None)),
+            "breadcrumb":  list(self._breadcrumb(data.get("page", None))),
             "nav":         chain(self._nav(), data.get("nav", [])),
             "ctxnav":      chain(self._ctxnav(), data.get("ctxnav", [])),
             "metanav":     chain(self._metanav(), data.get("metanav", [])),
