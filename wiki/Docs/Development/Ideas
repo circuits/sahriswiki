@@ -52,10 +52,10 @@ When 'Logout' is clicked, you are logged out. However you are immediately prompt
 
 PS: Attempting to re-enter your credentials on +logout will simply cause you to loop infinitely until you cancel. 
 
-This can't be done. SahrisWiki uses HTTP Auth at it's core and
-in order for the browser to forget about it's previous HTTP AUth
-credentials a 401 Unauthorized error response must be returned.
---[[JamesMills]]
+> This can't be done. SahrisWiki uses HTTP Auth at it's core and
+> in order for the browser to forget about it's previous HTTP AUth
+> credentials a 401 Unauthorized error response must be returned.
+> --[[JamesMills]]
 
 ----
 
