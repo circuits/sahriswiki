@@ -66,7 +66,7 @@
      ${include(config.get('menu'))}
     </div>
 
-    <div py:if="breadcrumb" id="breadcrumbs" >
+    <div py:if="breadcrumbs" id="breadcrumbs" >
      <span py:with="last = len(breadcrumbs) - 1"
       py:for="i, (page, name) in enumerate(breadcrumbs)">
       <a href="${url('/%s' % page)}">${name}</a>
