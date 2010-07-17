@@ -79,7 +79,7 @@
     <py:def function="display_nav(nav)">
      <py:for each="item in nav">
       <py:choose test="type(item[1])">
-       <py:when test="str">
+       <py:when test="unicode">
         <py:with vars="text, href = item">
          <li><a href="${href}">${text}</a></li>
         </py:with>

@@ -273,7 +273,7 @@ class WikiPageWiki(WikiPageColorText):
     def view(self):
         data = {
             "page": self._get_page_data(),
-            "ctxnav": list(self.environ._ctxnav("view", self.name))
+            "ctxnav": self.environ._ctxnav("view", self.name),
         }
         data["html"] = self.environ.parser.generate(
             data["page"]["text"], environ=(self.environ, data))
