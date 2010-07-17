@@ -1,0 +1,119 @@
+= Development Ideas =
+//[[SahrisWiki]] Development Ideas//
+
+== Index Fallback ==
+**Status**: DONE
+
+* **-i/--index** option/config to be a list of defaults to fallback to.
+* If a user tries to view ##/foo/bar/## and bar is a sub-directory of foo then an
+  index (//as specified by the -i/--index option//) will be searched for and
+  displayed.
+
+----
+
+== Breadcrumbs ==
+**Status**: DONE
+
+When accessing a wiki in subpages (such as this Ideas wiki under Docs then Development), provide some means of linking to it's parents such as Docs / Development , being separate links back up to their default index.  
+
+----
+
+== Embed Search to Not Found Results ==
+**Status**: DONE
+
+When trying to access a wiki that does not exist (for example typing /wikiformatting vs /WikiFormatting), maybe have a brief "Did you mean:" listing out wiki pages that may match closely to the requested title.
+
+----
+
+== Selective Note on New Pages ==
+**Status**: Proposed
+
+In the context of creating a new page under an already existing subfolder, the following note is shown.
+
+<<code lang="text">>
+NOTE: This page's parent is http://wiki.kbeezie.com/Docs/Development. If you create http://wiki.kbeezie.com/Docs/Development/RoadMap it's parent will be renamed to an index page.
+<</code>>
+
+The suggestion would be that if the location being requested is already a subfolder (ie: check to see if for example /Docs/Development/Index already exists), then do not show the Note, otherwise show the note when appropriate (either Index does not exist, or if easier to see if the parent is already a folder). 
+
+----
+
+== Remembering previously viewed page ==
+**Status**: DONE
+
+Upon clicking 'login' you are simply taken to +login and told login is successful (if of course you entered proper credentials). It would instead be nice that upon clicking login, and providing proper credentials that you be taken back to the page you were viewing a the time of clicking Login. 
+
+----
+
+== Proper Logout Behavior ==
+**Status**: Proposed
+
+When 'Logout' is clicked, you are logged out. However you are immediately prompted to login again. Ideally it would be nice if you are simply sent to the page you were viewing (like the idea above) after you are logged out. 
+
+PS: Attempting to re-enter your credentials on +logout will simply cause you to loop infinitely until you cancel. 
+
+----
+
+== Render History with Pygments ==
+**Status**: Proposed
+
+It would be nice for Pygments to be used in showing the history of wiki pages.
+
+Basically this:
+<<code lang="text">>
+--- Docs/Development/Ideas@4 2010-07-17T05:55:30Z
+
++++ Docs/Development/Ideas@5 2010-07-17T06:00:21Z
+
+@@ -36,3 +36,18 @@
+
+ 
+ The suggestion would be that if the location being requested is already a subfolder (ie: check to see if for example /Docs/Development/Index already exists), then do not show the Note, otherwise show the note when appropriate (either Index does not exist, or if easier to see if the parent is already a folder). 
+ 
++----
++
++== Remembering previously viewed page ==
++**Status**: Proposed
++
++Upon clicking 'login' you are simply taken to +login and told login is successful (if of course you entered proper credentials). It would instead be nice that upon clicking login, and providing proper credentials that you be taken back to the page you were viewing a the time of clicking Login. 
++
++----
++
++== Proper Logout Behavior ==
++**Status**: Proposed
++
++When 'Logout' is clicked, you are logged out. However you are immediately prompted to login again. Ideally it would be nice if you are simply sent to the page you were viewing (like the idea above) after you are logged out. 
++
++----
+<</code>>
+
+versus
+
+<<code lang="diff">>
+--- Docs/Development/Ideas@4 2010-07-17T05:55:30Z
+
++++ Docs/Development/Ideas@5 2010-07-17T06:00:21Z
+
+@@ -36,3 +36,18 @@
+
+ 
+ The suggestion would be that if the location being requested is already a subfolder (ie: check to see if for example /Docs/Development/Index already exists), then do not show the Note, otherwise show the note when appropriate (either Index does not exist, or if easier to see if the parent is already a folder). 
+ 
++----
++
++== Remembering previously viewed page ==
++**Status**: Proposed
++
++Upon clicking 'login' you are simply taken to +login and told login is successful (if of course you entered proper credentials). It would instead be nice that upon clicking login, and providing proper credentials that you be taken back to the page you were viewing a the time of clicking Login. 
++
++----
++
++== Proper Logout Behavior ==
++**Status**: Proposed
++
++When 'Logout' is clicked, you are logged out. However you are immediately prompted to login again. Ideally it would be nice if you are simply sent to the page you were viewing (like the idea above) after you are logged out. 
++
++----
+<</code>>
+
+----
