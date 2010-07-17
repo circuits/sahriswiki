@@ -65,6 +65,8 @@ form textarea {
 }
 form p.button {
 	text-align : right;
+	margin-right: 1em;
+	padding-top: 7px;
 }
 form p.input,
 form p.text {
@@ -73,6 +75,7 @@ form p.text {
 	padding : 0.25em;
 	margin : 0.25em 1em 0 1em;
 }
+form h4 { margin-left: 1em; margin-top: 7px; }
 
 p {
 	font-family: Helvetica;
@@ -245,6 +248,7 @@ td { padding: 2px; }
 	overflow : hidden;
 	padding : 0px;
 	padding-top: 10px;
+	margin-bottom: 5px;
 }
 #content div {
 	padding : 0 4em 2em 4em;
@@ -295,3 +299,7 @@ div.right {
 }
 
 #content div.highlight { padding: 0px; } 
+
+hr { margin-bottom: 10px; }
+
+fieldset { padding: 5px; }
