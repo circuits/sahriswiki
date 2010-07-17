@@ -22,7 +22,9 @@ When accessing a wiki in subpages (such as this Ideas wiki under Docs then Devel
 **Status**: Proposed
 
 When trying to access a wiki that does not exist (for example typing /wikiformatting vs /WikiFormatting), maybe have a brief "Did you mean:" listing out wiki pages that may match closely to the requested title.
- 
+
+----
+
 == Selective Note on New Pages ==
 **Status**: Proposed
 
