@@ -137,7 +137,10 @@ class Environment(BaseComponent):
                 "X-Forwarded-For", self.request.remote.ip)
 
     def _permissions(self):
-        if self._login():
+        login = self._login()
+        readonly = self.config.get("readonly")
+
+        if (readonly and login) or (not readonly):
             yield "PAGE_EDIT"
             yield "PAGE_MOVE"
             yield "PAGE_DELETE"
@@ -178,11 +181,19 @@ class Environment(BaseComponent):
                 yield ("RSS 2.0",   self.url("/+feed/?format=rss2"))
                 yield ("Atom",      self.url("/+feed/?format=atom"))
         elif type == "func":
-            if self._login() or not self.config.get("readonly"):
+            if "PAGE_EDIT" in permissions:
                 yield ("Edit",      self.url("/+edit/%s" % name))
-            yield ("Download",      self.url("/+download/%s" % name))
+            if "PAGE_MOVE" in permissions:
+                yield ("Move",      self.url("/+move/%s" % name))
+            if "PAGE_DELETE" in permissions:
+                yield ("Delete",    self.url("/+delete/%s" % name))
         elif type == "info":
             yield ("History",       self.url("/+history/%s" % name))
+            yield ("Feeds",          self._ctxnav("history", name))
+        elif type == "misc":
+            yield ("Download",      self.url("/+download/%s" % name))
+            if "PAGE_UPLOAD" in permissions:
+                yield ("Upload",    self.url("/+upload/%s" % name))
 
     def _breadcrumbs(self, page=None):
         yield ("", "Home", "Home",)
