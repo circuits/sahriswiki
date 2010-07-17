@@ -1,6 +1,6 @@
 = <<set-title "SahrisWiki Document ion", display=True>> =
 
-* [[Docs/Downloading|Downloading]] and [[Docs/Installing|Installing]]
-* [[Docs/Features|Features]]
-* [[Docs/Development|Development]]
+* [[./Downloading|Downloading]] and [[Docs/Installing|Installing]]
+* [[./Features|Features]]
+* [[./Development|Development]]
 
