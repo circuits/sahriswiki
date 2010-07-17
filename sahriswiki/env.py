@@ -204,10 +204,16 @@ class Environment(BaseComponent):
             return self.url("/+download", path)
         elif tag == "a":
             if path.startswith(".."):
+                path = path[2:]
+                if path and path[0] == "/":
+                    path = path[1:]
                 dirname = os.path.dirname(context["page"]["name"])
-                return os.path.join(dirname, path[2:])
+                return os.path.join(dirname, path)
             elif path.startswith("."):
-                return os.path.join(context["page"]["name"], path[1:])
+                path = path[1:]
+                if path and path[0] == "/":
+                    path = path[1:]
+                return os.path.join(context["page"]["name"], path)
         return path
 
     def url(self, *args):
