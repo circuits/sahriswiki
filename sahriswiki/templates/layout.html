@@ -78,8 +78,8 @@
 
     <py:def function="display_nav(nav)">
      <py:for each="item in nav">
-      <py:choose test="type(item[1])">
-       <py:when test="unicode">
+      <py:choose test="item and isinstance(item[1], basestring)">
+       <py:when test="True">
         <py:with vars="text, href = item">
          <li><a href="${href}">${text}</a></li>
         </py:with>
