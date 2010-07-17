@@ -52,7 +52,7 @@ def code(macro, environ, context, *args, **kwargs):
         text = pygments.highlight(macro.body, lexer, HTMLFormatter())
         output = genshi.core.Markup(text)
     elif macro.isblock:
-        output = genshi.builder.tag.pre(macro.body, attrs)
+        output = genshi.builder.tag.pre(macro.body)
     else:
         output = genshi.builder.tag.code(macro.body, attrs)
 
