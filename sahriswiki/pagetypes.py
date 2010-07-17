@@ -8,6 +8,7 @@
 """
 
 import csv
+from urlparse import urlparse
 from StringIO import StringIO
 from time import strftime, gmtime
 
@@ -109,6 +110,13 @@ class WikiPageLogin(WikiPage):
             return basic_auth(self.request, self.response, realm, users)
 
         self.request.session["login"] = self.request.login
+
+        referer = self.request.headers.get("Referer", None)
+        if referer:
+            base = urlparse(self.url())
+            link = urlparse(referer)
+            if all([base[i] == link[i] for i in range(2)]):
+                raise Redirect(referer)
 
         data = {
             "title": "Login",
