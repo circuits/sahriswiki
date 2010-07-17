@@ -380,7 +380,7 @@ class LinkElement(InlineElement):
             link_type = 'wiki'
             page_name = self.page_name(wikilink_mo)
             if self.path_func:
-                the_path = self.path_func(self.tag, page_name)
+                the_path = self.path_func(self.tag, page_name, environ)
             else:
                 the_path = urllib.quote(page_name.encode('utf-8'))
             url = urlparse.urljoin(self.base_url, the_path)
@@ -910,9 +910,9 @@ class WikiLink(WikiElement):
     def page_name(self,mo):
         return mo.group(1).replace(' ',self.space_char)
     
-    def href(self,mo):
+    def href(self,mo,environ):
         if self.path_func:
-            the_path = self.path_func(self.tag, self.page_name(mo))
+            the_path = self.path_func(self.tag, self.page_name(mo), environ)
         else:
             the_path = urllib.quote(self.page_name(mo).encode('utf-8'))
         return urlparse.urljoin(self.base_url, the_path)
@@ -923,7 +923,7 @@ class WikiLink(WikiElement):
         else:
             the_class = None
         return bldr.tag.__getattr__(self.tag)(self.alias(mo,element_store, environ),
-                                              href=self.href(mo),
+                                              href=self.href(mo, environ),
                                               class_=the_class)
     
     def alias(self,mo,element_store, environ):
