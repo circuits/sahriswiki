@@ -35,3 +35,19 @@ NOTE: This page's parent is http://wiki.kbeezie.com/Docs/Development. If you cre
 <</code>>
 
 The suggestion would be that if the location being requested is already a subfolder (ie: check to see if for example /Docs/Development/Index already exists), then do not show the Note, otherwise show the note when appropriate (either Index does not exist, or if easier to see if the parent is already a folder). 
+
+----
+
+== Remembering previously viewed page ==
+**Status**: Proposed
+
+Upon clicking 'login' you are simply taken to +login and told login is successful (if of course you entered proper credentials). It would instead be nice that upon clicking login, and providing proper credentials that you be taken back to the page you were viewing a the time of clicking Login. 
+
+----
+
+== Proper Logout Behavior ==
+**Status**: Proposed
+
+When 'Logout' is clicked, you are logged out. However you are immediately prompted to login again. Ideally it would be nice if you are simply sent to the page you were viewing (like the idea above) after you are logged out. 
+
+----
