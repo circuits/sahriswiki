@@ -7,6 +7,7 @@
 ...
 """
 
+import os
 import csv
 from urlparse import urlparse
 from StringIO import StringIO
@@ -299,6 +300,11 @@ class WikiPageImage(WikiPageFile):
     def view(self):
         if self.name not in self.storage:
             data = {"name": self.name}
+            self.storage.reopen()
+            self.search.update(self.environ)
+            name, _ = os.path.splitext(self.name)
+            data["results"] = sorted(self.search.find((name,)),
+                    key=itemgetter(0), reverse=True)[:5]
             return self.render("notfound.html", **data)
 
         data = {

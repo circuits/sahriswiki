@@ -53,6 +53,10 @@ class Root(BaseController):
             return page.view()
         except NotFoundErr:
             data = {"title": name}
+            self.storage.reopen()
+            self.search.update(self.environ)
+            data["results"] = sorted(self.search.find((name,)),
+                    key=itemgetter(0), reverse=True)[:5]
             if hasattr(self.storage, "page_parent"):
                 data["parent"] = self.storage.page_parent(name)
             return self.render("notfound.html", **data)
