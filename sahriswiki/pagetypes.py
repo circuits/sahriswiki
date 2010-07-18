@@ -157,15 +157,12 @@ class WikiPageColorText(WikiPageText):
     """Text pages, but displayed colorized with pygments"""
 
     def view(self):
-        import pdb
-        pdb.set_trace()
-
         data = {
             "page": self._get_page_data(),
             "ctxnav": list(self.environ._ctxnav("view", self.name)),
         }
 
-        data["html"] = highlight(data["text"], mime=self.mime)
+        data["html"] = highlight(data["page"]["text"], mime=self.mime)
         return self.render("view.html", **data)
 
 class WikiPageWiki(WikiPageText):
