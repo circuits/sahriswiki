@@ -9,12 +9,12 @@
   <title>About SahrisWIki</title>
  </head>
  <body>
-  <div id="content" class="about">
-   <a href="http://sahriswiki.org/"
-    style="border: none; float: right; margin-left: 2em">
-    <img style="display: block" src="${staticurl('img/sahris_banner.png')}"
-       alt="SahrisWiki: Wiki, Content Management &amp; Blogging"/>
-   </a>
+   <div class="sidebar">
+	<a href="http://www.python.org/" style="border: none; float: right">
+	<img style="display: block" src="${staticurl('img/python.png')}"
+		alt="python powered" width="140" height="56" />
+	</a>
+   </div>
    <h1>About SahrisWiki</h1>
    <p>
     SahrisWiki is a mixture of the best features of Wiki, Content Management
@@ -26,10 +26,6 @@
     <a href="http://sahriswiki.org/License">online</a>
     as well as in the <tt>LICENSE</tt> file included in the distribution.
    </p>
-   <a href="http://www.python.org/" style="border: none; float: right">
-    <img style="display: block" src="${staticurl('img/python.png')}"
-     alt="python powered" width="140" height="56" />
-   </a>
    <p>Please visit the SahrisWiki open source project:
     <a href="http://sahriswiki.org/">http://sahriswiki.org/</a>
    </p>
@@ -38,9 +34,8 @@
    </p>
 
    <py:if test="systeminfo or plugins or config">
-    <hr />
-
     <div py:if="systeminfo" id="systeminfo">
+    <hr />    
      <h2>System Information</h2>
      <table class="listing">
       <tr py:for="name, value in systeminfo">
@@ -81,6 +76,6 @@
      </table>
     </div>
    </py:if>
-  </div>
+	<br class="clearside"/>
  </body>
 </html>

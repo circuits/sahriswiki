@@ -175,13 +175,15 @@ class ArgParser(object):
             A tuple of keys that will be post-fixed with an underscore if found
             during parsing. 
           key_func
-            If supplied, this function will be used to transform the names of
-            keyword arguments. It must accept a single positional argument.
-            For example, this can be used to make keywords case insensitive:
+            If supplied, this function will be used to transform the names
+            and values of keyword arguments. It must accept two positional
+            arguments. For example, this can be used to make keywords case
+            insensitive:
             
             >>> from string import lower
             >>> from dialects import creepy20_base
-            >>> my_parser = ArgParser(dialect=creepy20_base(),key_func=lower)
+            >>> my_parser = ArgParser(dialect=creepy20_base(),
+            ...     key_func=lambda k, v: k, v.lower())
             >>> my_parser(" Foo='one' ")
             ([], {'foo': 'one'})
             
@@ -214,7 +216,8 @@ class ArgParser(object):
     def _parse(self,arg_string, convert_implicit_lists, key_func, illegal_keys,
                convert_unicode_keys):
         
-        frags = fragmentize(arg_string,self.dialect.top_elements,{},{})
+        frags = fragmentize(arg_string,self.dialect.top_elements,{},{},
+                remove_escapes=False)
         positional_args = []
         kw_args = {}
         for arg in frags:
@@ -223,7 +226,7 @@ class ArgParser(object):
              if convert_unicode_keys:
                  k = str(k)
              if key_func:
-                 k =  key_func(k)
+                 k, v =  key_func(k, v)
              if k in illegal_keys:
                  k = k + '_'
              if k in kw_args:

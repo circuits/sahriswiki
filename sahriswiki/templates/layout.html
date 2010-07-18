@@ -46,21 +46,6 @@
 	<body py:attrs="select('@*')">
 		<div id="main">
 			<div id="header">
-				<py:choose test="defined('page')">
-					<py:when test="True">
-						<h1>
-							<a title="View BackLinks for ${page['name']}"
-							href="${url('/+backlinks', page['name'])}">
-							${page["name"]}
-							</a>
-						</h1>
-					</py:when>
-					<py:otherwise>
-						<h1>
-							${(defined('title') and title) or (defined('page') and page['name'])}
-						</h1>
-					</py:otherwise>
-				</py:choose>
 				<div id="metanav" py:if="defined('metanav')">
 					<ul>
 						<li py:for="text, href in metanav"><a href="${href}">${text}</a></li>
@@ -74,15 +59,13 @@
 				</div>				
 	 		</div>
 
-
-
     <div id="menu">
      ${include(config.get('menu'))}
     </div>
 
-    <div py:if="breadcrumb" id="breadcrumb" >
-     <span py:with="last = len(breadcrumb) - 1"
-      py:for="i, (page, name) in enumerate(breadcrumb)">
+    <div py:if="breadcrumbs" id="breadcrumbs" >
+     <span py:with="last = len(breadcrumbs) - 1"
+      py:for="i, (page, name) in enumerate(breadcrumbs)">
       <a href="${url('/%s' % page)}">${name}</a>
       <py:if test="not i == last">&gt;</py:if>
      </span>
@@ -90,10 +73,30 @@
 
     <div id="content">${select('*|text()')}</div>
 
-    <div id="ctxnav" py:if="defined('ctxnav')">
-     <ul>
-      <li py:for="text, href in ctxnav"><a href="${href}">${text}</a></li>
-     </ul>
+    <py:def function="display_nav(nav)">
+     <py:for each="item in nav">
+      <py:choose test="item and isinstance(item[1], basestring)">
+       <py:when test="True">
+        <py:with vars="text, href = item">
+         <li><a href="${href}">${text}</a></li>
+        </py:with>
+       </py:when>
+       <py:otherwise>
+        <py:with vars="text, nav = item">
+         <li>
+          <a href="#">${text}</a>
+          <ul>
+            ${display_nav(nav)}
+          </ul>
+         </li>
+        </py:with>
+       </py:otherwise>
+      </py:choose>
+     </py:for>
+    </py:def>
+
+    <div id="ctxnav" class="nav" py:if="defined('ctxnav')">
+     <ul>${display_nav(ctxnav)}</ul>
     </div>
 
 	 		<div id="footer">

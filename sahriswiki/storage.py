@@ -169,6 +169,7 @@ class WikiStorage(object):
         """Commits and merges conflicting changes in the repository."""
 
         tip_node = changectx.node()
+        # FIXME: The following line fails sometimes :/
         filectx = changectx[repo_file].filectx(parent)
         parent_node = filectx.changectx().node()
 
@@ -190,11 +191,11 @@ class WikiStorage(object):
         return msg
 
     @locked_repo
-    def save_file(self, title, file_name, author=u'', comment=u'', parent=None):
+    def save_file(self, title, file_name, author, comment, parent=None):
         """Save an existing file as specified page."""
 
-        user = author.encode('utf-8') or _(u'anon').encode('utf-8')
-        text = comment.encode('utf-8') or _(u'comment').encode('utf-8')
+        user = author.encode('utf-8')
+        text = comment.encode('utf-8')
         repo_file = self._title_to_file(title)
         file_path = self._file_path(title)
         self._check_path(file_path)

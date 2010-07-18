@@ -4,13 +4,14 @@ This is just a page to practice stuff and learn [[WikiFormatting]].
 
 Go ahead, edit it freely, yah editing stuff.
 ----
-<<code lang="python">>
-from circuits.web import Server, Controller
+Test
 
-class Root(Controller):
+<<div class="nav">>
+* [[Foo]]
+* [[Bar]]
+** [[FooBar]]
+<</div>>
 
-    def index(self):
-        return "Hello World!"
+Test :)
 
-(Server(8000) + Root()).run()
-<</code>>
+Haha :)
