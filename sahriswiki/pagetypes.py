@@ -9,8 +9,8 @@
 
 import os
 import csv
-from urlparse import urlparse
 from StringIO import StringIO
+from operator import itemgetter
 from time import strftime, gmtime
 
 try:
@@ -26,9 +26,9 @@ from mercurial.node import short
 
 from circuits.web.tools import serve_file
 from circuits.web.exceptions import Redirect
-from circuits.web.tools import check_auth, basic_auth
 
 from utils import FIXLINES
+from highlight import highlight
 from errors import NotImplementedErr, UnsupportedMediaTypeErr
 
 class WikiPage(object):
@@ -57,10 +57,15 @@ class WikiPage(object):
         text = self._get_text()
         rev, node, date, author, comment = self.storage.page_meta(self.name)
 
+        base = os.path.basename(self.name)
+        parent = os.path.dirname(self.name)
+
         data = {
             "rev": rev,
+            "base": base,
             "date": date,
             "text": text,
+            "parent": parent,
             "author": author,
             "name": self.name,
             "comment": comment,
@@ -97,66 +102,6 @@ class WikiPage(object):
     def view(self):
         raise NotImplementedErr()
 
-class WikiPageLogin(WikiPage):
-    """Pages of mime type +login/* use this for display."""
-
-    def view(self):
-        users = self.environ.users
-        realm = self.environ.config.get("name")
-
-        if not check_auth(self.request, self.response, realm, users):
-            return basic_auth(self.request, self.response, realm, users)
-
-        if not self.request.login in self.environ.users:
-            return basic_auth(self.request, self.response, realm, users)
-
-        self.request.session["login"] = self.request.login
-
-        referer = self.request.headers.get("Referer", None)
-        if referer:
-            base = urlparse(self.url())
-            link = urlparse(referer)
-            if all([base[i] == link[i] for i in range(2)]):
-                raise Redirect(referer)
-
-        data = {
-            "title": "Login",
-            "html": Markup("Login successful.")
-        }
-
-        return self.render("view.html", **data)
-
-class WikiPageLogout(WikiPage):
-    """Pages of mime type +logout/* use this for display."""
-
-    def view(self):
-        users = self.environ.users
-        realm = self.environ.config.get("name")
-
-        if "login" in self.request.session:
-            del self.request.session["login"]
-
-        if "Authorization" in self.request.headers:
-            del self.request.headers["Authorization"]
-
-        return basic_auth(self.request, self.response, realm, users)
-
-class WikiPageHello(WikiPage):
-    """Pages of mime type +hello/* use this for display."""
-
-    def view(self):
-        data = {
-            "title": "Hello",
-            "html": Markup("Hello World!"),
-        }
-        return self.render("view.html", **data)
-
-class WikiPageAbout(WikiPage):
-    """Pages of mime type +about/* use this for display."""
-
-    def view(self):
-        return self.render("about.html", title="About SahrisWiki")
-        
 class WikiPageText(WikiPage):
     """Pages of mime type text/* use this for display."""
 
@@ -211,7 +156,16 @@ class WikiPageText(WikiPage):
 class WikiPageColorText(WikiPageText):
     """Text pages, but displayed colorized with pygments"""
 
-class WikiPageWiki(WikiPageColorText):
+    def view(self):
+        data = {
+            "page": self._get_page_data(),
+            "ctxnav": list(self.environ._ctxnav("view", self.name)),
+        }
+
+        data["html"] = highlight(data["page"]["text"], mime=self.mime)
+        return self.render("view.html", **data)
+
+class WikiPageWiki(WikiPageText):
     """Pages of with wiki markup use this for display."""
 
     def edit(self):
@@ -268,7 +222,7 @@ class WikiPageWiki(WikiPageColorText):
     def view(self):
         data = {
             "page": self._get_page_data(),
-            "ctxnav": list(self.environ._ctxnav("view", self.name))
+            "ctxnav": self.environ._ctxnav("view", self.name),
         }
         data["html"] = self.environ.parser.generate(
             data["page"]["text"], environ=(self.environ, data))
@@ -451,7 +405,7 @@ class WikiPageRST(WikiPageText):
         data["output"] = self._render()
         return self.render("view_rst.html", **data)
 
-class WikiPageHTML(WikiPageColorText):
+class WikiPageHTML(WikiPageText):
     """Display HTML (genshi) templates"""
 
     def edit(self):
@@ -510,4 +464,4 @@ class WikiPageHTML(WikiPageColorText):
             "ctxnav": list(self.environ._ctxnav("view", self.name)),
         }
         data["html"] = Markup(self.render(self.name, **data))
-        return self.render("view_html.html", **data)
+        return self.render("view.html", **data)

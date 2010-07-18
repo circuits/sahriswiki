@@ -254,18 +254,27 @@ td { padding: 2px; }
 #content div {
 	padding : 0 4em 2em 4em;
 }
-
-#ctxnav {
+#ctxnav > * {
     text-align: left;
-	font : 85% sans-serif;
-}
-#ctxnav li {
-	display : inline;
-}
-#ctxnav li a {
-	padding : 0.75em 0.5em;
+	font-size: 11px;
+	font-family: Helvetica;
 }
 
+/* Top Level */
+.nav>ul { width:100%; list-style:none; margin-bottom:5px; margin-top: 3px; }
+.nav>ul li { float:left; margin-right: 10px; position:relative; }
+.nav>ul li a { display:block; padding:2px; text-decoration:none; }
+.nav>ul li a:hover { text-shadow:1px 1px 1px rgba(0,0,0,0.20); text-decoration: underline; }
+
+/* Second Level */
+.nav>ul li>ul { list-style: none; visibility: hidden; }
+.nav>ul li>ul li { float: none; margin-right: 0px; }
+.nav>ul li:hover>ul { visibility: visible; }
+
+/* Third Level */
+.nav>ul li>ul li>a+ul { visibility:hidden; float: left; }
+.nav>ul li>ul li:hover>ul { visibility: visible; }
+.nav>ul li>ul li>a+ul li>a { text-indent: 10px; }
 
 h1, h2, h3, h4 {
 	font-family: Helvetica; color: #333;

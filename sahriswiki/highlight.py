@@ -28,13 +28,17 @@ class HTMLFormatter(pygments.formatters.HtmlFormatter):
             yield i, t
         yield 0, "</pre>"
 
-def highlight(text, lang=None):
-    if not lang:
-        return tag.pre(text)
+def highlight(text, mime=None, lang=None):
+    formatter = HTMLFormatter()
 
     try:
-        lexer = pygments.lexers.get_lexer_by_name(lang, stripall=True)
+        if mime:
+            lexer = pygments.lexers.get_lexer_for_mimetype(mime)
+        elif lang:
+            lexer = pygments.lexers.get_lexer_by_name(lang)
+        else:
+            lexer = pygments.lexers.guess_lexer(text)
     except pygments.util.ClassNotFound:
         return tag.pre(text)
 
-    return Markup(pygments.highlight(text, lexer, HTMLFormatter()))
+    return Markup(pygments.highlight(text, lexer, formatter))

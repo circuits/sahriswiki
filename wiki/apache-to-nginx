@@ -1,4 +1,4 @@
-<<set-title "Sample Documentation from Kbeezie.com">>
+<<SetTitle "Sample Documentation from Kbeezie.com">>
 = <<title>> =
 
 //For a simple beginning example configuration to start with please view my [[http://wiki.kbeezie.com/nginx-config/|example configuration]]//
@@ -202,7 +202,7 @@ server {
 
 **//This article is still being added on to, and will be updated as each new tip is added//**
 
-<<add-comment>>
+<<AddComment>>
 
 
 

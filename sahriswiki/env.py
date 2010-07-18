@@ -15,7 +15,7 @@ from urlparse import urlparse
 
 from circuits import handler, BaseComponent
 
-from genshi import Markup
+from genshi.builder import tag
 from genshi.template import TemplateLoader
 
 from creoleparser import create_dialect, creole11_base, Parser
@@ -26,10 +26,9 @@ from utils import page_mime
 from search import WikiSearch
 from storage import WikiSubdirectoryIndexesStorage as DefaultStorage
 
-from pagetypes import WikiPageText, WikiPageHTML, WikiPageImage
-from pagetypes import WikiPageWiki, WikiPageFile, WikiPageLogout
+from pagetypes import WikiPageText, WikiPageHTML
+from pagetypes import WikiPageWiki, WikiPageFile, WikiPageImage
 from pagetypes import WikiPageColorText, WikiPageCSV, WikiPageRST
-from pagetypes import WikiPageHello, WikiPageLogin, WikiPageAbout
 
 class Environment(BaseComponent):
 
@@ -43,18 +42,15 @@ class Environment(BaseComponent):
 
     mime_map = {
         "text":                     WikiPageText,
-        "application/x-javascript": WikiPageColorText,
-        "application/x-python":     WikiPageColorText,
+        "application/javascript":   WikiPageColorText,
+        "text/x-python":            WikiPageColorText,
+        "text/css":                 WikiPageColorText,
         "text/csv":                 WikiPageCSV,
         "text/html":                WikiPageHTML,
         "text/x-rst":               WikiPageRST,
         "text/x-wiki":              WikiPageWiki,
         "image":                    WikiPageImage,
         "":                         WikiPageFile,
-        "type/hello":               WikiPageHello,
-        "type/login":               WikiPageLogin,
-        "type/logout":              WikiPageLogout,
-        "type/about":               WikiPageAbout,
     }
 
     def __init__(self, config):
@@ -137,51 +133,73 @@ class Environment(BaseComponent):
                 "X-Forwarded-For", self.request.remote.ip)
 
     def _permissions(self):
-        if self._login():
-            yield "PAGE_EDIT"
-            yield "CONFIG_VIEW"
+        login = self._login()
+        readonly = self.config.get("readonly")
 
-    def _nav(self):
-        yield
+        if (readonly and login) or (not readonly):
+            yield "PAGE_EDIT"
+            yield "PAGE_MOVE"
+            yield "PAGE_DELETE"
+            yield "PAGE_UPLOAD"
+            yield "CONFIG_VIEW"
 
     def _metanav(self):
         if not self._login():
-            yield ("Login", self.url("/+login"))
+            yield ("Login",      self.url("/+login"),   )
         else:
-            yield ("Logout", self.url("/+logout"))
+            yield ("Logout",     self.url("/+logout"),  )
 
-        yield ("Preferences", self.url("/+prefs"))
-        yield ("Help/Guide",  self.url("/Help"))
-        yield ("About",       self.url("/+about"))
+        yield ("Preferences",    self.url("/+prefs"),   )
+        yield ("Recent Changes", self.url("/+history"), )
+        yield ("Help/Guide",     self.url("/Help"),     )
+        yield ("About",          self.url("/+about"),   )
 
     def _ctxnav(self, type="view", name=None):
+        permissions = self._permissions()
         if name and type == "view":
-            if self._login() or not self.config.get("readonly"):
-                yield ("Edit", self.url("/+edit/%s" % name))
-            yield ("Download", self.url("/+download/%s" % name))
-            yield ("History",  self.url("/+history/%s" % name))
+            yield ("Functions",     self._ctxnav("func", name),)
+            yield ("Information",   self._ctxnav("info", name),)
+            yield ("Miscellaneous", self._ctxnav("misc", name),)
         elif type in ("index", "search"):
-            yield ("Index",    self.url("/+search"))
-            yield ("Orphaned", self.url("/+orphaned"))
-            yield ("Wanted",   self.url("/+wanted"))
+            yield ("Index",         self.url("/+search"))
+            yield ("Orphaned",      self.url("/+orphaned"))
+            yield ("Wanted",        self.url("/+wanted"))
         elif type == "history":
             if name:
-                yield ("RSS 1.0", self.url("/+feed/%s/?format=rss1") % name)
-                yield ("RSS 2.0", self.url("/+feed/%s/?format=rss2") % name)
-                yield ("Atom",    self.url("/+feed/%s/?format=atom") % name)
+                yield ("RSS 1.0",   self.url("/+feed/%s/?format=rss1") % name)
+                yield ("RSS 2.0",   self.url("/+feed/%s/?format=rss2") % name)
+                yield ("Atom",      self.url("/+feed/%s/?format=atom") % name)
             else:
-                yield ("RSS 1.0", self.url("/+feed/?format=rss1"))
-                yield ("RSS 2.0", self.url("/+feed/?format=rss2"))
-                yield ("Atom",    self.url("/+feed/?format=atom"))
+                yield ("RSS 1.0",   self.url("/+feed/?format=rss1"))
+                yield ("RSS 2.0",   self.url("/+feed/?format=rss2"))
+                yield ("Atom",      self.url("/+feed/?format=atom"))
+        elif name and type == "func":
+            if "PAGE_EDIT" in permissions:
+                yield ("Edit",      self.url("/+edit/%s" % name))
+            if "PAGE_MOVE" in permissions:
+                yield ("Move",      self.url("/+move/%s" % name))
+            if "PAGE_DELETE" in permissions:
+                yield ("Delete",    self.url("/+delete/%s" % name))
+        elif name and type == "info":
+            yield ("History",       self.url("/+history/%s" % name))
+            yield ("Feeds",          self._ctxnav("history", name))
+        elif name and type == "misc":
+            yield ("Download",      self.url("/+download/%s" % name))
+            if "PAGE_UPLOAD" in permissions:
+                yield ("Upload",    self.url("/+upload/%s" % name))
 
-    def _breadcrumb(self, page=None):
+    def _breadcrumbs(self, page=None):
+        yield ("", "Home", "Home",)
         if page and "name" in page:
             xs = []
             name = page["name"]
-            yield ("", "Home",)
-            for x in name.split("/")[:-1]:
-                xs.append(x)
-                yield ("/".join(xs), x,)
+            if not name == self.config.get("frontpage"):
+                parts = name.split("/")
+                for x in parts[:-1]:
+                    xs.append(x)
+                    yield ("/".join(xs), x, x,)
+                base = os.path.basename(name)
+                yield ("+backlinks/%s" % name, base, "View BackLinks",)
 
     def _create_users(self):
         users = {"admin": md5(self.config.get("password")).hexdigest()}
@@ -253,12 +271,15 @@ class Environment(BaseComponent):
 
         return page_class(self, name, mime)
 
-    def include(self, name, context=None):
+    def include(self, name, parse=True, context=None):
         if name in self.storage:
-            return self.parser.generate(self.storage.page_text(name),
-                environ=(self, context))
+            text = self.storage.page_text(name)
+            if parse:
+                return self.parser.generate(text, environ=(self, context))
+            else:
+                return tag.pre(text)
         else:
-            return Markup("<!-- SiteMenu Not Found -->")
+            return tag.div(tag.p(u"Page %s Not Found" % name), class_="error")
 
     def render(self, template, **data):
         data.update({
@@ -271,10 +292,9 @@ class Environment(BaseComponent):
             "config":      self._config(),
             "staticurl":   self.staticurl,
             "permissions": self._permissions(),
-            "breadcrumb":  list(self._breadcrumb(data.get("page", None))),
-            "nav":         chain(self._nav(), data.get("nav", [])),
             "ctxnav":      chain(self._ctxnav(), data.get("ctxnav", [])),
             "metanav":     chain(self._metanav(), data.get("metanav", [])),
+            "breadcrumbs": list(self._breadcrumbs(data.get("page", None))),
         })
         t = self.templates.load(template)
         return t.generate(**data).render("xhtml", doctype="html")

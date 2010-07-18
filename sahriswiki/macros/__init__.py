@@ -1,12 +1,30 @@
-"""Macro
+# Module:   macros
+# Date:     12th July 2010
+# Author:   James Mills, prologic at shortcircuit dot net dot au
 
-Macro support and dispatcher
+"""Macro Support
+
+Macro loader and dispatcher for creoleparser
 """
 
 import os
+from traceback import format_exc
 from inspect import getmembers, getmodule, isfunction
 
-from creoleparser import parse_args
+from genshi.builder import tag
+
+from sahriswiki.unrepr import unrepr
+from sahriswiki.highlight import highlight
+from sahriswiki.creoleparser.core import ArgParser
+from sahriswiki.creoleparser.dialects import creepy10_base
+
+def key_func(k, v):
+    return k, v#unrepr(v) TODO: unrepr(v) doesn't work yet.
+
+parse_args = ArgParser(
+    dialect=creepy10_base(),
+    key_func=key_func,
+)
 
 class Macro(object):
 
@@ -26,9 +44,16 @@ def dispatcher(name, arg_string, body, isblock, (environ, context)):
             return environ.macros[name](macro, environ, context,
                 *args, **kwargs)
         except Exception, e:
-            return "ERROR: Error while executing macro %r (%s)" % (name, e)
+            error = "ERROR: Error while executing macro %s (%s)" % (name, e)
+            traceback = format_exc()
+            return tag.div(
+                tag.p(error),
+                highlight(traceback, lang="pytb"),
+                class_="error"
+            )
+
     else:
-        return "Macro not found!"
+        return tag.div(tag.p("Macro %s Not Found!" % name), class_="error")
 
 def loadMacros():
     path = os.path.abspath(os.path.dirname(__file__))
