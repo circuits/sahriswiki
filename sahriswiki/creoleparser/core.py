@@ -221,7 +221,6 @@ class ArgParser(object):
         positional_args = []
         kw_args = {}
         for arg in frags:
-           print arg
            if isinstance(arg,tuple):
              k, v  = arg
              if convert_unicode_keys:
