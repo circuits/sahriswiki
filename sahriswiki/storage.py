@@ -169,6 +169,7 @@ class WikiStorage(object):
         """Commits and merges conflicting changes in the repository."""
 
         tip_node = changectx.node()
+        # FIXME: The following line fails sometimes :/
         filectx = changectx[repo_file].filectx(parent)
         parent_node = filectx.changectx().node()
 
