@@ -42,8 +42,8 @@ class Environment(BaseComponent):
 
     mime_map = {
         "text":                     WikiPageText,
-        "application/x-javascript": WikiPageColorText,
-        "application/x-python":     WikiPageColorText,
+        "application/javascript":   WikiPageColorText,
+        "text/x-python":            WikiPageColorText,
         "text/css":                 WikiPageColorText,
         "text/csv":                 WikiPageCSV,
         "text/html":                WikiPageHTML,
