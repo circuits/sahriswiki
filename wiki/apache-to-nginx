@@ -1,0 +1,208 @@
+<<SetTitle "Sample Documentation from Kbeezie.com">>
+= <<title>> =
+
+//For a simple beginning example configuration to start with please view my [[http://wiki.kbeezie.com/nginx-config/|example configuration]]//
+ 
+[[http://wiki.nginx.org|Nginx]] currently holds shy of 6.5% of the known webserver market, which is just roughly shy of 13 million servers. This little lightweight webserver created by a sole Russian developer has been gaining a great deal of popularity over the last few years and is used by sites such as [[http://wordpress.com|Wordpress]], [[http://textsfromlastnight.com|Texts from Last Night]] and [[http://www.hulu.com|Hulu]].
+
+This guide will show you common examples in Nginx to make migration from Apache a bit easier. 
+
+===HTTP Basic Authentication or htpasswd support===
+If you have been playing with nginx for a the first time you may have noticed that there is no .htaccess support. However Nginx can still utilize HTTP Basic Authenication with existing htpasswd files using the HTTP Auth Basic Module. The module is compiled by default. 
+
+If you still have Apache installed (but perhaps turned off or on a different port) you can still use htpasswd to generate a password file. But in the event that you don't have or don't want to install Apache you can use Perl or Ruby to generate at least the encrypted passwords. The .htpasswd files should be in the following format.
+
+<<code lang="text">>
+username:encrypted-password:comment
+<</code>>
+
+To generate a password with Ruby in irb:
+<<code lang="ruby">>
+"your-password".crypt("salt-hash")
+<</code>>
+
+Likewise to generate with perl from the terminal:
+<<code lang="bash">>
+perl -le 'print crypt("your-password", "salt-hash")'
+<</code>>
+
+The two commands above will utilize a 56-bit DES encryption which can be used in the htpasswd file. 
+
+Once you have your password file saved, store it outside of the web-accessible location like you would have when using Apache (likewise you can ensure that web access to hidden files are denied, more on that later).
+
+Lets say you have a subfolder on your server called 'admin' and you wish to protect it. Here is an example configuration:
+
+<<code lang="nginx">>
+location  /admin  {
+  auth_basic            "Admin Access";
+  auth_basic_user_file  conf/domain.com/admin/htpasswd;
+}
+<</code>>
+
+If the above did not work, check your error logs as sometimes it will notify you if the path to the password file could not be found. 
+
+===Ignoring robots.txt, favicon.ico and hidden files===
+
+Sometimes you may wish to omit commonly accessed files from being recorded in the access log as well as block access to hidden files (filenames beginning with a period such as .htpasswd and .htaccess). Even though nginx doesn't support htaccess, you may still wish to secure files left behind from the migration. You can easily do this by adding a couple location blocks to your domain's server block.
+
+<<code lang="nginx">>
+location = /favicon.ico { access_log off; log_not_found off; }	
+location = /robots.txt { access_log off; log_not_found off; }
+location ~ /\. { deny  all; access_log off; log_not_found off; }
+<</code>>
+
+The above will not record access to the favicon.ico or robots.txt in the root of your site, as well as ignore the file-not-found error if you do not have either file present. Also the last line will deny access to any file beginning with a period anywhere within the root path. You can actually save the above into a file such as /conf/drop.conf, and include it at the bottom of each of your server blocks like so.
+
+<<code lang="nginx">>
+include drop.conf;
+<</code>>
+
+===Extremely Easy Wordpress Migration===
+
+Most people now days take advantage of Wordpress' permalink feature which normally requires mod_rewrite enabled in the .htaccess file. However as of Nginx 0.7.26 and above this can be taken care of very easily with a single directive.
+
+<<code lang="nginx">>
+location / { 
+   try_files $uri $uri/ index.php;
+}
+<</code>>
+
+The above will attempt to try the requested URI first as a file, then as a folder, and if both of those come back negative it will fall back to index.php. Wordpress can simply parse the request URI sent by the webserver so there is no need to manually add arguments onto index.php. If you instead need to do something further you can change the fallback from index.php to @fallback like so:
+
+<<code lang="nginx">>
+location / {
+   try_files $uri $uri/ @wordpress;
+}
+
+location @wordpress {
+     # Additional rewrite rules or such you need here.
+}
+<</code>>
+
+For Nginx versions older than 0.7.26 you can use the older method shown below
+
+<<code lang="nginx">>
+location / { 
+        if (-f $request_filename) {
+            expires 30d;
+            break;
+        }
+
+         if (!-e $request_filename) {
+            rewrite ^(.+)$ /index.php?q=$1 last;
+        }
+}
+<</code>>
+
+The two if blocks replace the common RewriteCond used by wordpress to test if the requested filename is an existing file or folder. 
+
+On the next page: Utilizing WP Super Cache, rewrite examples and more.
+
+===Using WP Super Cache with Nginx===
+
+While utilizing permalinks for Wordpress on nginx is incredibly easy, getting WP Super Cache to work to the best of its ability requires a bit more elbow grease. WP Super Cache can save you a great deal of bandwidth by proving both uncompressed and gzip compressed versions of your pages and articles in a cached html format. And it saves both versions of these in the /wp-content/cache/supercache/ folder. The problem is we need to make sure that Nginx serves these files when the conditions are appropriate thus completely bypassing the PHP interpreter when not needed. Since Nginx does an incredible job serving static files, getting this one right can be of great benefit. 
+
+Below is the current Nginx configuration used for Kbeezie.com with WP Super Cache enabled.
+
+<<code lang="nginx">>
+location / {
+        # Enables the Gzip Static Module (this must be added via --with-http_gzip_static_module
+        # Compile option when you compile Nginx in order to use Gzip Precompression
+        # If you don't have it installed you'll only be able to serve the uncompressed html files
+        gzip_static on;
+
+        # Disables serving of Gzipped content to IE6 and earlier
+        gzip_disable        "MSIE [1-6]\.";
+	
+        # Sets the default mime type to text/html	
+	default_type text/html;
+
+        if (-f $request_filename) {
+                break;
+        }
+
+        # Prepares some variables to aid us in determining the existance of the cache
+        set $supercache_file '';
+        set $supercache_uri $request_uri;
+
+        # Do not use the cache when submitting something such as a comment (ie: goto PHP)
+        if ($request_method = POST) {
+                set $supercache_uri '';
+        }
+
+        # Do not use the cache when submitting a query (ie: goto PHP for parsing)
+        if ($query_string) {
+                set $supercache_uri '';
+        }
+
+        # Do not use the cache where it may cause problems
+        if ($http_cookie ~* "comment_author_|wordpress|wp-postpass_" ) {
+                set $supercache_uri '';
+        }
+	
+        # If the variable has not been emptied assign the usual cached file location
+        if ($supercache_uri ~ ^(.+)$) {
+                set $supercache_file /wp-content/cache/supercache/$http_host/$1index.html;
+        }
+	
+        # If the cached file exists, rewrite the browsers request to the cached file location
+        if (-f $document_root$supercache_file) {
+                rewrite ^(.*)$ $supercache_file break;
+        }
+
+        # If the cached file location does not exit, or is blank, 
+        # and the file requested does not exist Fall back to 
+        # index.php to be parsed dynamically
+        if (!-e $request_filename) {
+                rewrite . /index.php last;
+        }	
+}
+<</code>>
+
+You'll notice in the above we only rewrite to the .html file. With the Gzip Precompression module enabled nginx will automatically serve a *.gz file of the same name (ie: index.html vs index.html.gz) to browsers that support gzip encoding. With the above configuration paired with WP Super Cache should help save considerable bandwidth as well as improve site response time when serving up cached results. 
+
+===Basic Rewrite Conversions===
+Rewrites are internal by default in Nginx, that is to say by default they're the equivalent of apache's [PT] Pass-Thru flag. 
+
+A pretty common rewrite setup in .htaccess may look something like this:
+
+<<code lang="apache">>
+RewriteEngine On
+Options +FollowSymlinks
+RewriteBase /
+
+RewriteCond %{SERVER_PORT} 80 
+RewriteRule ^(.*)$ https://www.domain/$1 [R,L]
+
+RewriteRule ^-(.*)/ /index.php?page=$1 [L]
+RewriteRule ^track.png /track.php [L]
+<</code>>
+
+Just to show a couple examples. A configuration such as above could be represented as such:
+
+For the last two
+<<code lang="nginx">>
+location / {
+     rewrite ^/-(.*)/ /index.php?page=$1 last;
+     rewrite ^/track.png /track.php last;
+}
+<</code>>
+
+Typically in a very simple rewrite string you usually just have use rewrite instead of RewriteRule, add a leading slash, and change [L] to last; 
+
+For the forced SSL redirect you can do something like this:
+<<code lang="nginx">>
+server { server_name domain.com; rewrite ^(.*) https://$server_name$1 permanent; }
+server {
+	listen 443;
+	server_name domain.com;
+	#...
+}
+<</code>>
+
+**//This article is still being added on to, and will be updated as each new tip is added//**
+
+<<AddComment>>
+
+
+
