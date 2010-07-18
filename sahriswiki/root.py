@@ -13,8 +13,7 @@ from operator import itemgetter
 from difflib import unified_diff
 from time import gmtime, strftime
 
-import genshi
-from genshi.builder import Markup
+from genshi.core import Markup
 
 from feedformatter import Feed
 
