@@ -37,8 +37,8 @@ class Environment(BaseComponent):
         "COPYING":      (WikiPageText,  "text/plain"),
         "CHANGES":      (WikiPageText,  "text/plain"),
         "MANIFEST":     (WikiPageText,  "text/plain"),
-        "LICENSE",      (WikiPageText,  "text/plain"),
-        "ChangeLog",    (WikiPageText,  "text/plain"),
+        "LICENSE":      (WikiPageText,  "text/plain"),
+        "ChangeLog":    (WikiPageText,  "text/plain"),
         "favicon.ico":  (WikiPageImage, "image/x-icon"),
     }
 
