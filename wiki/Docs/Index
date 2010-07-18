@@ -1,4 +1,4 @@
-= <<SetTitle "SahrisWiki Documentation", display=True>> =
+= <<SetTitle "SahrisWiki Documentation", display=False>> =
 
 * [[./Downloading|Downloading]] and [[Docs/Installing|Installing]]
 * [[./Features|Features]]
