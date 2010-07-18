@@ -20,6 +20,7 @@ except ImportError:
     HAS_DOCUTILS = False
 
 from genshi import Markup
+from genshi.builder import tag
 from genshi.template import Template
 
 from mercurial.node import short
@@ -109,10 +110,10 @@ class WikiPageText(WikiPage):
         if not self.request.kwargs:
             if self.name in self.storage:
                 data = {"page": self._get_page_data()}
-                return self.render("edit_plain.html", **data)
+                return self.render("edit.html", **data)
             else:
                 data = {"page": {"name": self.name, "text": ""}}
-                return self.render("edit_plain.html", **data)
+                return self.render("edit.html", **data)
 
         action = self.request.kwargs.get("action", None)
         comment = self.request.kwargs.get("comment", "")
@@ -151,7 +152,8 @@ class WikiPageText(WikiPage):
             "page": self._get_page_data(),
             "ctxnav": list(self.environ._ctxnav("view", self.name)),
         }
-        return self.render("view_plain.html", **data)
+        data["html"] = tag.pre(data["page"]["text"])
+        return self.render("view.html", **data)
 
 class WikiPageColorText(WikiPageText):
     """Text pages, but displayed colorized with pygments"""
@@ -264,22 +266,38 @@ class WikiPageImage(WikiPageFile):
         data = {
             "title": self.name,
             "name": self.name,
+            "html": tag.img(
+                alt=self.name,
+                src=self.url("/+download/%s" % self.name)
+            ),
             "ctxnav": list(self.environ._ctxnav("view", self.name)),
         }
 
-        return self.render("view_image.html", **data)
+        return self.render("view.html", **data)
 
 class WikiPageCSV(WikiPageFile):
     """Display class for type text/csv."""
+
+    def _render(self, text=None):
+        if text is None:
+            text = self._get_text()
+
+        data = csv.reader(StringIO(text))
+
+        rows = (tag.tr(tag.td(cell) for cell in row) for row in data)
+
+        stream = tag.table(rows)
+
+        return stream.generate()
 
     def edit(self):
         if not self.request.kwargs:
             if self.name in self.storage:
                 data = {"page": self._get_page_data()}
-                return self.render("edit_csv.html", **data)
+                return self.render("edit.html", **data)
             else:
                 data = {"page": {"name": self.name, "text": ""}}
-                return self.render("edit_csv.html", **data)
+                return self.render("edit.html", **data)
 
         action = self.request.kwargs.get("action", None)
         comment = self.request.kwargs.get("comment", "")
@@ -304,12 +322,12 @@ class WikiPageCSV(WikiPageFile):
         elif action == "preview":
             data = {
                 "page": {"name": self.name, "text": text},
-                "rows": csv.reader(StringIO(text)),
+                "html": self._render(),
                 "author": self.environ._user(),
                 "comment": comment,
                 "preview": True,
             }
-            return self.render("edit_csv.html", **data)
+            return self.render("edit.html", **data)
         elif action == "save":
             self.storage.reopen()
             self.search.update(self.environ)
@@ -325,10 +343,10 @@ class WikiPageCSV(WikiPageFile):
     def view(self):
         data = {
             "page": self._get_page_data(),
+            "html": self._render(),
             "ctxnav": list(self.environ._ctxnav("view", self.name)),
         }
-        data["rows"] = csv.reader(StringIO(data["page"]["text"]))
-        return self.render("view_csv.html", **data)
+        return self.render("view.html", **data)
 
 class WikiPageRST(WikiPageText):
     """
@@ -348,10 +366,10 @@ class WikiPageRST(WikiPageText):
         if not self.request.kwargs:
             if self.name in self.storage:
                 data = {"page": self._get_page_data()}
-                return self.render("edit_rst.html", **data)
+                return self.render("edit.html", **data)
             else:
                 data = {"page": {"name": self.name, "text": ""}}
-                return self.render("edit_rst.html", **data)
+                return self.render("edit.html", **data)
 
         action = self.request.kwargs.get("action", None)
         comment = self.request.kwargs.get("comment", "")
@@ -376,12 +394,12 @@ class WikiPageRST(WikiPageText):
         elif action == "preview":
             data = {
                 "page": {"name": self.name, "text": text},
-                "output": self._render(text),
+                "html": self._render(text),
                 "author": self.environ._user(),
                 "comment": comment,
                 "preview": True,
             }
-            return self.render("edit_rst.html", **data)
+            return self.render("edit.html", **data)
         elif action == "save":
             self.storage.reopen()
             self.search.update(self.environ)
@@ -400,10 +418,10 @@ class WikiPageRST(WikiPageText):
 
         data = {
             "page": self._get_page_data(),
+            "html": self._render(),
             "ctxnav": list(self.environ._ctxnav("view", self.name)),
         }
-        data["output"] = self._render()
-        return self.render("view_rst.html", **data)
+        return self.render("view.html", **data)
 
 class WikiPageHTML(WikiPageText):
     """Display HTML (genshi) templates"""
@@ -412,10 +430,10 @@ class WikiPageHTML(WikiPageText):
         if not self.request.kwargs:
             if self.name in self.storage:
                 data = {"page": self._get_page_data()}
-                return self.render("edit_html.html", **data)
+                return self.render("edit.html", **data)
             else:
                 data = {"page": {"name": self.name, "text": ""}}
-                return self.render("edit_html.html", **data)
+                return self.render("edit.html", **data)
 
         action = self.request.kwargs.get("action", None)
         comment = self.request.kwargs.get("comment", "")
@@ -441,11 +459,12 @@ class WikiPageHTML(WikiPageText):
             data = {
                 "page": {"name": self.name, "text": text},
                 "author": self.environ._user(),
+                "html": text,
                 "comment": comment,
                 "preview": True,
                 "html": Template(text).render(**data),
             }
-            return self.render("edit_html.html", **data)
+            return self.render("edit.html", **data)
         elif action == "save":
             self.storage.reopen()
             self.search.update(self.environ)
