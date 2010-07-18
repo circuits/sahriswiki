@@ -1,51 +1,97 @@
-"""Wiki macros"""
+# Module:   wiki
+# Date:     12th July 2010
+# Author:   James Mills, prologic at shortcircuit dot net dot au
+
+"""Wiki Macros
+
+Various wiki and page macros.
+"""
 
 import re
 import time
 
 from genshi.builder import tag
-from genshi import Markup
+from genshi.core import Markup
 
-def set_title(macro, environ, context, *args, **kwargs):
-    """Set the title of the page
+def SetTitle(macro, environ, context, *args, **kwargs):
+    """Set the title of the page.
     
+    This macro allows you to set a custom title for a page that is
+    different to the name of the page (//for SEO purposes//). You can
+    also optinoally specify that you also want the newly set title
+    to be rendered in-place.
+
     **Arguments:**
-    * title (//the title//)
-    * display=False (//True to render the title//)
+    * title (//the new title//)
+    * display=False (//whether to render the title//)
 
     **Example(s):**
     {{{
-    <<set-title "My Title">>
+    <<SetTitle "My Title">>
     }}}
+
+    <<SetTitle "SahrisWiki Macros">>
 
     {{{
-    <<set-title "My Title", display=True>>
+    <<SetTitle "My Title", display=True>>
     }}}
+
+    <<SetTitle "SahrisWiki Macros", display=True>>
     """
 
-    if args and args[0]:
-        title = args[0]
-        context["title"] = title
-        if kwargs.get("display", False):
-            return title
-        else:
-            return Markup("<!-- %s -->" % title)
+    title = kwargs.get("title", (args and args[0]) or u"")
+    display = kwargs.get("display", False)
+
+    if not title:
+        return None
+
+    context["title"] = title
+
+    if display:
+        return title
+    else:
+        return Markup("<!-- %s -->" % title)
 
 def title(macro, environ, context, *args, **kwargs):
-    """Renders the current title of the page
+    """Displays the current title of the page or it's name.
     
-    **Arguments:** //None//
+    This macro simply displays the title or name of the current page.
+
+    **Arguments:** //No Arguments//
 
     **Example(s):**
     {{{
     <<title>>
     }}}
+
+    <<title>>
     """
 
-    return context.get("title", context.get("page", None)["name"])
+    if "title" in context:
+        title = context["title"]
+    elif "page" in context:
+        title = context["page"].get("name", u"")
+    else:
+        title = u""
 
-def add_comment(macro, environ, context, *args, **kwargs):
-    """..."""
+    return title
+
+def AddComment(macro, environ, context, *args, **kwargs):
+    """Display an add comment form allowing users to post comments.
+
+    This macro allows you to display an add comment form on the current
+    page allowing users to post comments. The comments are added to the
+    page's content itself.
+    
+    **Arguments:** //No Arguments//
+
+    **Example(s):**
+    {{{
+    <<AddComment>>
+    }}}
+
+    <<AddComment>>
+    """
 
     # Setup info and defaults
     parser = environ.parser
