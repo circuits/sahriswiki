@@ -9,6 +9,7 @@
 
 import os
 import re
+from urlparse import urlparse
 from operator import itemgetter
 from difflib import unified_diff
 from time import gmtime, strftime
@@ -17,6 +18,7 @@ from genshi.core import Markup
 
 from feedformatter import Feed
 
+from circuits.web.tools import check_auth, basic_auth
 from circuits.web.controllers import expose, BaseController
 
 from highlight import highlight
@@ -107,6 +109,50 @@ class Root(BaseController):
         name = os.path.sep.join(args)
         page = self.environ.get_page(name)
         return page.edit()
+
+    @expose("+login")
+    def login(self):
+        users = self.environ.users
+        realm = self.environ.config.get("name")
+
+        if not check_auth(self.request, self.response, realm, users):
+            return basic_auth(self.request, self.response, realm, users)
+
+        if not self.request.login in self.environ.users:
+            return basic_auth(self.request, self.response, realm, users)
+
+        self.request.session["login"] = self.request.login
+
+        referer = self.request.headers.get("Referer", None)
+        if referer:
+            base = urlparse(self.url())
+            link = urlparse(referer)
+            if all([base[i] == link[i] for i in range(2)]):
+                return self.redirect(referer)
+
+        data = {
+            "title": "Login",
+            "html": Markup("Login successful.")
+        }
+
+        return self.render("view.html", **data)
+
+    @expose("+logout")
+    def logout(self):
+        users = self.environ.users
+        realm = self.environ.config.get("name")
+
+        if "login" in self.request.session:
+            del self.request.session["login"]
+
+        if "Authorization" in self.request.headers:
+            del self.request.headers["Authorization"]
+
+        return basic_auth(self.request, self.response, realm, users)
+
+    @expose("+about")
+    def about(self):
+        return self.render("about.html")
 
     @expose("+search")
     def search(self, *args, **kwargs):
