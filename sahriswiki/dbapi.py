@@ -7,7 +7,6 @@
 ...
 """
 
-import re
 from itertools import izip as zip
 
 from pyodict import odict
@@ -36,14 +35,14 @@ def oracle_session(*args, **kwargs):
 
 def sqlite_session(*args, **kwargs):
     try:
+        import sqlite3
         from sqlite3 import Connection
+        try:
+            return SQLiteSession(Connection(*args, **kwargs))
+        except sqlite3.Error, e:
+            raise ConnectionError("sqlite", e)
     except:
         raise DriverError("sqlite", "No SQLite support available.")
-
-    try:
-        return SQLiteSession(Connection(*args, **kwargs))
-    except sqlite.Error, e:
-        raise ConnectionError("sqlite", e)
 
 types = {
     "mysql": mysql_session,
@@ -129,7 +128,7 @@ class OracleSession(BaseSession):
     def __init__(self, *args, **kwargs):
         super(OracleSession, self).__init__(*args, **kwargs)
 
-        self.getCursor.arraysize = ORACLE_ARRAYSIZE
+        self.getCursor.arraysize = self.ORACLE_ARRAYSIZE
 
     def _execute(self, sql=None, *args, **kwargs):
         self._cu.execute(sql, *args, **kwargs)
