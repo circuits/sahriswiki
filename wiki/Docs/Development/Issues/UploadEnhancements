@@ -1,4 +1,4 @@
-= <<set-title "Upload Enhancements", Display = True>> =
+= <<SetTitle "Upload Enhancements", Display = True>> =
 |=Status|NEW|
 |=Resolution|N/A|
 
@@ -13,5 +13,5 @@ Upload as:
 Where:
  * <<filename> is the name of the uploaded file
 
-<<add-comment>>
+<<AddComment>>
 ----
