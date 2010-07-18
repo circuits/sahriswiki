@@ -26,10 +26,9 @@ from utils import page_mime
 from search import WikiSearch
 from storage import WikiSubdirectoryIndexesStorage as DefaultStorage
 
-from pagetypes import WikiPageText, WikiPageHTML, WikiPageImage
-from pagetypes import WikiPageWiki, WikiPageFile, WikiPageLogout
+from pagetypes import WikiPageText, WikiPageHTML
+from pagetypes import WikiPageWiki, WikiPageFile, WikiPageImage
 from pagetypes import WikiPageColorText, WikiPageCSV, WikiPageRST
-from pagetypes import WikiPageHello, WikiPageLogin, WikiPageAbout
 
 class Environment(BaseComponent):
 
@@ -45,16 +44,13 @@ class Environment(BaseComponent):
         "text":                     WikiPageText,
         "application/x-javascript": WikiPageColorText,
         "application/x-python":     WikiPageColorText,
+        "text/css":                 WikiPageColorText,
         "text/csv":                 WikiPageCSV,
         "text/html":                WikiPageHTML,
         "text/x-rst":               WikiPageRST,
         "text/x-wiki":              WikiPageWiki,
         "image":                    WikiPageImage,
         "":                         WikiPageFile,
-        "type/hello":               WikiPageHello,
-        "type/login":               WikiPageLogin,
-        "type/logout":              WikiPageLogout,
-        "type/about":               WikiPageAbout,
     }
 
     def __init__(self, config):
