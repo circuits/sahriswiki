@@ -1,14 +1,28 @@
-"""Utils macros
+# Module:   utils
+# Date:     12th July 2010
+# Author:   James Mills, prologic at shortcircuit dot net dot au
 
-Utility macros
+"""Utility Macros
+
+Various Utility Macros
 """
 
 from inspect import getdoc
 
 def macros(macro, environ, context, *args, **kwargs):
-    """Return a list of available macros"""
+    """Display a list of available macros and their documentation.
+    
+    **Arguments:** //No Arguments//
+
+    **Example(s):**
+    {{{
+    <<macros>>
+    }}}
+
+    You're looking at it! :)
+    """
 
     macros = environ.macros.items()
     s = "\n".join(["== %s ==\n%s\n" % (k, getdoc(v)) for k, v in macros])
 
-    return environ.parser.generate(s, environ=environ)
+    return environ.parser.generate(s, environ=(environ, context))

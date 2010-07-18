@@ -1,54 +1,47 @@
-"""Include macros
+# Module:   include
+# Date:     12th July 2010
+# Author:   James Mills, prologic at shortcircuit dot net dot au
 
-Macros for inclusion of other wiki pages
+"""Include macro
+
+Macro for inclusion of other wiki pages
 """
 
-from genshi import builder
+from genshi.builder import tag
 
 from sahriswiki.errors import NotFoundErr
 
-def include(macro, environ, context, name=None, *args, **kwargs):
-    """Return the parsed content of the page identified by arg_string"""
+def include(macro, environ, context, *args, **kwargs):
+    """Include the contents of another wiki page.
     
-    if name is None:
-        return None
+    This macro allows you to include the contents of another wiki page,
+    optinoally allowing you to include it parsed (//the default//) or
+    unparsed (//parse=False//). If the specified page does not exist,
+    then "Page Not Found" will be displayed.
 
-    return environ.include(name)
+    **Arguments:**
+    * name=None (//the name of the page to include//)
+    * parse=True (//whether to parse the page//)
 
-def include_raw(macro, environ, context, name=None, *args, **kwargs):
-    """Return the raw text of the page identified by arg_string, rendered
-    in a <pre> block.
+    **Example(s):**
+    {{{
+    <<include "SandBox">>
+    }}}
+
+    <<include "SandBox">>
+
+    {{{
+    <<include "SandBox", parse=False>>
+    }}}
+
+    <<include "SandBox", parse=False>>
     """
+    
+    name = kwargs.get("name", (args and args[0]) or None)
 
     if name is None:
         return None
 
-    storage = environ.storage
+    parse = kwargs.get("parse", True)
 
-    if name in storage:
-        try:
-            text = storage.page_text(name)
-        except NotFoundErr:
-            text = u""
-
-        return builder.tag.pre(text, class_="plain")
-
-def include_source(macro, environ, context, name=None, *args, **kwargs):
-    """Return the parsed text of the page identified by arg_string, rendered
-    in a <pre> block.
-    """
-
-    if name is None:
-        return None
-
-    storage = environ.storage
-
-    if name in storage:
-        try:
-            text = storage.page_text(name)
-        except NotFoundErr:
-            text = u""
-
-        return builder.tag.pre(
-            environ.parser.generate(text, environ=(environ, context))
-        )
+    return environ.include(name, parse, context)
