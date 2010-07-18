@@ -1,4 +1,4 @@
-<<SetTitle "SahrisWiki">>
+= [[<<SetTitle "SahrisWiki", display=True>>]] =
 
 <<div class="right">>
 <<include "News">>
