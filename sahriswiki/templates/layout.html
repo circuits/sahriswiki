@@ -46,9 +46,6 @@
 	<body py:attrs="select('@*')">
 		<div id="main">
 			<div id="header">
-				<h1>
-					${_title} ${(defined('title') and title) or (defined('page') and page['name']) or ''}
-				</h1>
 				<div id="metanav" py:if="defined('metanav')">
 					<ul>
 						<li py:for="text, href in metanav"><a href="${href}">${text}</a></li>
