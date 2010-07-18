@@ -197,12 +197,13 @@ class Environment(BaseComponent):
         if page and "name" in page:
             xs = []
             name = page["name"]
-            parts = name.split("/")
-            for x in parts[:-1]:
-                xs.append(x)
-                yield ("/".join(xs), x, x,)
-            base = os.path.basename(name)
-            yield ("+backlinks/%s" % name, base, "View BackLinks",)
+            if not name == self.config.get("frontpage"):
+                parts = name.split("/")
+                for x in parts[:-1]:
+                    xs.append(x)
+                    yield ("/".join(xs), x, x,)
+                base = os.path.basename(name)
+                yield ("+backlinks/%s" % name, base, "View BackLinks",)
 
     def _create_users(self):
         users = {"admin": md5(self.config.get("password")).hexdigest()}
