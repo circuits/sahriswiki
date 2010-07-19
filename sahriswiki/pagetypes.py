@@ -29,7 +29,7 @@ from mercurial.node import short
 from circuits.web.tools import serve_file
 from circuits.web.exceptions import Redirect
 
-from utils import FIXLINES
+from utils import NEWLINES
 from highlight import highlight
 from errors import NotImplementedErr, UnsupportedMediaTypeErr
 
@@ -86,7 +86,7 @@ class WikiPage(object):
         return serve_file(self.request, self.response, path, type=self.mime)
 
     def edit(self):
-        raise NotImplemented()
+        raise NotImplementedErr()
 
     def history(self):
         history = list(self.storage.page_history(self.name))[:30]
@@ -122,7 +122,7 @@ class WikiPageText(WikiPage):
         text = self.request.kwargs.get("text", "")
 
         if text:
-            text = FIXLINES.sub("\n", text)
+            text = NEWLINES.sub("\n", text)
         else:
             action = "delete"
 
@@ -186,7 +186,7 @@ class WikiPageWiki(WikiPageText):
         text = self.request.kwargs.get("text", "")
 
         if text:
-            text = FIXLINES.sub("\n", text)
+            text = NEWLINES.sub("\n", text)
         else:
             action = "delete"
 
@@ -239,7 +239,7 @@ class WikiPageImage(WikiPageFile):
 
     def edit(self):
         if not self.request.kwargs:
-            raise NotImplemented()
+            raise NotImplementedErr()
 
         action = self.request.kwargs.get("action", None)
 
@@ -306,7 +306,7 @@ class WikiPageCSV(WikiPageFile):
         text = self.request.kwargs.get("text", "")
 
         if text:
-            text = FIXLINES.sub("\n", text)
+            text = NEWLINES.sub("\n", text)
         else:
             action = "delete"
 
@@ -378,7 +378,7 @@ class WikiPageRST(WikiPageText):
         text = self.request.kwargs.get("text", "")
 
         if text:
-            text = FIXLINES.sub("\n", text)
+            text = NEWLINES.sub("\n", text)
         else:
             action = "delete"
 
@@ -454,7 +454,7 @@ class WikiPageHTML(WikiPageText):
         text = self.request.kwargs.get("text", "")
 
         if text:
-            text = FIXLINES.sub("\n", text)
+            text = NEWLINES.sub("\n", text)
         else:
             action = "delete"
 
