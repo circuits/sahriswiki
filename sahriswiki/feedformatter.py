@@ -52,7 +52,7 @@ try:
 except ImportError:
     feedformatterCanPrettyPrint = False
 
-from time import time, strftime, localtime, mktime, struct_time, timezone
+from time import strftime, strptime, localtime, struct_time, timezone
 
 # RSS 1.0 Functions ----------
 
