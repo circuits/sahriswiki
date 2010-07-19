@@ -24,8 +24,6 @@ from circuits.web.controllers import expose, BaseController
 from highlight import highlight
 from errors import ForbiddenErr, NotFoundErr
 
-FIXLINES = re.compile("(\r[^\n])|(\r\n)")
-
 class Root(BaseController):
 
     def __init__(self, environ):
