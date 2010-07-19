@@ -12,7 +12,7 @@ import re
 
 from circuits.web.tools import mimetypes
 
-FIXLINES = re.compile("(\r[^\n])|(\r\n)")
+NEWLINES = re.compile("\n|\r[^\n]|\r\n")
 
 def external_link(addr):
     """
