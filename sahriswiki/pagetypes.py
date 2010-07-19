@@ -107,6 +107,12 @@ class WikiPage(object):
 class WikiPageText(WikiPage):
     """Pages of mime type text/* use this for display."""
 
+    def _render(self, text=None):
+        if text is None:
+            text = self._get_text()
+
+        return tag.pre(text)
+
     def edit(self):
         if not self.request.kwargs:
             if self.name in self.storage:
@@ -136,12 +142,21 @@ class WikiPageText(WikiPage):
             raise Redirect(self.url("/%s" % self.name))
         elif action == "cancel":
             raise Redirect(self.url("/%s" % self.name))
+        elif action == "preview":
+            data = {
+                "page": {"name": self.name, "text": text},
+                "author": self.environ._user(),
+                "comment": comment,
+                "preview": True,
+            }
+            data["html"] = self._render(text)
+            return self.render("edit.html", **data)
         elif action == "save":
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.save_text(self.name, text, self.environ._user(), comment,
-                    parent=parent)
+            self.storage.save_text(self.name, text, self.environ._user(),
+                comment, parent=parent)
             self.search.update_page(self, self.name, text=text)
 
             raise Redirect(self.url("/%s" % self.name))
@@ -153,7 +168,7 @@ class WikiPageText(WikiPage):
             "page": self._get_page_data(),
             "ctxnav": list(self.environ._ctxnav("view", self.name)),
         }
-        data["html"] = tag.pre(data["page"]["text"])
+        data["html"] = self._render()
         return self.render("view.html", **data)
 
 class WikiPageColorText(WikiPageText):
