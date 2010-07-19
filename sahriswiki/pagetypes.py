@@ -19,9 +19,10 @@ try:
 except ImportError:
     HAS_DOCUTILS = False
 
-from genshi import Markup
 from genshi.builder import tag
-from genshi.template import Template
+from genshi import HTML, Markup
+from genshi.filters import HTMLSanitizer
+from genshi.output import HTMLSerializer
 
 from mercurial.node import short
 
@@ -426,6 +427,18 @@ class WikiPageRST(WikiPageText):
 class WikiPageHTML(WikiPageText):
     """Display HTML (genshi) templates"""
 
+    def __init__(self, environ, name, mime):
+        super(WikiPageHTML, self).__init__(environ, name, mime)
+
+        self.sanitizer = HTMLSanitizer()
+        self.serializer = HTMLSerializer()
+
+    def _render(self, text=None):
+        if text is None:
+            text = self._get_text()
+
+        return self.sanitizer(HTML(text))
+
     def edit(self):
         if not self.request.kwargs:
             if self.name in self.storage:
@@ -459,18 +472,17 @@ class WikiPageHTML(WikiPageText):
             data = {
                 "page": {"name": self.name, "text": text},
                 "author": self.environ._user(),
-                "html": text,
                 "comment": comment,
                 "preview": True,
-                "html": Template(text).render(**data),
             }
+            data["html"] = self._render(text)
             return self.render("edit.html", **data)
         elif action == "save":
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.save_text(self.name, text, self.environ._user(), comment,
-                    parent=parent)
+            self.storage.save_text(self.name, text, self.environ._user(),
+                comment, parent=parent)
             self.search.update_page(self, self.name, text=text)
 
             raise Redirect(self.url("/%s" % self.name))
@@ -482,5 +494,5 @@ class WikiPageHTML(WikiPageText):
             "page": self._get_page_data(),
             "ctxnav": list(self.environ._ctxnav("view", self.name)),
         }
-        data["html"] = Markup(self.render(self.name, **data))
+        data["html"] = self._render()
         return self.render("view.html", **data)
