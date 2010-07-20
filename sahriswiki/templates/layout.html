@@ -30,15 +30,17 @@
     type="text/css" href="${staticurl(stylesheet)}" />
    <py:if test="defined('page')">
     <style type="text/css">
-     #menu li a[href="/${page['name']}"] {
+     #menu p a[href="/${page['name']}"] {
      	background : #fcfcfc;
      	border : 1px solid #2b548c;
      	border-bottom : 1px solid #fcfcfc;
      	color : #437fda;
+     	padding: 6px 10px;
      }
-     #menu li a[href="/${page['name']}"]:hover {
+     #menu p a[href="/${page['name']}"]:hover {
      	background : #fcfcfc;
      	color : #ba8f43;
+     	padding: 6px 10px;     	
       }
     </style>
    </py:if>
