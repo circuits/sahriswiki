@@ -1,5 +1,8 @@
-html * { margin: 0px; padding: 0px; outline: none; }
-body {  margin: 0px; padding: 0px; outline: none; background-color: #fcfcfc; }
+/* CSS Reset */
+html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var,optgroup{font-style:inherit;font-weight:inherit;}del,ins{text-decoration:none;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:baseline;}sub{vertical-align:baseline;}legend{color:#000;}input,button,textarea,select,optgroup,option{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;}input,button,textarea,select{*font-size:100%;}
+
+html { background-color: #fcfcfc; }
+body { background-color: #fcfcfc; }
 
 a {
 	color : #437fda;
@@ -184,28 +187,33 @@ td:empty { display: none; }
 input#q { background-color: #fff;  width: 150px; font-family: Helvetica; font-size: 12px; line-height: 12px; padding: 4px; margin-right: 0px; border: 1px solid #cfcfcf; } 
 input#q + button { background-color: #fff; border: 1px solid #cfcfcf; padding: 4px; font-size: 12px; line-height: 12px; font-family: Helvetica; text-align: center; }
 
-#menu {
-	background : #fcfcfc;
-	border-bottom : 1px solid #2b548c;
-	font-family: Helvetica;
-	font-size: 12px;
+#menu { position: relative; }
+#menu p {
+	margin: 0px; padding: 0px; 
+	padding-left: 10px; 
+	border-bottom: 1px solid #2b548c; 
+	width: 100%; 
+	height: 27px;
 }
-#menu ul {
-	padding : 7px 25px;
+#menu p a { 
+	display: block; 
+	padding: 7px 11px; 
+	font-family: Helvetica; 
+	font-size: 14px; line-height: 14px; 
+	color: #00c; 
+	float: left; 
+	border: none;
+	margin-right: 10px; 
 }
-#menu li {
-	display : inline;
+#menu p a:hover { 
+	background-color: #c1d7ff; 
+	color: #00c; 
+	border: 1px solid #2b548c; 
+	border-bottom: 1px solid #c1d7ff; 
+	padding: 6px 10px;
 }
-#menu li a {
-	color : #00c;
-	padding : 0.75em 1.5em;
-}
-#menu li a:hover {
-	background : #c1d7ff;
-	color: #00c;
-	border : 1px solid #2b548c;
-    border-bottom : 1px solid #c1d7ff;
-}
+
+#menu p code { clear: left; }
 
 #metanav {
     text-align: right;
