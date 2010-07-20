@@ -179,23 +179,10 @@ td:empty { display: none; }
   float: right;
   position: relative;
   text-align: right;
+  width: 250px;
 }
-
-#search form input {
-  width: 50%;
-  background : #ffffff;
-  border : 1px solid #cfcfcf;
-  padding : 0.35em;
-  margin : 0;
-}
-
-#search form button {
-  background : #ffffff;
-  border : 1px solid #cfcfcf;
-  padding : 0.35em;
-  margin : 0;
-  text-align: right;
-}
+input#q { background-color: #fff;  width: 150px; font-family: Helvetica; font-size: 12px; line-height: 12px; padding: 4px; margin-right: 0px; border: 1px solid #cfcfcf; } 
+input#q + button { background-color: #fff; border: 1px solid #cfcfcf; padding: 4px; font-size: 12px; line-height: 12px; font-family: Helvetica; text-align: center; }
 
 #menu {
 	background : #fcfcfc;
