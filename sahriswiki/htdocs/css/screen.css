@@ -137,13 +137,14 @@ img.smiley {
 }
 
 table {
-    border: 2px solid #ccc;
+    border: 1px solid #dedede;
     border-collapse: collapse;
     border-spacing: 0;
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
 }
 
-td { padding: 2px; }
+td { padding: 4px; margin: 0px; border: 1px solid #dedede; }
+td:empty { display: none; }
 
 #main {
 	margin : auto;
