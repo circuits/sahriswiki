@@ -15,9 +15,6 @@
    <meta name="author" content="${site['author']}" />
    <meta http-equiv="Content-Type"
     content="application/xhtml+xml; charset=utf-8" />
-    ${Markup('&lt;!--[if lt IE 9]&gt;')}
-		<script src="${staticurl('js/IE9.js')}"></script>
-	${Markup('&lt;![endif]--&gt;')}
    <py:if test="defined('page')">
     <link py:if="'feed' in page" rel="alternate" title="${page['name']}"
      href="${page['feed']}" type="application/xml" />
@@ -45,11 +42,14 @@
     </style>
    </py:if>
    ${select('*[local-name()!="title"]')}
+    ${Markup('&lt;!--[if lt IE 9]&gt;')}
+		<script src="${staticurl('js/IE9.js')}"></script>
+	${Markup('&lt;![endif]--&gt;')}
 	 </head>
  </py:match>
  <py:match path="body" once="true">
 	<body py:attrs="select('@*')">
-		<div id="_main"><div id="main">
+		<div id="wrapper"><div id="main">
 			<div id="header">
 				<div id="metanav" py:if="defined('metanav')">
 					<ul>
