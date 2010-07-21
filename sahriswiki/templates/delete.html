@@ -8,8 +8,24 @@
  </head>
  <body>
   <h1>Delete Page</h1>
-  <div py:if="defined('message')" id="message">${message}</div>
-  <div id="delete">
+  <py:choose test="defined('success')">
+   <py:when test="True">
+    <py:choose test="success">
+    <py:when test="True">
+     <div id="message">${message}</div>
+    </py:when>
+    <py:otherwise>
+     <div id="message" class="error">${message}</div>
+    </py:otherwise>
+    </py:choose>
+   </py:when>
+   <py:otherwise>
+   <p>Are you sure you want to delete
+    <a href="$url('/%s' % title)">${title}</a> ?
+   </p>
+   </py:otherwise>
+  </py:choose>
+  <div id="delete" py:if="not defined('success')">
    <form method="post" action="">
 		 	<h4><label for="comment">Comment:</label></h4>
 		 	<p class="input">
