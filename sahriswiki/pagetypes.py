@@ -19,8 +19,9 @@ try:
 except ImportError:
     HAS_DOCUTILS = False
 
+from genshi.input import HTML
 from genshi.builder import tag
-from genshi import HTML, Markup
+from genshi.core import Markup
 from genshi.filters import HTMLSanitizer
 from genshi.output import HTMLSerializer
 
