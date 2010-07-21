@@ -49,7 +49,7 @@
  </py:match>
  <py:match path="body" once="true">
 	<body py:attrs="select('@*')">
-		<div id="main">
+		<div id="_main"><div id="main">
 			<div id="header">
 				<div id="metanav" py:if="defined('metanav')">
 					<ul>
@@ -72,7 +72,7 @@
      <span py:with="last = len(breadcrumbs) - 1"
       py:for="i, (page, name) in enumerate(breadcrumbs)">
       <a href="${url('/%s' % page)}">${name}</a>
-      <py:if test="not i == last">&gt;</py:if>
+      <py:if test="not i == last"> &gt; </py:if>
      </span>
     </div>
 
@@ -110,6 +110,7 @@
       sahriswiki - ${sahriswiki['version']}
      </a>
     </div>
+	 	</div>
 	 	</div>
 	 </body>
  </py:match>
