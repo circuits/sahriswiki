@@ -15,6 +15,7 @@ from difflib import unified_diff
 from time import gmtime, strftime
 
 from genshi.core import Markup
+from genshi.builder import tag
 
 from feedformatter import Feed
 
@@ -342,6 +343,44 @@ class Root(BaseController):
             "Disallow: /%2b",
             "Disallow: /%2B",
         ))
+
+    @expose("+delete")
+    def delete(self, *args, **kwargs):
+        name = os.path.sep.join(args)
+
+        data = {
+            "title": name,
+        }
+
+        if name not in self.storage:
+            self.storage.reopen()
+            self.search.update(self.environ)
+            data["results"] = sorted(self.search.find((name,)),
+                    key=itemgetter(0), reverse=True)[:5]
+            if hasattr(self.storage, "page_parent"):
+                data["parent"] = self.storage.page_parent(name)
+            return self.render("notfound.html", **data)
+
+        action = kwargs.get("action", None)
+
+        if not action:
+            data["message"] = tag.p("Are you sure you want to delete ",
+                    tag.a(name, href=self.url("/%s" % name)), " ?")
+            return self.render("delete.html", **data)
+
+        if action == "delete":
+            comment = kwargs.get("comment", "")
+
+            self.storage.reopen()
+            self.search.update(self.environ)
+
+            self.storage.delete_page(name, self.environ._user(), comment)
+            self.search.update_page(self, name)
+
+            data["message"] = "%s has been deleted." % name
+            return self.render("delete.html", **data)
+        else:
+            raise Exception("Invalid action %r" % action)
 
     @expose("+diff")
     def diff(self, *args, **kwargs):
