@@ -128,20 +128,9 @@ class WikiPageText(WikiPage):
         parent = self.request.kwargs.get("parent", None)
         text = self.request.kwargs.get("text", "")
 
-        if text:
-            text = NEWLINES.sub("\n", text)
-        else:
-            action = "delete"
+        text = NEWLINES.sub("\n", text)
 
-        if action == "delete":
-            self.storage.reopen()
-            self.search.update(self.environ)
-
-            self.storage.delete_page(self.name, self.environ._user(), comment)
-            self.search.update_page(self, self.name, text=text)
-
-            raise Redirect(self.url("/%s" % self.name))
-        elif action == "cancel":
+        if action == "cancel":
             raise Redirect(self.url("/%s" % self.name))
         elif action == "preview":
             data = {
@@ -201,20 +190,9 @@ class WikiPageWiki(WikiPageText):
         parent = self.request.kwargs.get("parent", None)
         text = self.request.kwargs.get("text", "")
 
-        if text:
-            text = NEWLINES.sub("\n", text)
-        else:
-            action = "delete"
+        text = NEWLINES.sub("\n", text)
 
-        if action == "delete":
-            self.storage.reopen()
-            self.search.update(self.environ)
-
-            self.storage.delete_page(self.name, self.environ._user(), comment)
-            self.search.update_page(self, self.name, text=text)
-
-            raise Redirect(self.url("/%s" % self.name))
-        elif action == "cancel":
+        if action == "cancel":
             raise Redirect(self.url("/%s" % self.name))
         elif action == "preview":
             data = {
@@ -252,23 +230,6 @@ class WikiPageFile(WikiPage):
 
 class WikiPageImage(WikiPageFile):
     """Pages of mime type image/* use this for display."""
-
-    def edit(self):
-        if not self.request.kwargs:
-            raise NotImplementedErr()
-
-        action = self.request.kwargs.get("action", None)
-
-        if action == "delete":
-            self.storage.reopen()
-            self.search.update(self.environ)
-
-            self.storage.delete_page(self.name, self.environ._user(), "deleted")
-            self.search.update_page(self, self.name, "")
-
-            raise Redirect(self.url("/%s" % self.name))
-        else:
-            raise Exception("Invalid action %r" % action)
 
     def view(self):
         if self.name not in self.storage:
@@ -321,20 +282,9 @@ class WikiPageCSV(WikiPageFile):
         parent = self.request.kwargs.get("parent", None)
         text = self.request.kwargs.get("text", "")
 
-        if text:
-            text = NEWLINES.sub("\n", text)
-        else:
-            action = "delete"
+        text = NEWLINES.sub("\n", text)
 
-        if action == "delete":
-            self.storage.reopen()
-            self.search.update(self.environ)
-
-            self.storage.delete_page(self.name, self.environ._user(), comment)
-            self.search.update_page(self, self.name, text=text)
-
-            raise Redirect(self.url("/%s" % self.name))
-        elif action == "cancel":
+        if action == "cancel":
             raise Redirect(self.url("/%s" % self.name))
         elif action == "preview":
             data = {
@@ -393,20 +343,9 @@ class WikiPageRST(WikiPageText):
         parent = self.request.kwargs.get("parent", None)
         text = self.request.kwargs.get("text", "")
 
-        if text:
-            text = NEWLINES.sub("\n", text)
-        else:
-            action = "delete"
+        text = NEWLINES.sub("\n", text)
 
-        if action == "delete":
-            self.storage.reopen()
-            self.search.update(self.environ)
-
-            self.storage.delete_page(self.name, self.environ._user(), comment)
-            self.search.update_page(self, self.name, text=text)
-
-            raise Redirect(self.url("/%s" % self.name))
-        elif action == "cancel":
+        if action == "cancel":
             raise Redirect(self.url("/%s" % self.name))
         elif action == "preview":
             data = {
@@ -469,20 +408,9 @@ class WikiPageHTML(WikiPageText):
         parent = self.request.kwargs.get("parent", None)
         text = self.request.kwargs.get("text", "")
 
-        if text:
-            text = NEWLINES.sub("\n", text)
-        else:
-            action = "delete"
+        text = NEWLINES.sub("\n", text)
 
-        if action == "delete":
-            self.storage.reopen()
-            self.search.update(self.environ)
-
-            self.storage.delete_page(self.name, self.environ._user(), comment)
-            self.search.update_page(self, self.name, text=text)
-
-            raise Redirect(self.url("/%s" % self.name))
-        elif action == "cancel":
+        if action == "cancel":
             raise Redirect(self.url("/%s" % self.name))
         elif action == "preview":
             data = {
