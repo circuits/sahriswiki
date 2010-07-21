@@ -4,14 +4,9 @@ This is just a page to practice stuff and learn [[WikiFormatting]].
 
 Go ahead, edit it freely, yah editing stuff.
 ----
-Test
+<<code lang="python">>
+def main():
+    print "Hello World!"
 
-<<div class="nav">>
-* [[Foo]]
-* [[Bar]]
-** [[FooBar]]
-<</div>>
-
-Test :)
-
-Haha :)
+main()
+<</code>>
