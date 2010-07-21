@@ -375,8 +375,7 @@ class Root(BaseController):
             strftime(date_format, gmtime(to_date))))
 
         data = {
-            "title": "diff -r %s -r %s %s" % (from_rev, to_rev, name),
-            "name": self.name,
+            "title": "diff of %s from %s to %s" % (name, from_rev, to_rev),
             "diff": highlight(diff, lang="diff"),
         }
 
