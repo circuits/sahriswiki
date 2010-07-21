@@ -54,8 +54,6 @@ class Root(BaseController):
             return page.view()
         except NotFoundErr:
             data = {"title": name}
-            self.storage.reopen()
-            self.search.update(self.environ)
             data["results"] = sorted(self.search.find((name,)),
                     key=itemgetter(0), reverse=True)[:5]
             if hasattr(self.storage, "page_parent"):
@@ -348,13 +346,8 @@ class Root(BaseController):
     def delete(self, *args, **kwargs):
         name = os.path.sep.join(args)
 
-        data = {
-            "title": name,
-        }
-
         if name not in self.storage:
-            self.storage.reopen()
-            self.search.update(self.environ)
+            data = {"title": name}
             data["results"] = sorted(self.search.find((name,)),
                     key=itemgetter(0), reverse=True)[:5]
             if hasattr(self.storage, "page_parent"):
@@ -364,8 +357,7 @@ class Root(BaseController):
         action = kwargs.get("action", None)
 
         if not action:
-            data["message"] = tag.p("Are you sure you want to delete ",
-                    tag.a(name, href=self.url("/%s" % name)), " ?")
+            data = {"title": name}
             return self.render("delete.html", **data)
 
         if action == "delete":
@@ -377,7 +369,7 @@ class Root(BaseController):
             self.storage.delete_page(name, self.environ._user(), comment)
             self.search.update_page(self, name)
 
-            data["message"] = "%s has been deleted." % name
+            data = {"success": True, "message": "Page deleted successfully."}
             return self.render("delete.html", **data)
         else:
             raise Exception("Invalid action %r" % action)
