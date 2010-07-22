@@ -1,3 +1,5 @@
+= Test =
+
 |= Wiki                                           |= Rendered                              |= Source
 |{{{//italics//}}}                                |//italics//                             |<<source>>//italics//<</source>>
 |{{{**bold**}}}                                   |**bold**                                |<<source>>**bold**<</source>>
@@ -21,6 +23,24 @@
 |{{{use a tilde to ~**escape**}}}                 |use a tilde to ~**escape**              |<<source>>use a tilde to ~**escape**<</source>>
 |{{{<<source>>a //simple// macro<</source>>}}}    |<<source>>a //simple// macro<</source>> |<<source>><<source>>a //simple// macro<</source>><</source>>
 
-[[/+download/TestPages/CheatSheetPlus|Raw Wiki Text]]
+<<code lang="python" linenos=True>>
+from circuits.web import Server, Controller
 
-[[http://validator.w3.org/check?uri=referer|{{http://www.w3.org/Icons/valid-xhtml10-blue|Valid XHTML 1.0 Strict}}]]
+class Root(Controller):
+
+    def index(self):
+        return "Hello World!"
+
+(Server(8000) + Root()).run()
+<</code>>
+
+<<html>>
+<form method="get" action="http://www.google.com/search">
+<a href="http://www.google.com/>
+<img src="http://www.google.com/logos/Logo_40wht.gif" border="0" alt="Google"></a>
+<input type="text" name="q" maxlength="255" />
+<input type="submit" value="Google Search" />
+<input type="hidden" name="domains" value="*.darrenhoyt.com" />
+<input style="visibility:hidden" type="radio" name="sitesearch" value="*.darrenhoyt.com" checked="checked" />
+</form>
+<</html>>
