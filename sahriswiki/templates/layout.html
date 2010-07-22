@@ -19,8 +19,9 @@
     <link py:if="'feed' in page" rel="alternate" title="${page['name']}"
      href="${page['feed']}" type="application/xml" />
    </py:if>
-   <link rel="stylesheet" title="Normal" type="text/css" media="screen"
+   <link rel="stylesheet" type="text/css" media="screen"
     href="${staticurl('css/screen.css')}" />
+   <link rel="stylesheet" type="text/css" href="${staticurl('css/wiki.css')}" />
     <link rel="stylesheet" type="text/css"
      href="${staticurl('css/pygments.css')}" />
    <link py:for="stylesheet in stylesheets" rel="stylesheet"
@@ -76,7 +77,9 @@
      </span>
     </div>
 
-    <div id="content">${select('*|text()')}</div>
+    <div id="content" class="${(defined('cls') and cls) or 'wiki'}">
+     ${select('*|text()')}
+    </div>
 
     <py:def function="display_nav(nav)">
      <py:for each="item in nav">
