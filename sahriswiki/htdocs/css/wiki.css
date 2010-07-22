@@ -13,20 +13,17 @@
 	margin: 1em 0 0 1em;
 }
 
-.wiki blockquote, .wiki q {
+.wiki blockquote {
   quotes: none;
-}
-.wiki blockquote:before, .wiki blockquote:after, .wiki q:before, .wiki q:after {
-  content: "";
-}
-
-.wiki blockquote{
   background-color: #f8f8f8;
   border-left: 2px solid #eaeaea;
   color: #111;
   font-style: italic;
   margin:0 0 9px;
   padding:7px;
+}
+.wiki blockquote:before, .wiki blockquote:after {
+  content: "";
 }
 
 .wiki form button {
@@ -92,9 +89,7 @@
 	color:#3e5867;
 	display:block;
 	font-size:12px;
-
 	line-height:19px;
-	/* margin:0 -28px; */
 	margin: 1.75em 0;
 	padding: 8px;
 	white-space: pre-wrap;
@@ -149,8 +144,6 @@
 .wiki div.sidebar h4 { font-size: 14px; font-weight: bold; margin-bottom: 10px; }
 .wiki div.sidebar ul { margin-bottom: 5px; margin-top: 5px; padding: 0px; }
 .wiki br.clearside { clear: right; }
-
-.wiki div.highlight { padding: 0px; }
 
 .wiki ul,
 .wiki ol {

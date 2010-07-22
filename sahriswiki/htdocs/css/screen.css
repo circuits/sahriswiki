@@ -11,19 +11,15 @@ html, body {
 }
 
 a, a:visited, a:hover {
-	color : #437fda;
-	text-decoration : none;
+    color : #437fda;
+    text-decoration : none;
 }
 a:hover { text-decoration: underline; }
 
 h1, h2, h3, h4 {
-	color: #333;
-	font-weight: bold;
+    color: #333;
+    font-weight: bold;
 }
-
-hr { margin-bottom: 10px; }
-
-fieldset { padding: 5px; }
 
 h1 { font-size: 24px; line-height: 26px; margin-bottom: 15px; }
 h2 { font-size: 18px; line-height: 20px; margin-bottom: 10px; }
@@ -32,17 +28,8 @@ h4 { font-size: 14px; line-height: 16px; margin-bottom: 5px; }
 
 /* Header Area */
 #header {
-	padding-top: 20px;
+    padding-top: 20px;
     overflow: auto;
-}
-
-#header h1 {
-	color : #20b;
-	font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    float: left;
-    position: relative;
 }
 
 /* Search Area */
@@ -54,22 +41,22 @@ h4 { font-size: 14px; line-height: 16px; margin-bottom: 5px; }
 }
 
 #search input#q {
-	background-color: #fff;
-	width: 150px;
-	font-size: 12px;
-	line-height: 12px;
-	padding: 4px;
-	margin-right: 0px;
-	border: 1px solid #cfcfcf;
+    background-color: #fff;
+    width: 150px;
+    font-size: 12px;
+    line-height: 12px;
+    padding: 4px;
+    margin-right: 0px;
+    border: 1px solid #cfcfcf;
 }
 
 #search input#q + button {
-	background-color: #fff;
-	border: 1px solid #cfcfcf;
-	padding: 4px;
-	font-size: 12px;
-	line-height: 12px;
-	text-align: center;
+    background-color: #fff;
+    border: 1px solid #cfcfcf;
+    padding: 4px;
+    font-size: 12px;
+    line-height: 12px;
+    text-align: center;
 }
 
 /* Meta Menu */
@@ -81,10 +68,10 @@ h4 { font-size: 14px; line-height: 16px; margin-bottom: 5px; }
     font-size: 11px;
     line-height: 14px;
     height: 18px;
-	display : inline;
-	padding-right: 2px;
-	padding-left: 2px;
-	text-align: right;
+    display : inline;
+    padding-right: 2px;
+    padding-left: 2px;
+    text-align: right;
 }
 #metanav li a {
     text-decoration: none;
@@ -95,33 +82,32 @@ h4 { font-size: 14px; line-height: 16px; margin-bottom: 5px; }
 #metanav li a:hover { border-bottom: 1px dotted #2b548c; }
 
 /* Menu Navigation */
-#menu { position: relative; }
-#menu p {
-	margin: 0px; padding: 0px;
-	padding-left: 10px;
-	border-bottom: 1px solid #2b548c;
-	width: 100%;
-	height: 27px;
+#menu {
+  clear: left;
+  position: relative;
+  margin: 0px; padding: 0px;
+  padding-left: 10px;
+  border-bottom: 1px solid #2b548c;
+  width: 100%;
+  height: 27px;
 }
-#menu p:after { clear: left; }
-#menu p a {
-	display: block;
-	padding: 7px 11px;
-	font-size: 14px; line-height: 14px;
-	color: #00c;
-	float: left;
-	border: none;
-	margin-right: 10px;
+#menu a {
+    display: block;
+    padding: 7px 11px;
+    font-size: 14px; line-height: 14px;
+    color: #00c;
+    float: left;
+    border: none;
+    margin-right: 10px;
 }
-#menu p a:hover {
-	background-color: #c1d7ff;
-	color: #00c;
-	border: 1px solid #2b548c;
-	border-bottom: 1px solid #c1d7ff;
-	padding: 6px 10px;
+#menu a:hover {
+    background-color: #c1d7ff;
+    color: #00c;
+    border: 1px solid #2b548c;
+    border-bottom: 1px solid #c1d7ff;
+    text-decoration: none;
+    padding: 6px 10px;
 }
-
-#menu p { clear: left; }
 
 /* Bread Crumbs */
 
@@ -143,20 +129,20 @@ h4 { font-size: 14px; line-height: 16px; margin-bottom: 5px; }
 /* Content Declarations */
 
 #content {
-	border-bottom : 1px solid #cfcfcf;
-	height : auto !important;
-	height : 1%;
-	overflow : hidden;
-	padding : 0px;
-	padding-top: 10px;
-	margin-bottom: 5px;
+    border-bottom : 1px solid #cfcfcf;
+    height : auto !important;
+    height : 1%;
+    overflow : hidden;
+    padding : 0px;
+    padding-top: 10px;
+    margin-bottom: 5px;
 }
 
 /* Sub Navigation */
 
 #ctxnav > * {
     text-align: left;
-	font-size: 11px;
+    font-size: 11px;
 }
 
 /* Top Level */
@@ -178,9 +164,9 @@ h4 { font-size: 14px; line-height: 16px; margin-bottom: 5px; }
 /* Footer */
 
 #footer {
-	font-size : 85%;
-	margin : auto;
-	padding : 1em 0 3em 0;
-	text-align : center;
-	width : 65%;
+    font-size : 85%;
+    margin : auto;
+    padding : 1em 0 3em 0;
+    text-align : center;
+    width : 65%;
 }
