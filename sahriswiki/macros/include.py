@@ -22,6 +22,7 @@ def include(macro, environ, context, *args, **kwargs):
     **Arguments:**
     * name=None (//the name of the page to include//)
     * parse=True (//whether to parse the page//)
+    * source=False (//whether to display the genereated HTML / source//)
 
     **Example(s):**
     {{{
@@ -43,5 +44,11 @@ def include(macro, environ, context, *args, **kwargs):
         return None
 
     parse = kwargs.get("parse", True)
+    source = kwargs.get("source", False)
 
-    return environ.include(name, parse, context)
+    contents = environ.include(name, parse, context)
+
+    if source:
+        return tag.pre(contents)
+    else:
+        return contents
