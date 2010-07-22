@@ -1,5 +1,5 @@
 = Help on deleting pages =
-To delete a page replace it's contents with delete.
+To delete a page use the **Delete** function in the //Context Navigation//.
 
 **Reasons to delete a page:**
 * It's an orphan page and is not likely to become connected. Click on the page title to find out if there are any [[HelpOnBackLinks|BackLinks]].
@@ -15,5 +15,4 @@ To delete a page replace it's contents with delete.
 * Its content offends you.
 * Someone you don't like wrote it.
 * It's short.
-
 ----
