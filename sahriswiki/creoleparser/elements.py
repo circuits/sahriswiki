@@ -1371,12 +1371,10 @@ class IndentedBlock(BlockElement):
 
     """
 
-    def __init__(self, tag, token, class_ , style ):
+    def __init__(self, tag, token):
         super(IndentedBlock,self).__init__(tag,token )
         self.regexp = re.compile(self.re_string(),re.MULTILINE)
         self.regexp2 = re.compile(self.re_string2(),re.MULTILINE)
-        self.class_ = class_
-        self.style = style
 
     def re_string(self):
         return r'^((' + re.escape(self.token) \
@@ -1390,7 +1388,7 @@ class IndentedBlock(BlockElement):
         match = self.regexp2.sub(r'',mo.group(1)) # removes tokens during processing
         return bldr.tag.__getattr__(self.tag)(
             fragmentize(match,self.child_elements,
-                        element_store, environ),class_=self.class_,style=self.style)
+                        element_store, environ))
 
 
 class LoneElement(BlockElement):

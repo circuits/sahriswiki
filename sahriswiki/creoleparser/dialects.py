@@ -73,11 +73,6 @@ def create_dialect(dialect_base, **kw_args):
         If `True`, each newline character in a paragraph will be converted to
         a <br />. Note that the escaping mechanism (tilde) does not work
         for newlines.
-      indent_class
-        The class attribute to add to indented regions.
-      indent_style
-        The style attribute to add to indented regions.
- 
     """
 
     return dialect_base(**kw_args)
@@ -287,7 +282,7 @@ def creole11_base(macro_func=None,
         
         simple_element = SimpleElement(token_dict={'**':'strong','//':'em',',,':'sub',
                                                   '^^':'sup','__':'u','##':'code'})
-        indented = IndentedBlock('div','>', class_=indent_class, style=indent_style)
+        indented = IndentedBlock('blockquote','>')
         
         dd = DefinitionDef('dd',':')
         dt = DefinitionTerm('dt',';',stop_token=':')
