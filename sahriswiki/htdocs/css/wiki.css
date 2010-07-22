@@ -163,3 +163,8 @@
 .wiki li { font-family: Helvetica; font-size: 12px; line-height: 16px; list-style: disc; }
 
 .wiki ol li { list-style: decimal; }
+
+.wiki a.external {
+  padding-right: 15px;
+  background: url(../img/icons/moin-www.png) no-repeat 100% 50%;
+}
