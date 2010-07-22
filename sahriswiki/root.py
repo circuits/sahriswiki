@@ -14,8 +14,6 @@ from operator import itemgetter
 from difflib import unified_diff
 from time import gmtime, strftime
 
-from mercurial.node import short
-
 from genshi.core import Markup
 from genshi.builder import tag
 
@@ -390,15 +388,13 @@ class Root(BaseController):
         action = kwargs.get("action", None)
 
         if not action:
-            rev, node, date, author, comment = self.storage.page_meta(name)
-            data = {"title": name, "parent": short(node)}
+            data = {"title": name}
             return self.render("rename.html", **data)
 
         if action == "rename":
             newname = kwargs.get("name", "")
             if newname and newname not in self.storage:
                 comment = kwargs.get("comment", "")
-                parent = kwargs.get("parent", None)
 
                 self.storage.reopen()
                 self.search.update(self.environ)
@@ -406,7 +402,7 @@ class Root(BaseController):
                 user = self.environ._user()
 
                 text = self.storage.page_text(name)
-                self.storage.save_text(newname, text, user, comment, parent)
+                self.storage.save_text(newname, text, user, comment)
                 self.search.update_page(self, newname, text=text)
 
                 self.storage.delete_page(name, user, comment)
@@ -427,7 +423,7 @@ class Root(BaseController):
                     "message": "A new name is requried",
                 }
 
-            return self.render("delete.html", **data)
+            return self.render("rename.html", **data)
         else:
             raise Exception("Invalid action %r" % action)
 
