@@ -448,28 +448,3 @@ class InvalidFeedException(Exception):
 def fromUFP(ufp):
 
     return Feed(ufp["feed"], ufp["items"])
-
-### MAIN ------------------------------
-
-def main():
-
-    feed = Feed()
-    feed.feed["title"] = "Test Feed"
-    feed.feed["link"] = "http://code.google.com/p/feedformatter/"
-    feed.feed["author"] = "Luke Maurits"
-    feed.feed["description"] = "A simple test feed for the feedformatter project"
-    item = {}
-    item["title"] = "Test item"
-    item["link"] = "http://www.python.org"
-    item["description"] = "Python programming language"
-    item["guid"] = "1234567890"
-    feed.items.append(item)
-    print("---- RSS 1.0 ----")
-    print feed.format_rss1_string(pretty=True)
-    print("---- RSS 2.0 ----")
-    print feed.format_rss2_string(pretty=True)
-    print("---- Atom 1.0 ----")
-    print feed.format_atom_string(pretty=True)
-
-if __name__ == "__main__":
-    main()
