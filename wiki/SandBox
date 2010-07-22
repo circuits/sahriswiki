@@ -5,16 +5,12 @@ This is just a page to practice stuff and learn [[WikiFormatting]].
 Go ahead, edit it freely, yah editing stuff.
 ----
 <<code lang="python" linenos=True>>
-import os
-
-from circuits.tools import graph
 from circuits.web import Server, Controller
 
 class Root(Controller):
 
     def index(self):
-        graph(self.root)
-        return self.serve_file(os.path.abspath("%s.png" % self.root.name))
+        return "Hello World!"
 
 (Server(8000) + Root()).run()
 <</code>>
