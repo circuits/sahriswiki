@@ -140,8 +140,8 @@ class Environment(BaseComponent):
 
         if (readonly and login) or (not readonly):
             yield "PAGE_EDIT"
-            yield "PAGE_MOVE"
             yield "PAGE_DELETE"
+            yield "PAGE_RENAME"
             yield "PAGE_UPLOAD"
             yield "CONFIG_VIEW"
 
