@@ -273,11 +273,12 @@ class Environment(BaseComponent):
 
         return page_class(self, name, mime)
 
-    def include(self, name, parse=True, context=None):
+    def include(self, name, parse=True, context="block", data=None):
         if name in self.storage:
             text = self.storage.page_text(name)
             if parse:
-                return self.parser.generate(text, environ=(self, context))
+                return self.parser.generate(text, context=context,
+                        environ=(self, data))
             else:
                 return tag.pre(text)
         else:

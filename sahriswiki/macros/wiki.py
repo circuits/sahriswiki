@@ -16,7 +16,7 @@ from genshi.output import HTMLSerializer
 
 serializer = HTMLSerializer()
 
-def SetTitle(macro, environ, context, *args, **kwargs):
+def SetTitle(macro, environ, data, *args, **kwargs):
     """Set the title of the page.
     
     This macro allows you to set a custom title for a page that is
@@ -48,14 +48,14 @@ def SetTitle(macro, environ, context, *args, **kwargs):
     if not title:
         return None
 
-    context["title"] = title
+    data["title"] = title
 
     if display:
         return title
     else:
         return Markup("<!-- %s -->" % title)
 
-def title(macro, environ, context, *args, **kwargs):
+def title(macro, environ, data, *args, **kwargs):
     """Displays the current title of the page or it's name.
     
     This macro simply displays the title or name of the current page.
@@ -70,16 +70,16 @@ def title(macro, environ, context, *args, **kwargs):
     <<title>>
     """
 
-    if "title" in context:
-        title = context["title"]
-    elif "page" in context:
-        title = context["page"].get("name", u"")
+    if "title" in data:
+        title = data["title"]
+    elif "page" in data:
+        title = data["page"].get("name", u"")
     else:
         title = u""
 
     return title
 
-def AddComment(macro, environ, context, *args, **kwargs):
+def AddComment(macro, environ, data, *args, **kwargs):
     """Display an add comment form allowing users to post comments.
 
     This macro allows you to display an add comment form on the current
@@ -100,7 +100,7 @@ def AddComment(macro, environ, context, *args, **kwargs):
     parser = environ.parser
     request = environ.request
 
-    page = context["page"]
+    page = data["page"]
     page_name = page["name"]
     page_text = page["text"]
     
@@ -119,8 +119,8 @@ def AddComment(macro, environ, context, *args, **kwargs):
     # If we are submitting or previewing, inject comment as it should look
     if action == "preview":
         the_preview = tag.div(tag.h1("Preview"), id="preview")
-        the_preview += tag.div(parser.generate(comment,
-            environ=(environ, context)), class_="article")
+        the_preview += tag.div(parser.generate(comment, context="inline",
+            environ=(environ, data)), class_="article")
 
     # When submitting, inject comment before macro
     if comment and action == "save":
@@ -144,8 +144,8 @@ def AddComment(macro, environ, context, *args, **kwargs):
         search.update_page(environ.get_page(page_name), page_name,
                 text=new_text)
 
-        the_comment = parser.generate(comment_text,
-                environ=(environ, context))
+        the_comment = parser.generate(comment_text, context="inline",
+                environ=(environ, data))
 
     the_form = tag.form(
             tag.input(type="hidden", name="parent", value=page["node"]),
@@ -180,7 +180,7 @@ def AddComment(macro, environ, context, *args, **kwargs):
 
     return tag(the_preview, the_comment, the_form)
 
-def source(macro, environ, context, *args, **kwargs):
+def source(macro, environ, data, *args, **kwargs):
     """Display the HTML source of some parsed wiki text
     
     This macro allows you to display the genereated HTML source of some
@@ -199,6 +199,7 @@ def source(macro, environ, context, *args, **kwargs):
     if not macro.body:
         return None
 
-    contents = environ.parser.generate(macro.body, environ=(environ, context))
+    contents = environ.parser.generate(macro.body, context="inline",
+            environ=(environ, data))
     
     return tag.pre("".join(serializer(contents)))

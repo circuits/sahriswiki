@@ -27,8 +27,8 @@ from genshi.output import HTMLSerializer
 
 from mercurial.node import short
 
-from circuits.web.tools import serve_file
 from circuits.web.exceptions import Redirect
+from circuits.web.tools import expires, serve_file
 
 from utils import NEWLINES
 from highlight import highlight
@@ -84,6 +84,7 @@ class WikiPage(object):
 
     def download(self):
         path = self.storage._file_path(self.name)
+        expires(self.request, self.response, 60*60*24*30, force=True)
         return serve_file(self.request, self.response, path, type=self.mime)
 
     def edit(self):
@@ -176,6 +177,13 @@ class WikiPageColorText(WikiPageText):
 class WikiPageWiki(WikiPageText):
     """Pages of with wiki markup use this for display."""
 
+    def _render(self, text=None, data={}):
+        if text is None:
+            text = self._get_text()
+
+        return self.environ.parser.generate(text, context="block",
+                environ=(self.environ, data))
+
     def edit(self):
         if not self.request.kwargs:
             if self.name in self.storage:
@@ -201,15 +209,14 @@ class WikiPageWiki(WikiPageText):
                 "comment": comment,
                 "preview": True,
             }
-            data["html"] = self.environ.parser.generate(
-                data["page"]["text"], environ=(self.environ, data))
+            data["html"] = self._render(text, data)
             return self.render("edit.html", **data)
         elif action == "save":
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.save_text(self.name, text, self.environ._user(), comment,
-                    parent=parent)
+            self.storage.save_text(self.name, text, self.environ._user(),
+                    comment, parent=parent)
             self.search.update_page(self, self.name, text=text)
 
             raise Redirect(self.url("/%s" % self.name))
@@ -221,8 +228,7 @@ class WikiPageWiki(WikiPageText):
             "page": self._get_page_data(),
             "ctxnav": self.environ._ctxnav("view", self.name),
         }
-        data["html"] = self.environ.parser.generate(
-            data["page"]["text"], environ=(self.environ, data))
+        data["html"] = self._render(data=data)
         return self.render("view.html", **data)
 
 class WikiPageFile(WikiPage):

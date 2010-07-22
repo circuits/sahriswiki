@@ -9,7 +9,7 @@ Various Utility Macros
 
 from inspect import getdoc
 
-def macros(macro, environ, context, *args, **kwargs):
+def macros(macro, environ, data, *args, **kwargs):
     """Display a list of available macros and their documentation.
     
     **Arguments:** //No Arguments//
@@ -25,4 +25,5 @@ def macros(macro, environ, context, *args, **kwargs):
     macros = environ.macros.items()
     s = "\n".join(["== %s ==\n%s\n" % (k, getdoc(v)) for k, v in macros])
 
-    return environ.parser.generate(s, environ=(environ, context))
+    return environ.parser.generate(s, context="inline",
+            environ=(environ, data))
