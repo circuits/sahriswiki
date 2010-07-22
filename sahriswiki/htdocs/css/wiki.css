@@ -157,7 +157,11 @@
 
 .wiki ol li { list-style: decimal; }
 
+.wiki a.new {
+  color: #ff0000;
+  font-weight: bold;
+}
+
 .wiki a.external {
-  padding-right: 15px;
-  background: url(../img/icons/moin-www.png) no-repeat 100% 50%;
+  text-decoration: underline;
 }
