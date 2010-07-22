@@ -158,10 +158,9 @@
 .wiki ol li { list-style: decimal; }
 
 .wiki a.new {
-  color: #ff0000;
-  font-weight: bold;
+  color: #8B0000;
 }
 
 .wiki a.external {
-  text-decoration: underline;
+  color: #4B0082;
 }
