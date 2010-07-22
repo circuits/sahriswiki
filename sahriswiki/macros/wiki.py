@@ -12,6 +12,9 @@ import time
 
 from genshi.builder import tag
 from genshi.core import Markup
+from genshi.output import HTMLSerializer
+
+serializer = HTMLSerializer()
 
 def SetTitle(macro, environ, context, *args, **kwargs):
     """Set the title of the page.
@@ -198,4 +201,4 @@ def source(macro, environ, context, *args, **kwargs):
 
     contents = environ.parser.generate(macro.body, environ=(environ, context))
     
-    return tag.pre(contents)
+    return tag.pre("".join(serializer(contents)))
