@@ -1,0 +1,30 @@
+<<SetTitle "SahrisWiki ChangesLog">>
+
+= Change Log =
+//SahrisWiki ChangeLog//
+
+== 0.8 ==
+* [+]: If searching yields no results an option is given to create or
+       upload a page.
+* [+]: The page index (//searching for nothing//) now lists a tree
+* [+]: Can now search for specific pages (//not just words//)
+* [!]: --daemon now works
+* [!]: --readonly now works
+* [+]: Added support to specify logfile (//--logfile//)
+* [+]: Rudimentary user authentication support
+** Uses HTTP Basic Auth
+** Default username/password == admin/admin (//use --password to change//)
+** Uses htpasswd style file (//use --htpasswd//)
+* [+]: Many new configuration options (//See sahriswiki --help//)
+** Options to disable compression, static, hgweb and logging
+** Options to set baseurl for static resources
+** //And many more...//
+* [+]: Subdirectory Storage with Indexes (//now the default//).
+* [ ]: Initial public documentation of changes: [[<<title>>]]
+----
+
+**Legend:** \\
+* [+] Addition of something new.
+* [-] Removal of an existing feature.
+* [!] Fix of an existing broken feature.
+* [ ] Uncategorized
