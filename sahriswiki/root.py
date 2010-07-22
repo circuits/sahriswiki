@@ -308,9 +308,11 @@ class Root(BaseController):
             page = self.environ.get_page(name)
             return page.history()
 
+        history = list(self.storage.history())[:30]
+
         data = {
             "title": "Recent Changes",
-            "history": self.storage.history(),
+            "history": history,
             "strftime": strftime,
             "gmtime": gmtime,
             "ctxnav": self.environ._ctxnav("history"),
