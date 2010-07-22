@@ -12,7 +12,7 @@ from genshi.output import HTMLSerializer
 
 serializer = HTMLSerializer()
 
-def include(macro, environ, context, *args, **kwargs):
+def include(macro, environ, data, *args, **kwargs):
     """Include the contents of another wiki page.
     
     This macro allows you to include the contents of another wiki page,
@@ -47,7 +47,7 @@ def include(macro, environ, context, *args, **kwargs):
     parse = kwargs.get("parse", True)
     source = kwargs.get("source", False)
 
-    contents = environ.include(name, parse, context)
+    contents = environ.include(name, parse, data=data)
 
     if source:
         return tag.pre("".join(serializer(contents)))

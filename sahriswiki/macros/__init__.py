@@ -28,11 +28,10 @@ def creepy10_base():
 
         def __init__(self):
             self.kw_arg.child_elements = [self.spaces]
-            self.spaces.child_elements = []
 
         @property
         def top_elements(self):
-            return [self.kw_arg, self.spaces]
+            return [self.kw_arg]
 
     return Base
 
@@ -64,12 +63,12 @@ class Macro(object):
         self.body = body
         self.isblock = isblock
 
-def dispatcher(name, arg_string, body, isblock, (environ, context)):
+def dispatcher(name, arg_string, body, isblock, (environ, data)):
     if name in environ.macros:
         macro = Macro(name, arg_string, body, isblock)
         args, kwargs = parse_args(arg_string)
         try:
-            return environ.macros[name](macro, environ, context,
+            return environ.macros[name](macro, environ, data,
                 *args, **kwargs)
         except Exception, e:
             error = "ERROR: Error while executing macro %s (%s)" % (name, e)

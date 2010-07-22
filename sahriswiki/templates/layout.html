@@ -66,7 +66,7 @@
 	 		</div>
 
     <div id="menu">
-     ${include(config.get('menu'))}
+     ${include(config.get('menu'), context='inline')}
     </div>
 
     <div py:if="breadcrumbs" id="breadcrumbs" >

@@ -18,7 +18,7 @@ serializer = HTMLSerializer()
 
 from sahriswiki.highlight import highlight
 
-def code(macro, environ, context, *args, **kwargs):
+def code(macro, environ, data, *args, **kwargs):
     """Displays a block of text with syntax highlighting in a HTML <pre>.
     
     This macro uses the pygments syntax highlighter to render a block of
@@ -61,7 +61,7 @@ def code(macro, environ, context, *args, **kwargs):
 
     return highlight(macro.body, lang=lang, linenos=linenos)
 
-def div(macro, environ, context, *args, **kwargs):
+def div(macro, environ, data, *args, **kwargs):
     """Displays a block of text in a custom HTML <div>.
     
     This macro allows you to render a block of text in a custom HTML <div>
@@ -72,6 +72,7 @@ def div(macro, environ, context, *args, **kwargs):
     * class=None (//the class attribute//)
     * float=None (//the float style//)
     * style=None (//the style attribute//)
+    * context="block" (//Either "inline" or "block"//)
 
     **Example(s):**
     {{{
@@ -93,6 +94,7 @@ def div(macro, environ, context, *args, **kwargs):
     float = kwargs.get("float", "")
     style = kwargs.get("style", "")
     parse = kwargs.get("parse", True)
+    context = kwargs.get("context", "block")
 
     if float and float in ("left", "right"):
         style = "float: %s; %s" % (float, style)
@@ -100,13 +102,8 @@ def div(macro, environ, context, *args, **kwargs):
     if style:
         style = ";".join(sanitizer.sanitize_css(style))
 
-    if macro.isblock:
-        context = "block"
-    else:
-        context = "inline"
-
-    contents = environ.parser.generate(
-            macro.body, environ=(environ, context))
+    contents = environ.parser.generate(macro.body, context=context,
+            environ=(environ, data))
 
     attrs = {}
     if id:
@@ -118,7 +115,7 @@ def div(macro, environ, context, *args, **kwargs):
 
     return tag.div(contents, **attrs)
 
-def span(macro, environ, context, *args, **kwargs):
+def span(macro, environ, data, *args, **kwargs):
     """Displays text in a HTML <span>
 
     This macro allows you to display text in a custom HTML <span>
@@ -137,7 +134,7 @@ def span(macro, environ, context, *args, **kwargs):
     <<span "Hello World!">>
     """
 
-    text = macro.body or macro.arg_string
+    text = macro.body or (args and args[0]) or None
 
     if not text:
         return None
@@ -149,7 +146,8 @@ def span(macro, environ, context, *args, **kwargs):
     if style:
         style = ";".join(sanitizer.sanitize_css(style))
 
-    contents = environ.parser.generate(text, environ=(environ, context))
+    contents = environ.parser.generate(text, context="inline",
+            environ=(environ, data))
 
     attrs = {}
     if id:
@@ -161,7 +159,7 @@ def span(macro, environ, context, *args, **kwargs):
 
     return tag.span(contents, **attrs)
 
-def p(macro, environ, context, *args, **kwargs):
+def p(macro, environ, data, *args, **kwargs):
     """Displays text in a HTML <p>
 
     This macro allows you to display text in a custom HTML <p>
@@ -180,7 +178,7 @@ def p(macro, environ, context, *args, **kwargs):
     <<p "Hello World!">>
     """
 
-    text = macro.body or macro.arg_string
+    text = macro.body or (args and args[0]) or None
 
     if not text:
         return None
@@ -192,6 +190,9 @@ def p(macro, environ, context, *args, **kwargs):
     if style:
         style = ";".join(sanitizer.sanitize_css(style))
 
+    contents = environ.parser.generate(text, context="inline",
+            environ=(environ, data))
+
     attrs = {}
     if id:
         attrs["id"] = id
@@ -200,9 +201,9 @@ def p(macro, environ, context, *args, **kwargs):
     if style:
         attrs["style"] = style
 
-    return tag.p(text, **attrs)
+    return tag.p(contents, **attrs)
 
-def html(macro, environ, context, *args, **kwargs):
+def html(macro, environ, data, *args, **kwargs):
     """Displays raw HTML content.
 
     This macro allows you to display raw HTML with any **safe** content.
@@ -228,7 +229,7 @@ def html(macro, environ, context, *args, **kwargs):
 
     return Markup("".join(serializer(sanitizer(HTML(macro.body)))))
 
-def img(macro, environ, context, *args, **kwargs):
+def img(macro, environ, data, *args, **kwargs):
     """Displays an image, HTML <img>.
 
     This macro allows you to display a custom image, HTML <img>
