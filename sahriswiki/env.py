@@ -146,15 +146,15 @@ class Environment(BaseComponent):
             yield "CONFIG_VIEW"
 
     def _metanav(self):
+        yield ("About",       self.url("/+about"),   )
+        yield ("Help",        self.url("/Help"),     )
+        yield ("History",     self.url("/+history"), )
+
         if not self._login():
             yield ("Login",   self.url("/+login"),   )
         else:
             yield ("Logout",  self.url("/+logout"),  )
-            yield ("Profile", self.url("/+profile"),   )
-
-        yield ("History",     self.url("/+history"), )
-        yield ("Help",        self.url("/Help"),     )
-        yield ("About",       self.url("/+about"),   )
+            yield ("Profile", self.url("/+profile"), )
 
     def _ctxnav(self, type="view", name=None):
         permissions = self._permissions()
