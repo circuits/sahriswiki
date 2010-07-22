@@ -40,7 +40,7 @@ h4 { font-size: 14px; line-height: 16px; margin-bottom: 5px; }
   width: 250px;
 }
 
-#search input#q {
+#search input {
     background-color: #fff;
     width: 150px;
     font-size: 12px;
@@ -50,7 +50,7 @@ h4 { font-size: 14px; line-height: 16px; margin-bottom: 5px; }
     border: 1px solid #cfcfcf;
 }
 
-#search input#q + button {
+#search input + button {
     background-color: #fff;
     border: 1px solid #cfcfcf;
     padding: 4px;
