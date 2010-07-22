@@ -154,7 +154,8 @@ class ArgParser(object):
     """
     
     def __init__(self,dialect, convert_implicit_lists=True,
-                 key_func=None, illegal_keys=(), convert_unicode_keys=True):
+                 arg_func=None, key_func=None, illegal_keys=(),
+                 convert_unicode_keys=True):
         """Constructor for ArgParser objects
 
         :parameters:
@@ -174,6 +175,9 @@ class ArgParser(object):
           illegal_keys
             A tuple of keys that will be post-fixed with an underscore if found
             during parsing. 
+          arg_func
+            If supplied, this function will be used to transform the values
+            of the positional arguments.
           key_func
             If supplied, this function will be used to transform the names
             and values of keyword arguments. It must accept two positional
@@ -191,6 +195,7 @@ class ArgParser(object):
     
         self.dialect = dialect()
         self.convert_implicit_lists = convert_implicit_lists
+        self.arg_func = arg_func
         self.key_func = key_func
         self.illegal_keys = illegal_keys
         self.convert_unicode_keys = convert_unicode_keys
@@ -206,6 +211,7 @@ class ArgParser(object):
         """
         
         kwargs.setdefault('convert_implicit_lists',self.convert_implicit_lists)
+        kwargs.setdefault('arg_func',self.arg_func)
         kwargs.setdefault('key_func',self.key_func)
         kwargs.setdefault('illegal_keys',self.illegal_keys)
         kwargs.setdefault('convert_unicode_keys',self.convert_unicode_keys)
@@ -213,8 +219,8 @@ class ArgParser(object):
         return self._parse(arg_string,**kwargs)
 
 
-    def _parse(self,arg_string, convert_implicit_lists, key_func, illegal_keys,
-               convert_unicode_keys):
+    def _parse(self,arg_string, convert_implicit_lists, arg_func, key_func,
+            illegal_keys, convert_unicode_keys):
         
         frags = fragmentize(arg_string,self.dialect.top_elements,{},{},
                 remove_escapes=False)
@@ -246,6 +252,8 @@ class ArgParser(object):
              if isinstance(kw_args[k],ImplicitList) and convert_implicit_lists:
                  kw_args[k] = ' ' .join(kw_args[k])
            else:
+             if arg_func:
+                 arg = arg_func(arg)
              positional_args.append(arg)
 
         return (positional_args, kw_args)
