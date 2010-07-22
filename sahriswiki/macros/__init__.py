@@ -39,13 +39,13 @@ def creepy10_base():
 def arg_func(arg):
     try:
         return unrepr(arg)
-    except TypeError:
+    except:
         return arg
 
 def key_func(k, v):
     try:
         return k, unrepr(v)
-    except TypeError:
+    except:
         return k, v
 
 parse_args = ArgParser(
