@@ -299,7 +299,7 @@ class Environment(BaseComponent):
             "breadcrumbs": list(self._breadcrumbs(data.get("page", None))),
         })
         t = self.templates.load(template)
-        return t.generate(**data).render("xhtml", doctype="html")
+        return t.generate(**data).render("xhtml", doctype="xhtml")
 
     @handler("request", priority=1.0, target="web")
     def _on_request(self, request, response):
