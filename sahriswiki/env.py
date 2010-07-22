@@ -178,10 +178,10 @@ class Environment(BaseComponent):
         elif name and type == "func":
             if "PAGE_EDIT" in permissions:
                 yield ("Edit",      self.url("/+edit/%s" % name))
-            if "PAGE_MOVE" in permissions:
-                yield ("Move",      self.url("/+move/%s" % name))
             if "PAGE_DELETE" in permissions:
                 yield ("Delete",    self.url("/+delete/%s" % name))
+            if "PAGE_RENAME" in permissions:
+                yield ("Rename",    self.url("/+rename/%s" % name))
         elif name and type == "info":
             yield ("History",       self.url("/+history/%s" % name))
             yield ("Feeds",          self._ctxnav("history", name))
