@@ -4,20 +4,20 @@
 |##{{{^^super^^script}}}##              |^^super^^script             |<<source>>^^super^^script<</source>>
 |##{{{,,sub,,script}}}##                |,,sub,,script               |<<source>>,,sub,,script<</source>>
 |##{{{##monospace##}}}##                |##monospace##               |<<source>>##monospace##<</source>>
-|<<include-raw BulletList>>             |<<include BulletList>>      |<<include-source BulletList>>
-|<<include-raw NumberedList>>           |<<include NumberedList>>    |<<include-source NumberedList>>
-|<<include-raw MixedList>>              |<<include MixedList>>       |<<include-source MixedList>>
-|<<include-raw DefinitionList>>         |<<include DefinitionList>>  |<<include-source DefinitionList>>
+|{{{<<include TestPages/BulletList parse=>>}}}             |<<include TestPages/BulletList>>      |{{{<<include TestPages/BulletList source=True>>}}}
+|{{{<<include TestPages/NumberedList parse=>>}}}           |<<include TestPages/NumberedList>>    |{{{<<include TestPages/NumberedList source=True>>}}}
+|{{{<<include TestPages/MixedList parse=>>}}}              |<<include TestPages/MixedList>>       |{{{<<include TestPages/MixedList source=True>>}}}
+|{{{<<include TestPages/DefinitionList parse=>>}}}         |<<include TestPages/DefinitionList>>  |{{{<<include TestPages/DefinitionList source=True>>}}}
 |##Link to ~[[WikiPage]]##              |Link to [[WikiPage]]        |<<pre>><p>Link to <a href="WikiPage">WikiPage</a></p><</pre>>
 |##{{{[[http://google.com|Google]]}}}## |[[http://google.com|Google]]|<<source>>[[http://google.com|Google]]<</source>>
-|<<include-raw HeadingsPage>>           |<<include HeadingsPage>>    |<<include-source HeadingsPage>>
-|<<include-raw NoLineBreak>>            |<<include NoLineBreak>>     |<<include-source NoLineBreak>>
+|{{{<<include TestPages/HeadingsPage parse=>>}}}           |<<include TestPages/HeadingsPage>>    |{{{<<include TestPages/HeadingsPage source=True>>}}}
+|{{{<<include TestPages/NoLineBreak parse=>>}}}            |<<include TestPages/NoLineBreak>>     |{{{<<include TestPages/NoLineBreak source=True>>}}}
 |##Force~\\linebreak##                  |Force\\linebreak            |<<source>>Force\\linebreak<</source>>
-|<<include-raw HorizontalLine>>         |<<include HorizontalLine>>  |<<include-source HorizontalLine>>
+|{{{<<include TestPages/HorizontalLine parse=>>}}}         |<<include TestPages/HorizontalLine>>  |{{{<<include TestPages/HorizontalLine source=True>>}}}
 |##{{{{{Image.jpg|Cod}}}}}##            |{{Image.jpg|Cod}}           |<<source>>{{Image.jpg|Cod}}<</source>>
-|<<include-raw RenderedTable>>          |<<include RenderedTable>>   |<<include-source RenderedTable>>
-|<<include-raw RenderedPre>>            |<<include RenderedPre>>     |<<include-source RenderedPre>>
-|<<include-raw Indented>>               |<<include Indented>>        |<<include-source Indented>>
+|{{{<<include TestPages/RenderedTable parse=>>}}}          |<<include TestPages/RenderedTable>>   |{{{<<include TestPages/RenderedTable source=True>>}}}
+|{{{<<include TestPages/RenderedPre parse=>>}}}            |<<include TestPages/RenderedPre>>     |{{{<<include TestPages/RenderedPre source=True>>}}}
+|{{{<<include TestPages/Indented parse=>>}}}               |<<include TestPages/Indented>>        |{{{<<include TestPages/Indented source=True>>}}}
 |{{{use a tilde to ~**escape}}}         |use a tilde to ~**escape    |<<source>>use a tilde to ~**escape<</source>>
 |##{{{<<source>>a //simple// macro<</source>>}}}##|<<source>>a //simple// macro<</source>>|<<pre>><pre><p>a <em>simple</em> macro</p></pre><</pre>>
 
