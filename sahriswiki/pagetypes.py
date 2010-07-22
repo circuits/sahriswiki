@@ -360,8 +360,8 @@ class WikiPageRST(WikiPageText):
             self.storage.reopen()
             self.search.update(self.environ)
 
-            self.storage.save_text(self.name, text, self.environ._user(), comment,
-                    parent=parent)
+            self.storage.save_text(self.name, text, self.environ._user(),
+                    comment, parent=parent)
             self.search.update_page(self, self.name, text=text)
 
             raise Redirect(self.url("/%s" % self.name))
