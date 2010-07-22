@@ -374,6 +374,60 @@ class Root(BaseController):
         else:
             raise Exception("Invalid action %r" % action)
 
+    @expose("+rename")
+    def rename(self, *args, **kwargs):
+        name = os.path.sep.join(args)
+
+        if name not in self.storage:
+            data = {"title": name}
+            data["results"] = sorted(self.search.find((name,)),
+                    key=itemgetter(0), reverse=True)[:5]
+            if hasattr(self.storage, "page_parent"):
+                data["parent"] = self.storage.page_parent(name)
+            return self.render("notfound.html", **data)
+
+        action = kwargs.get("action", None)
+
+        if not action:
+            data = {"title": name}
+            return self.render("rename.html", **data)
+
+        if action == "rename":
+            comment = kwargs.get("comment", "")
+            newname = kwargs.get("name", "")
+
+            if newname and newname not in self.storage:
+                self.storage.reopen()
+                self.search.update(self.environ)
+
+                user = self.environ._user()
+
+                text = self.storage.page_text(name)
+                self.storage.save_text(newname, text, user, comment, parent)
+                self.search.update_page(self, newname, text=text)
+
+                self.storage.delete_page(name, user, comment)
+                self.search.update_page(self, name)
+
+                data = {
+                    "success": True,
+                    "message": "Page renamed successfully.",
+                }
+            elif newname in storage:
+                data = {
+                    "success": False,
+                    "message": "%s already exists" % newname,
+                }
+            else:
+                data = {
+                    "success": False,
+                    "message": "A new name is requried",
+                }
+
+            return self.render("delete.html", **data)
+        else:
+            raise Exception("Invalid action %r" % action)
+
     @expose("+diff")
     def diff(self, *args, **kwargs):
         name = os.path.sep.join(args)
