@@ -229,7 +229,6 @@ h4 { font-size: 14px; line-height: 16px; margin-bottom: 5px; }
 }
 
 #content td { padding: 4px; margin: 0px; border: 1px solid #dedede; }
-#content td:empty { display: none; }
 
 #content div.left {
 	left : -1em;
