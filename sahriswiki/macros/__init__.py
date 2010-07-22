@@ -16,13 +16,41 @@ from genshi.builder import tag
 from sahriswiki.unrepr import unrepr
 from sahriswiki.highlight import highlight
 from sahriswiki.creoleparser.core import ArgParser
-from sahriswiki.creoleparser.dialects import creepy10_base
+from sahriswiki.creoleparser.dialects import ArgDialect
+from sahriswiki.creoleparser.elements import KeywordArg, WhiteSpace
+
+def creepy10_base():
+
+    class Base(ArgDialect):
+
+        kw_arg = KeywordArg(token='=')
+        spaces = WhiteSpace()
+
+        def __init__(self):
+            self.kw_arg.child_elements = [self.spaces]
+            self.spaces.child_elements = []
+
+        @property
+        def top_elements(self):
+            return [self.kw_arg, self.spaces]
+
+    return Base
+
+def arg_func(arg):
+    try:
+        return unrepr(arg)
+    except TypeError:
+        return arg
 
 def key_func(k, v):
-    return k, v#unrepr(v) TODO: unrepr(v) doesn't work yet.
+    try:
+        return k, unrepr(v)
+    except TypeError:
+        return k, v
 
 parse_args = ArgParser(
     dialect=creepy10_base(),
+    arg_func=arg_func,
     key_func=key_func,
 )
 
