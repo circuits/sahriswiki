@@ -8,8 +8,9 @@ Macro for inclusion of other wiki pages
 """
 
 from genshi.builder import tag
+from genshi.output import HTMLSerializer
 
-from sahriswiki.errors import NotFoundErr
+serializer = HTMLSerializer()
 
 def include(macro, environ, context, *args, **kwargs):
     """Include the contents of another wiki page.
@@ -49,6 +50,6 @@ def include(macro, environ, context, *args, **kwargs):
     contents = environ.include(name, parse, context)
 
     if source:
-        return tag.pre(contents)
+        return tag.pre("".join(serializer(contents)))
     else:
         return contents
