@@ -47,3 +47,16 @@ class Root(Controller):
 </p>
 </form>
 <</html>>
+
+<<img "http://c2.com/sig/wiki.gif" class="left">>
+Hello World!
+<<img "http://c2.com/sig/wiki.gif" class="right">>
+
+This is <<span "some" class="highlight">> highlighted text.
+
+<<div class="sidebar" style="clear: both">>
+==== Side Bar ====
+You may:
+* Do nothing
+* Do something
+<</div>>
