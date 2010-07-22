@@ -6,20 +6,20 @@
 |{{{^^super^^script}}}                            |^^super^^script                         |<<source>>^^super^^script<</source>>
 |{{{,,sub,,script}}}                              |,,sub,,script                           |<<source>>,,sub,,script<</source>>
 |{{{##monospace##}}}                              |##monospace##                           |<<source>>##monospace##<</source>>
-|<<include TestPages/BulletList parse=False>>     |<<include TestPages/BulletList>>        |<<include TestPages/BulletList source=True>>
-|<<include TestPages/NumberedList parse=False>>   |<<include TestPages/NumberedList>>      |<<include TestPages/NumberedList source=True>>
-|<<include TestPages/MixedList parse=False>>      |<<include TestPages/MixedList>>         |<<include TestPages/MixedList source=True>>
-|<<include TestPages/DefinitionList parse=False>> |<<include TestPages/DefinitionList>>    |<<include TestPages/DefinitionList source=True>>
+|<<include Test/BulletList parse=False>>     |<<include Test/BulletList>>        |<<include Test/BulletList source=True>>
+|<<include Test/NumberedList parse=False>>   |<<include Test/NumberedList>>      |<<include Test/NumberedList source=True>>
+|<<include Test/MixedList parse=False>>      |<<include Test/MixedList>>         |<<include Test/MixedList source=True>>
+|<<include Test/DefinitionList parse=False>> |<<include Test/DefinitionList>>    |<<include Test/DefinitionList source=True>>
 |{{{Link to [[WikiPage]]}}}                       |Link to [[WikiPage]]                    |<<source>>Link to [[WikiPage]]<</source>>
 |{{{[[http://google.com|Google]]}}}               |[[http://google.com|Google]]            |<<source>>[[http://google.com|Google]]<</source>>
-|<<include TestPages/HeadingsPage parse=False>>   |<<include TestPages/HeadingsPage>>      |<<include TestPages/HeadingsPage source=True>>
-|<<include TestPages/NoLineBreak parse=False>>    |<<include TestPages/NoLineBreak>>       |<<include TestPages/NoLineBreak source=True>>
+|<<include Test/HeadingsPage parse=False>>   |<<include Test/HeadingsPage>>      |<<include Test/HeadingsPage source=True>>
+|<<include Test/NoLineBreak parse=False>>    |<<include Test/NoLineBreak>>       |<<include Test/NoLineBreak source=True>>
 |{{{Force\\linebreak}}}                           |Force\\linebreak                        |<<source>>Force\\linebreak<</source>>
-|<<include TestPages/HorizontalLine parse=False>> |<<include TestPages/HorizontalLine>>    |<<include TestPages/HorizontalLine source=True>>
-|{{{{{TestPages/Image.jpg|Cod}}}}}                |{{TestPages/Image.jpg|Cod}}             |<<source>>{{TestPages/Image.jpg|Cod}}<</source>>
-|<<include TestPages/RenderedTable parse=False>>  |<<include TestPages/RenderedTable>>     |<<include TestPages/RenderedTable source=True>>
-|<<include TestPages/RenderedPre parse=False>>    |<<include TestPages/RenderedPre>>       |<<include TestPages/RenderedPre source=True>>
-|<<include TestPages/Indented parse=False>>       |<<include TestPages/Indented>>          |<<include TestPages/Indented source=True>>
+|<<include Test/HorizontalLine parse=False>> |<<include Test/HorizontalLine>>    |<<include Test/HorizontalLine source=True>>
+|{{{{{Test/Image.jpg|Cod}}}}}                |{{Test/Image.jpg|Cod}}             |<<source>>{{Test/Image.jpg|Cod}}<</source>>
+|<<include Test/RenderedTable parse=False>>  |<<include Test/RenderedTable>>     |<<include Test/RenderedTable source=True>>
+|<<include Test/RenderedPre parse=False>>    |<<include Test/RenderedPre>>       |<<include Test/RenderedPre source=True>>
+|<<include Test/Indented parse=False>>       |<<include Test/Indented>>          |<<include Test/Indented source=True>>
 |{{{use a tilde to ~**escape**}}}                 |use a tilde to ~**escape**              |<<source>>use a tilde to ~**escape**<</source>>
 |{{{<<source>>a //simple// macro<</source>>}}}    |<<source>>a //simple// macro<</source>> |<<source>><<source>>a //simple// macro<</source>><</source>>
 
@@ -36,11 +36,14 @@ class Root(Controller):
 
 <<html>>
 <form method="get" action="http://www.google.com/search">
-<a href="http://www.google.com/>
-<img src="http://www.google.com/logos/Logo_40wht.gif" border="0" alt="Google"></a>
+<a href="http://www.google.com">
+ <img src="http://www.google.com/logos/Logo_40wht.gif" border="0" alt="Google">
+</a>
+<p class="text">
 <input type="text" name="q" maxlength="255" />
+</p>
+<p class="button">
 <input type="submit" value="Google Search" />
-<input type="hidden" name="domains" value="*.darrenhoyt.com" />
-<input style="visibility:hidden" type="radio" name="sitesearch" value="*.darrenhoyt.com" checked="checked" />
+</p>
 </form>
 <</html>>
