@@ -390,7 +390,7 @@ class Root(BaseController):
         action = kwargs.get("action", None)
 
         if not action:
-            rev, node, date, author, comment = self.storage.page_meta(self.name)
+            rev, node, date, author, comment = self.storage.page_meta(name)
             data = {"title": name, "parent": short(node)}
             return self.render("rename.html", **data)
 
