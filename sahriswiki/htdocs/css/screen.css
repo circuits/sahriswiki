@@ -210,7 +210,6 @@ h4 { font-size: 14px; line-height: 16px; margin-bottom: 5px; }
 	/* margin:0 -28px; */
 	margin: 1.75em 0;
 	padding: 8px;
-	text-shadow:0px 1px 0px #fff;
 	white-space: pre-wrap;
 	line-height: 15px; 
 	overflow: auto;
@@ -285,7 +284,7 @@ h4 { font-size: 14px; line-height: 16px; margin-bottom: 5px; }
 .nav>ul { width:100%; list-style:none; margin-bottom:5px; margin-top: 3px; }
 .nav>ul li { float:left; margin-right: 10px; position:relative; }
 .nav>ul li a { display:block; padding:2px; text-decoration:none; }
-.nav>ul li a:hover { text-shadow:1px 1px 1px rgba(0,0,0,0.20); text-decoration: underline; }
+.nav>ul li a:hover { text-decoration: underline; }
 
 /* Second Level */
 .nav>ul li>ul { list-style: none; visibility: hidden; }
