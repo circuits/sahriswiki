@@ -14,14 +14,15 @@ from operator import itemgetter
 from difflib import unified_diff
 from time import gmtime, strftime
 
+from mercurial.node import short
+
 from genshi.core import Markup
 from genshi.builder import tag
-
-from feedformatter import Feed
 
 from circuits.web.tools import check_auth, basic_auth
 from circuits.web.controllers import expose, BaseController
 
+from feedformatter import Feed
 from highlight import highlight
 from errors import ForbiddenErr, NotFoundErr
 
@@ -389,14 +390,16 @@ class Root(BaseController):
         action = kwargs.get("action", None)
 
         if not action:
-            data = {"title": name}
+            rev, node, date, author, comment = self.storage.page_meta(self.name)
+            data = {"title": name, "parent": short(node)}
             return self.render("rename.html", **data)
 
         if action == "rename":
-            comment = kwargs.get("comment", "")
-            newname = kwargs.get("name", "")
-
             if newname and newname not in self.storage:
+                comment = kwargs.get("comment", "")
+                parent = kwargs.get("parent", None)
+                newname = kwargs.get("name", "")
+
                 self.storage.reopen()
                 self.search.update(self.environ)
 
