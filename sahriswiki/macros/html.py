@@ -57,8 +57,9 @@ def code(macro, environ, context, *args, **kwargs):
         return None
 
     lang = kwargs.get("lang", None)
+    linenos = kwargs.get("linenos", False)
 
-    return highlight(macro.body, lang=lang)
+    return highlight(macro.body, lang=lang, linenos=linenos)
 
 def div(macro, environ, context, *args, **kwargs):
     """Displays a block of text in a custom HTML <div>.

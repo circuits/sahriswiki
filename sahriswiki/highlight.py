@@ -28,8 +28,8 @@ class HTMLFormatter(pygments.formatters.HtmlFormatter):
             yield i, t
         yield 0, "</pre>"
 
-def highlight(text, mime=None, lang=None):
-    formatter = HTMLFormatter()
+def highlight(text, mime=None, lang=None, linenos=False):
+    formatter = HTMLFormatter(cssclass="code", linenos=linenos)
 
     try:
         if mime:
