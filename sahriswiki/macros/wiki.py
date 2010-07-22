@@ -176,3 +176,26 @@ def AddComment(macro, environ, context, *args, **kwargs):
     )
 
     return tag(the_preview, the_comment, the_form)
+
+def source(macro, environ, context, *args, **kwargs):
+    """Display the HTML source of some parsed wiki text
+    
+    This macro allows you to display the genereated HTML source of some
+    parsed wiki text. (//Useful mostly for debugging//).
+
+    **Arguments:** //No Arguments//
+
+    **Example(s):**
+    {{{
+    <<source>>**Hello World!**<</source>>
+    }}}
+
+    <<source>>**Hello World!**<</source>>
+    """
+
+    if not macro.body:
+        return None
+
+    contents = environ.parser.generate(macro.body, environ=(environ, context))
+    
+    return tag.pre(contents)
