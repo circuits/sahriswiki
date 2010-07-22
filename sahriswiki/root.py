@@ -198,7 +198,7 @@ class Root(BaseController):
             return self.render("index.html", **data)
 
         if query in self.storage:
-            return self.environ.get_page(query).view()
+            return self.redirect(query)
 
         words = tuple(self.search.split_text(query, stop=False))
         if not words:
