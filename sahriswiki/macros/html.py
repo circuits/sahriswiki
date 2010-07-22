@@ -107,7 +107,15 @@ def div(macro, environ, context, *args, **kwargs):
     contents = environ.parser.generate(
             macro.body, environ=(environ, context))
 
-    return tag.div(contents, id=id, class_=cls, style=style)
+    attrs = {}
+    if id:
+        attrs["id"] = id
+    if cls:
+        attrs["class_"] = cls
+    if style:
+        attrs["style"] = style
+
+    return tag.div(contents, **attrs)
 
 def span(macro, environ, context, *args, **kwargs):
     """Displays text in a HTML <span>
@@ -142,7 +150,15 @@ def span(macro, environ, context, *args, **kwargs):
 
     contents = environ.parser.generate(text, environ=(environ, context))
 
-    return tag.span(contents, id=id, class_=cls, style=style)
+    attrs = {}
+    if id:
+        attrs["id"] = id
+    if cls:
+        attrs["class_"] = cls
+    if style:
+        attrs["style"] = style
+
+    return tag.span(contents, **attrs)
 
 def p(macro, environ, context, *args, **kwargs):
     """Displays text in a HTML <p>
@@ -175,7 +191,15 @@ def p(macro, environ, context, *args, **kwargs):
     if style:
         style = ";".join(sanitizer.sanitize_css(style))
 
-    return tag.p(text, id=id, class_=cls, style=style)
+    attrs = {}
+    if id:
+        attrs["id"] = id
+    if cls:
+        attrs["class_"] = cls
+    if style:
+        attrs["style"] = style
+
+    return tag.p(text, **attrs)
 
 def html(macro, environ, context, *args, **kwargs):
     """Displays raw HTML content.
@@ -236,4 +260,14 @@ def img(macro, environ, context, *args, **kwargs):
     if style:
         style = ";".join(sanitizer.sanitize_css(style))
 
-    return tag.img(src=src, id=id, alt=alt, class_=cls, style=style)
+    attrs = {}
+    if id:
+        attrs["id"] = id
+    if alt:
+        attrs["alt"] = alt
+    if cls:
+        attrs["class_"] = cls
+    if style:
+        attrs["style"] = style
+
+    return tag.img(src=src, **attrs)
