@@ -1,10 +1,10 @@
 = Features =
 //[[SahrisWiki]] Feature List//
 
-* **[[+backlinks]]** :: [[SahrisWiki]] includes support for displaying [[BackLinks]], pages that refer to the current page.
-* **[[+search]]** :: [[SahrisWiki]] includes a powerful cache-able full-text search thanks to [[http://hatta.sheep.art.pl/|Hatta]].
-* **[[Macros]]** :: [[SahrisWiki]] supports the creole macro extension and includes a variety of useful macros.
-* **[[+plugins]]** :: [[SahrisWiki]] has full plugin support allowing for easy and powerful extensibility.
-* **[[Docs/Themes|Themes]]** :: [[SahrisWiki]] uses the [[http://genshi.edgewall.org/|genshi]] toolkit to make creating new themes easy.
-* **[[Docs/Performance|Performance]]** :: [[SahrisWiki]] is designed with performance in mind.
+* Support for displaying [[BackLinks]], pages that refer to the current page.
+* A powerful cache-able full-text search thanks to [[http://hatta.sheep.art.pl/|Hatta]].
+* Supports the creole macro extension and includes a variety of useful [[Macros]].
+* Full plugin support allowing for easy and powerful extensibility. See: [[Plugins]].
+* Uses the [[http://genshi.edgewall.org/|genshi]] toolkit to make creating new [[Docs/Themes|Theme]] easy.
+* Is designed with [[Docs/Performance|Performance]] in mind.
 
