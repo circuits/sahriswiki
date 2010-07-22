@@ -217,8 +217,14 @@ class Environment(BaseComponent):
         return users
 
     def _wiki_links_class_func(self, type, url, body, name):
-        if type == "wiki" and name:
-            if name in self.storage:
+        if type == "wiki":
+            if url and url[0] == ".":
+                url = url[1:]
+            if url and url[0] in "./":
+                url = url[1:]
+            if url and url[0] == "/":
+                url = url[1:]
+            if url in self.storage:
                 return "wiki"
             else:
                 return "wiki new"
