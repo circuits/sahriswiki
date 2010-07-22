@@ -395,10 +395,10 @@ class Root(BaseController):
             return self.render("rename.html", **data)
 
         if action == "rename":
+            newname = kwargs.get("name", "")
             if newname and newname not in self.storage:
                 comment = kwargs.get("comment", "")
                 parent = kwargs.get("parent", None)
-                newname = kwargs.get("name", "")
 
                 self.storage.reopen()
                 self.search.update(self.environ)
