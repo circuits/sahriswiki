@@ -35,14 +35,14 @@ def oracle_session(*args, **kwargs):
 
 def sqlite_session(*args, **kwargs):
     try:
-        import sqlite3
         from sqlite3 import Connection
-        try:
-            return SQLiteSession(Connection(*args, **kwargs))
-        except sqlite3.Error, e:
-            raise ConnectionError("sqlite", e)
     except:
         raise DriverError("sqlite", "No SQLite support available.")
+
+    try:
+        return SQLiteSession(Connection(*args, **kwargs))
+    except sqlite.Error, e:
+        raise ConnectionError("sqlite", e)
 
 types = {
     "mysql": mysql_session,
@@ -104,7 +104,12 @@ class BaseSession(object):
 
     def execute(self, sql=None, *args, **kwargs):
         try:
-            self._execute(sql, *args, **kwargs)
+            if args:
+                self._execute(sql, *args)
+            elif kwargs:
+                self._execute(sql, **kwargs)
+            else:
+                self._execute(sql)
             return Records(self, self.cursor())
         except Exception, e:
             raise DatabaseError(sql, e)
@@ -128,7 +133,7 @@ class OracleSession(BaseSession):
     def __init__(self, *args, **kwargs):
         super(OracleSession, self).__init__(*args, **kwargs)
 
-        self.getCursor.arraysize = self.ORACLE_ARRAYSIZE
+        self.getCursor.arraysize = ORACLE_ARRAYSIZE
 
     def _execute(self, sql=None, *args, **kwargs):
         self._cu.execute(sql, *args, **kwargs)
