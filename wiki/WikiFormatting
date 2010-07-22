@@ -245,11 +245,10 @@ You can put a picture in a page by typing the URL to the picture \\
 
 You can use the described-reference URL markup to give the image an ALT tag:
 <<code>>
-{{Images/fuckcat.jpg|F**K YOU I'm a Cat!}}
+{{http://c2.com/sig/wiki.gif|Wiki}}
 <</code>>
 
-{{Images/fuckcat.jpg|F**K YOU I'm a Cat!}}
-
+{{http://c2.com/sig/wiki.gif|Wiki}}
 
 ----
 == Code Blocks
