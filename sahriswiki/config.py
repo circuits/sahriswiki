@@ -9,6 +9,7 @@
 
 import os
 import ConfigParser
+from warnings import warn
 
 from argparse import ArgumentParser
 
@@ -27,7 +28,7 @@ class Config(reprconf.Config):
         self.check_options()
 
     def check_options(self):
-        paths = ("accesslog", "cache", "config", "data", "errorlog",
+        paths = ("accesslog", "config", "data", "errorlog",
                 "htpasswd", "pidfile", "sock", "theme",)
 
         for path in paths:
@@ -68,13 +69,13 @@ class Config(reprconf.Config):
                 dest="sock", metavar="FILE", type=str,
                 help="Listen on socket FILE")
 
-        add("-d", "--data", action="store", default="wiki",
-                dest="data", metavar="DIR", type=str,
-                help="Store pages in DIR")
+        add("-d", "--db", action="store", default="sqlite:///sahriswiki.db",
+                dest="db", metavar="DB", type=str,
+                help="Store meta data in database DB")
 
-        add("-c", "--cache", action="store", default="cache",
-                dest="cache", metavar="DIR", type=str,
-                help="Store cache in DIR")
+        add("-r", "--repo", action="store", default="wiki",
+                dest="repo", metavar="REPO", type=str,
+                help="Store pages in mercurial repository REPO")
 
         add("-t", "--theme", action="store",
                 default=os.path.join(os.path.dirname(__file__)),
@@ -190,6 +191,8 @@ class Config(reprconf.Config):
                     for option, value in config.iteritems():
                         if option in namespace:
                             self[option] = value
+                        else:
+                            warn("Ignoring unknown option %r" % option)
 
         for option, value in namespace.__dict__.iteritems():
             if option not in self and value is not None:

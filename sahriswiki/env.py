@@ -24,6 +24,7 @@ import macros
 import sahriswiki
 from utils import page_mime
 from search import WikiSearch
+from dbm import DataBaseManager
 from storage import WikiSubdirectoryIndexesStorage as DefaultStorage
 
 from pagetypes import WikiPageText, WikiPageHTML
@@ -60,15 +61,19 @@ class Environment(BaseComponent):
 
         self.config = config
 
+        self.dbm = DataBaseManager(self.config.get("db"),
+            echo=(self.config.get("debug") and self.config.get("verbose")),
+        ).register(self)
+
         self.storage = DefaultStorage(
-            self.config.get("data"),
+            self.config.get("repo"),
             self.config.get("encoding"),
             index=self.config.get("index"),
             indexes=self.config.get("indexes"),
         )
 
         self.search = WikiSearch(
-            self.config.get("cache"),
+            self.dbm.session,
             self.config.get("language"),
             self.storage,
         )
