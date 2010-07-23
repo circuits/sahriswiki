@@ -73,5 +73,11 @@ setup(
     entry_points="""
     [console_scripts]
     sahriswiki = sahriswiki.main:main
-    """
+    """,
+    install_requires = [
+        "circuits >= tip",
+        "docutils >= 0.5",
+        "genshi >= 0.6",
+        "sqlalchemy >= 0.6.3",
+    ],
 )
