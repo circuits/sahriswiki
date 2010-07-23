@@ -8,14 +8,67 @@
 ...
 """
 
-import os
 import re
-import thread
-import sqlite3
+
+from sqlalchemy import func, exists
+from sqlalchemy.orm import relationship
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy import Column, ForeignKey, Integer, Sequence, String
 
 from i18n import _
+from dbm import Base, SysInfo
 from errors import NotFoundErr
 from utils import external_link, extract_links
+
+class Title(Base):
+
+    __tablename__ = "titles"
+
+    id = Column(Integer, Sequence("titles_id_seq"), primary_key=True)
+    title = Column(String(50))
+
+    def __init__(self, title):
+        self.title = title
+
+    def __repr__(self):
+        return "<Title('%s')>" % self.title
+
+class Word(Base):
+
+    __tablename__ = "words"
+
+    id = Column(Integer, Sequence("words_id_seq"), primary_key=True)
+    word = Column(String(50), index=True)
+    page = Column(Integer, ForeignKey("titles.title"), index=True)
+    count = Column(Integer)
+
+    def __init__(self, word, page, count):
+        self.word = word
+        self.page = page
+        self.count = count
+
+    def __repr__(self):
+        return "<Word('%s', '%s', %d)>" % (self.word, self.page, self.count)
+
+class Link(Base):
+
+    __tablename__ = "links"
+
+    id = Column(Integer, Sequence("links_id_seq"), primary_key=True)
+    src = Column(Integer, ForeignKey("titles.title"), index=True)
+    target = Column(Integer, ForeignKey("titles.title"), index=True)
+    label = Column(String(50))
+    number = Column(Integer)
+
+    def __init__(self, src, target, label, number):
+        self.src = src
+        self.target = target
+        self.label = label
+        self.number = number
+
+    def __repr__(self):
+        return "<Link('%s', '%s', '%s', %d)>" % (self.src, self.target,
+                self.label, self.number)
 
 class WikiSearch(object):
     """
@@ -24,50 +77,12 @@ class WikiSearch(object):
     """
 
     word_pattern = re.compile(ur"""\w[-~&\w]+\w""", re.UNICODE)
-    jword_pattern = re.compile(
-ur"""[ｦ-ﾟ]+|[ぁ-ん～ー]+|[ァ-ヶ～ー]+|[0-9A-Za-z]+|"""
-ur"""[０-９Ａ-Ｚａ-ｚΑ-Ωα-ωА-я]+|"""
-ur"""[^- !"#$%&'()*+,./:;<=>?@\[\\\]^_`{|}"""
-ur"""‾｡｢｣､･　、。，．・：；？！゛゜´｀¨"""
-ur"""＾￣＿／〜‖｜…‥‘’“”"""
-ur"""（）〔〕［］｛｝〈〉《》「」『』【】＋−±×÷"""
-ur"""＝≠＜＞≦≧∞∴♂♀°′″℃￥＄¢£"""
-ur"""％＃＆＊＠§☆★○●◎◇◆□■△▲▽▼※〒"""
-ur"""→←↑↓〓∈∋⊆⊇⊂⊃∪∩∧∨¬⇒⇔∠∃∠⊥"""
-ur"""⌒∂∇≡≒≪≫√∽∝∵∫∬Å‰♯♭♪†‡¶◾"""
-ur"""─│┌┐┘└├┬┤┴┼"""
-ur"""━┃┏┓┛┗┣┫┻╋"""
-ur"""┠┯┨┷┿┝┰┥┸╂"""
-ur"""ｦ-ﾟぁ-ん～ーァ-ヶ"""
-ur"""0-9A-Za-z０-９Ａ-Ｚａ-ｚΑ-Ωα-ωА-я]+""", re.UNICODE)
-    _con = {}
 
-    def __init__(self, cache_path, lang, storage):
-        self.path = cache_path
-        self.storage = storage
+    def __init__(self, db, lang, storage):
+        self.db = db
         self.lang = lang
-        if lang == "ja":
-            self.split_text = self.split_japanese_text
-        self.filename = os.path.join(cache_path, 'index.sqlite3')
-        if not os.path.isdir(self.path):
-            self.empty = True
-            os.makedirs(self.path)
-        elif not os.path.exists(self.filename):
-            self.empty = True
-        else:
-            self.empty = False
-        con = self.con # sqlite3.connect(self.filename)
-        con.execute('CREATE TABLE IF NOT EXISTS titles '
-                '(id INTEGER PRIMARY KEY, title VARCHAR);')
-        con.execute('CREATE TABLE IF NOT EXISTS words '
-                '(word VARCHAR, page INTEGER, count INTEGER);')
-        con.execute('CREATE INDEX IF NOT EXISTS index1 '
-                         'ON words (page);')
-        con.execute('CREATE INDEX IF NOT EXISTS index2 '
-                         'ON words (word);')
-        con.execute('CREATE TABLE IF NOT EXISTS links '
-                '(src INTEGER, target INTEGER, label VARCHAR, number INTEGER);')
-        con.commit()
+        self.storage = storage
+
         self.stop_words_re = re.compile(u'^('+u'|'.join(re.escape(_(
 u"""am ii iii per po re a about above
 across after afterwards again against all almost alone along already also
@@ -97,19 +112,6 @@ whether which while whither who whoever whole whom whose why will with within
 without would yet you your yours yourself yourselves""")).split())
 +ur')$|.*\d.*', re.U|re.I|re.X)
 
-    @property
-    def con(self):
-        """Keep one connection per thread."""
-
-        thread_id = thread.get_ident()
-        try:
-            return self._con[thread_id]
-        except KeyError:
-            connection = sqlite3.connect(self.filename)
-            connection.isolation_level = None
-            self._con[thread_id] = connection
-            return connection
-
     def split_text(self, text, stop=True):
         """Splits text into words, removing stop words"""
 
@@ -118,38 +120,24 @@ without would yet you your yours yourself yourselves""")).split())
             if not (stop and self.stop_words_re.match(word)):
                 yield word.lower()
 
-    def split_japanese_text(self, text, stop=True):
-        """Splits text into words, including rules for Japanese"""
-
-        for match in self.word_pattern.finditer(text):
-            word = match.group(0)
-            got_japanese = False
-            for m in self.jword_pattern.finditer(word):
-                w = m.group(0)
-                got_japanese = True
-                if not (stop and self.stop_words_re.match(w)):
-                    yield w.lower()
-            if not (got_japanese or stop and self.stop_words_re.match(word)):
-                yield word.lower()
-
     def count_words(self, words):
         count = {}
         for word in words:
             count[word] = count.get(word, 0)+1
         return count
 
-    def title_id(self, title, con):
-        c = con.execute('SELECT id FROM titles WHERE title=?;', (title,))
-        idents = c.fetchone()
-        if idents is None:
-            con.execute('INSERT INTO titles (title) VALUES (?);', (title,))
-            c = con.execute('SELECT LAST_INSERT_ROWID();')
-            idents = c.fetchone()
-        return idents[0]
+    def title_id(self, title):
+        try:
+            return self.db.query(Title.id).filter(
+                    Title.title==title).one().id
+        except NoResultFound:
+            self.db.add(Title(title))
+            return self.db.query(Title.id).filter(
+                    Title.title==title).one().id
 
-    def update_words(self, title, text, cursor):
-        title_id = self.title_id(title, cursor)
-        cursor.execute('DELETE FROM words WHERE page=?;', (title_id,))
+    def update_words(self, title, text):
+        title_id = self.title_id(title)
+        self.db.query(Word).filter(Word.page==title_id).delete()
         if not text:
             return
         words = self.count_words(self.split_text(text))
@@ -157,94 +145,88 @@ without would yet you your yours yourself yourselves""")).split())
         for word, count in title_words.iteritems():
             words[word] = words.get(word, 0) + count
         for word, count in words.iteritems():
-            cursor.execute('INSERT INTO words VALUES (?, ?, ?);',
-                             (word, title_id, count))
+            self.db.add(Word(word, title_id, count))
 
-    def update_links(self, title, links_and_labels, cursor):
-        title_id = self.title_id(title, cursor)
-        cursor.execute('DELETE FROM links WHERE src=?;', (title_id,))
+    def update_links(self, title, links_and_labels):
+        title_id = self.title_id(title)
+        self.db.query(Link).filter(Link.src==title_id).delete()
         for number, (link, label) in enumerate(links_and_labels):
-            cursor.execute('INSERT INTO links VALUES (?, ?, ?, ?);',
-                             (title_id, link, label, number))
+            self.db.add(Link(title_id, link, label, number))
 
     def orphaned_pages(self):
         """Gives all pages with no links to them."""
 
-        con = self.con
         try:
-            sql = ('SELECT title FROM titles '
-                   'WHERE NOT EXISTS '
-                   '(SELECT * FROM links WHERE target=title) '
-                   'ORDER BY title;')
-            for (title,) in con.execute(sql):
+            stmt = ~exists().where(Link.target==Title.title)
+            orphaned = self.db.query(Title.title).\
+                    filter(stmt).\
+                    order_by(Title.title)
+            for (title,) in orphaned:
                 yield unicode(title)
         finally:
-            con.commit()
+            self.db.commit()
 
     def wanted_pages(self):
         """Gives all pages that are linked to, but don't exist, together with
         the number of links."""
 
-        con = self.con
         try:
-            sql = ('SELECT COUNT(*), target FROM links '
-                   'WHERE NOT EXISTS '
-                   '(SELECT * FROM titles WHERE target=title) '
-                   'GROUP BY target ORDER BY -COUNT(*);')
-            for (refs, db_title,) in con.execute(sql):
-                title = unicode(db_title)
+            stmt = ~exists().where(Title.title==Link.target)
+            wanted = self.db.query(func.count(), Link.target).\
+                    filter(stmt).\
+                    group_by(Link.target).\
+                    order_by(-func.count())
+            for refs, title, in wanted:
+                title = unicode(title)
                 if not external_link(title) and not title.startswith('+'):
                     yield refs, title
         finally:
-            con.commit()
+            self.db.commit()
 
 
     def page_backlinks(self, title):
         """Gives a list of pages linking to specified page."""
 
-        con = self.con # sqlite3.connect(self.filename)
         try:
-            sql = ('SELECT DISTINCT(titles.title) '
-                   'FROM links, titles '
-                   'WHERE links.target=? AND titles.id=links.src '
-                   'ORDER BY titles.title;')
-            for (backlink,) in con.execute(sql, (title,)):
-                yield unicode(backlink)
+           backlinks = self.db.query(func.distinct(Title.title)).join(
+                   Title.id, Link.src).filter(Link.target==title).order_by(
+                           Title.title)
+           for backlink in backlinks:
+               yield unicode(backlink)
         finally:
-            con.commit()
+           self.db.commit()
 
     def page_links(self, title):
         """Gives a list of links on specified page."""
 
-        con = self.con # sqlite3.connect(self.filename)
         try:
-            title_id = self.title_id(title, con)
-            sql = 'SELECT target FROM links WHERE src=? ORDER BY number;'
-            for (link,) in con.execute(sql, (title_id,)):
+            title_id = self.title_id(title)
+            links = self.db.query(Link.target).filter(
+                    Link.src==title_id).order_by(Link.number)
+            for link in links:
                 yield unicode(link)
         finally:
-            con.commit()
+            self.db.commit()
 
     def page_links_and_labels (self, title):
-        con = self.con # sqlite3.connect(self.filename)
         try:
-            title_id = self.title_id(title, con)
-            sql = 'SELECT target, label FROM links WHERE src=? ORDER BY number;'
-            for link, label in con.execute(sql, (title_id,)):
+            title_id = self.title_id(title)
+            links = self.db.query(Link.target, Link.label).filter(
+                    Link.src==title_id).order_by(Link.number)
+            for link, label in links:
                 yield unicode(link), unicode(label)
         finally:
-            con.commit()
+            self.db.commit()
 
     def find(self, words):
         """Iterator of all pages containing the words, and their scores."""
 
-        con = self.con
         try:
             ranks = []
             for word in words:
                 # Calculate popularity of each word.
-                sql = 'SELECT SUM(words.count) FROM words WHERE word LIKE ?;'
-                rank = con.execute(sql, ('%%%s%%' % word,)).fetchone()[0]
+                rank = self.db.query(func.sum(Word.count)).filter(
+                        Word.word.like("%%%s%%" % word)).first()[0]
                 # If any rank is 0, there will be no results anyways
                 if not rank:
                     return
@@ -253,20 +235,20 @@ without would yet you your yours yourself yourselves""")).split())
             # Start with the least popular word. Get all pages that contain it.
             first_rank, first = ranks[0]
             rest = ranks[1:]
-            sql = ('SELECT words.page, titles.title, SUM(words.count) '
-                   'FROM words, titles '
-                   'WHERE word LIKE ? AND titles.id=words.page '
-                   'GROUP BY words.page;')
-            first_counts = con.execute(sql, ('%%%s%%' % first,))
+            first_counts = self.db.query(Word.page, Title.title,
+                    func.sum(Word.count)).\
+                            filter(Word.word.like("%%%s%%" % first)).\
+                            filter(Title.id==Word.page).\
+                            group_by(Word.page)
             # Check for the rest of words
             for title_id, title, first_count in first_counts:
                 # Score for the first word
                 score = float(first_count)/first_rank
                 for rank, word in rest:
-                    sql = ('SELECT SUM(count) FROM words '
-                           'WHERE page=? AND word LIKE ?;')
-                    count = con.execute(sql,
-                        (title_id, '%%%s%%' % word)).fetchone()[0]
+                    count = self.db.query(func.sum(Word.count)).\
+                            filter(Word.page==title_id).\
+                            filter(Word.word.like("%%%%s%%" % word)).\
+                            first()
                     if not count:
                         # If page misses any of the words, its score is 0
                         score = 0
@@ -275,9 +257,9 @@ without would yet you your yours yourself yourselves""")).split())
                 if score > 0:
                     yield int(100*score), unicode(title)
         finally:
-            con.commit()
+            self.db.commit()
 
-    def reindex_page(self, page, title, cursor, text=None):
+    def reindex_page(self, page, title, text=None):
         """Updates the content of the database, needs locks around."""
 
         if text is None:
@@ -286,47 +268,44 @@ without would yet you your yours yourself yourselves""")).split())
                 text = _get_text()
             except NotFoundErr:
                 text = None
-                title_id = self.title_id(title, cursor)
+                title_id = self.title_id(title)
                 if not list(self.page_backlinks(title)):
-                    cursor.execute("DELETE FROM titles WHERE id=?;",
-                            (title_id,))
+                    self.db.query(Title).filter(Title.id==title_id).delete()
 
         if text is not None:
             links = extract_links(text)
         else:
             links = []
 
-        self.update_links(title, links, cursor=cursor)
-        self.update_words(title, text or u'', cursor=cursor)
+        self.update_links(title, links)
+        self.update_words(title, text or u'')
 
     def update_page(self, page, title, data=None, text=None):
         """Updates the index with new page content, for a single page."""
 
         if text is None and data is not None:
             text = unicode(data, self.storage.charset, 'replace')
-        cursor = self.con.cursor()
-        cursor.execute('BEGIN IMMEDIATE TRANSACTION;')
+
+        self.db.begin()
         try:
             self.set_last_revision(self.storage.repo_revision())
-            self.reindex_page(page, title, cursor, text)
-            self.con.commit()
+            self.reindex_page(page, title, text)
+            self.db.commit()
         except:
-            self.con.rollback()
+            self.db.rollback()
             raise
 
     def reindex(self, environ, pages):
         """Updates specified pages in bulk."""
 
-        cursor = self.con.cursor()
-        cursor.execute('BEGIN IMMEDIATE TRANSACTION;')
+        self.db.begin(subtransactions=True)
         try:
             for title in pages:
                 page = environ.get_page(title)
-                self.reindex_page(page, title, cursor)
-            self.con.commit()
-            self.empty = False
+                self.reindex_page(page, title)
+            self.db.commit()
         except Exception, e:
-            self.con.rollback()
+            self.db.rollback()
             raise
 
     def set_last_revision(self, rev):
@@ -334,16 +313,21 @@ without would yet you your yours yourself yourselves""")).split())
 
         # We use % here because the sqlite3's substitiution doesn't work
         # We store revision 0 as 1, 1 as 2, etc. because 0 means "no revision"
-        self.con.execute('PRAGMA USER_VERSION=%d;' % (int(rev+1),))
+        
+        sysinfo = self.db.query(SysInfo).get("search_revision")
+        if sysinfo is None:
+            self.db.add(SysInfo("search_revision", (int(rev + 1))))
+        else:
+            sysinfo.value = int(rev + 1)
 
     def get_last_revision(self):
         """Retrieve the last indexed repository revision."""
 
-        con = self.con
-        c = con.execute('PRAGMA USER_VERSION;')
-        rev = c.fetchone()[0]
-        # -1 means "no revision", 1 means revision 0, 2 means revision 1, etc.
-        return rev-1
+        sysinfo = self.db.query(SysInfo).get("search_revision")
+        if sysinfo is None:
+            return -1
+        else:
+            return int(sysinfo.value) - 1
 
     def update(self, environ):
         """Reindex al pages that changed since last indexing."""

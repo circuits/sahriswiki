@@ -2,6 +2,7 @@ syntax: glob
 
 tmp
 dist
+*.db
 *.pyc
 *.pyo
 build
