@@ -8,6 +8,7 @@ dist
 build
 cache
 coverage
+*.journal
 .coverage
 docs/build
 __version__.py
