@@ -15,7 +15,6 @@ from difflib import unified_diff
 from time import gmtime, strftime
 
 from genshi.core import Markup
-from genshi.builder import tag
 
 from circuits.web.tools import check_auth, basic_auth
 from circuits.web.controllers import expose, BaseController
