@@ -413,7 +413,7 @@ class Root(BaseController):
                     "success": True,
                     "message": "Page renamed successfully.",
                 }
-            elif newname in storage:
+            elif newname in self.storage:
                 data = {
                     "success": False,
                     "message": "%s already exists" % newname,
