@@ -156,108 +156,92 @@ without would yet you your yours yourself yourselves""")).split())
     def orphaned_pages(self):
         """Gives all pages with no links to them."""
 
-        try:
-            stmt = ~exists().where(Link.target==Title.title)
-            orphaned = self.db.query(Title.title).\
-                    filter(stmt).\
-                    order_by(Title.title)
-            for (title,) in orphaned:
-                yield unicode(title)
-        finally:
-            self.db.commit()
+        stmt = ~exists().where(Link.target==Title.title)
+        orphaned = self.db.query(Title.title).\
+                filter(stmt).\
+                order_by(Title.title)
+        for (title,) in orphaned:
+            yield unicode(title)
 
     def wanted_pages(self):
         """Gives all pages that are linked to, but don't exist, together with
         the number of links."""
 
-        try:
-            stmt = ~exists().where(Title.title==Link.target)
-            wanted = self.db.query(func.count(), Link.target).\
-                    filter(stmt).\
-                    group_by(Link.target).\
-                    order_by(-func.count())
-            for refs, title, in wanted:
-                title = unicode(title)
-                if not external_link(title) and not title.startswith('+'):
-                    yield refs, title
-        finally:
-            self.db.commit()
-
+        stmt = ~exists().where(Title.title==Link.target)
+        wanted = self.db.query(func.count(), Link.target).\
+                filter(stmt).\
+                group_by(Link.target).\
+                order_by(-func.count())
+        for refs, title, in wanted:
+            title = unicode(title)
+            if not external_link(title) and not title.startswith('+'):
+                yield refs, title
 
     def page_backlinks(self, title):
         """Gives a list of pages linking to specified page."""
 
-        try:
-           backlinks = self.db.query(func.distinct(Title.title)).join(
-                   Title.id, Link.src).filter(Link.target==title).order_by(
-                           Title.title)
-           for backlink in backlinks:
-               yield unicode(backlink)
-        finally:
-           self.db.commit()
+        backlinks = self.db.query(func.distinct(Title.title)).\
+                join(Title.id, Link.src).\
+                filter(Link.target==title).\
+                order_by(Title.title)
+        for backlink in backlinks:
+            yield unicode(backlink)
 
     def page_links(self, title):
         """Gives a list of links on specified page."""
 
-        try:
-            title_id = self.title_id(title)
-            links = self.db.query(Link.target).filter(
-                    Link.src==title_id).order_by(Link.number)
-            for link in links:
-                yield unicode(link)
-        finally:
-            self.db.commit()
+        title_id = self.title_id(title)
+        links = self.db.query(Link.target).\
+                filter(Link.src==title_id).\
+                order_by(Link.number)
+        for link in links:
+            yield unicode(link)
 
     def page_links_and_labels (self, title):
-        try:
-            title_id = self.title_id(title)
-            links = self.db.query(Link.target, Link.label).filter(
-                    Link.src==title_id).order_by(Link.number)
-            for link, label in links:
-                yield unicode(link), unicode(label)
-        finally:
-            self.db.commit()
+        title_id = self.title_id(title)
+        links = self.db.query(Link.target, Link.label).\
+                filter(Link.src==title_id).\
+                order_by(Link.number)
+        for link, label in links:
+            yield unicode(link), unicode(label)
 
     def find(self, words):
         """Iterator of all pages containing the words, and their scores."""
 
-        try:
-            ranks = []
-            for word in words:
-                # Calculate popularity of each word.
-                rank = self.db.query(func.sum(Word.count)).filter(
-                        Word.word.like("%%%s%%" % word)).first()[0]
-                # If any rank is 0, there will be no results anyways
-                if not rank:
-                    return
-                ranks.append((rank, word))
-            ranks.sort()
-            # Start with the least popular word. Get all pages that contain it.
-            first_rank, first = ranks[0]
-            rest = ranks[1:]
-            first_counts = self.db.query(Word.page, Title.title,
-                    func.sum(Word.count)).\
-                            filter(Word.word.like("%%%s%%" % first)).\
-                            filter(Title.id==Word.page).\
-                            group_by(Word.page)
-            # Check for the rest of words
-            for title_id, title, first_count in first_counts:
-                # Score for the first word
-                score = float(first_count)/first_rank
-                for rank, word in rest:
-                    count = self.db.query(func.sum(Word.count)).\
-                            filter(Word.page==title_id).\
-                            filter(Word.word.like("%%%%s%%" % word)).\
-                            first()
-                    if not count:
-                        # If page misses any of the words, its score is 0
-                        score = 0
-                        break
-                    score += float(count)/rank
-                if score > 0:
-                    yield int(100*score), unicode(title)
-        finally:
-            self.db.commit()
+        ranks = []
+        for word in words:
+            # Calculate popularity of each word.
+            rank = self.db.query(func.sum(Word.count)).filter(
+                    Word.word.like("%%%s%%" % word)).first()[0]
+            # If any rank is 0, there will be no results anyways
+            if not rank:
+                return
+            ranks.append((rank, word))
+        ranks.sort()
+        # Start with the least popular word. Get all pages that contain it.
+        first_rank, first = ranks[0]
+        rest = ranks[1:]
+        first_counts = self.db.query(Word.page, Title.title,
+                func.sum(Word.count)).\
+                        filter(Word.word.like("%%%s%%" % first)).\
+                        filter(Title.id==Word.page).\
+                        group_by(Word.page)
+        # Check for the rest of words
+        for title_id, title, first_count in first_counts:
+            # Score for the first word
+            score = float(first_count)/first_rank
+            for rank, word in rest:
+                count = self.db.query(func.sum(Word.count)).\
+                        filter(Word.page==title_id).\
+                        filter(Word.word.like("%%%%s%%" % word)).\
+                        first()
+                if not count:
+                    # If page misses any of the words, its score is 0
+                    score = 0
+                    break
+                score += float(count)/rank
+            if score > 0:
+                yield int(100*score), unicode(title)
 
     def reindex_page(self, page, title, text=None):
         """Updates the content of the database, needs locks around."""
@@ -287,6 +271,7 @@ without would yet you your yours yourself yourselves""")).split())
             text = unicode(data, self.storage.charset, 'replace')
 
         self.db.begin()
+
         try:
             self.set_last_revision(self.storage.repo_revision())
             self.reindex_page(page, title, text)
@@ -299,6 +284,7 @@ without would yet you your yours yourself yourselves""")).split())
         """Updates specified pages in bulk."""
 
         self.db.begin(subtransactions=True)
+
         try:
             for title in pages:
                 page = environ.get_page(title)
