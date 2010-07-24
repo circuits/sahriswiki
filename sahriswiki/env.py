@@ -24,6 +24,7 @@ import macros
 import schema
 import sahriswiki
 from utils import page_mime
+from auth import Permissions
 from search import WikiSearch
 from dbm import DatabaseManager
 from storage import WikiSubdirectoryIndexesStorage as DefaultStorage
@@ -126,13 +127,7 @@ class Environment(BaseComponent):
                 "X-Forwarded-For", self.request.remote.ip)
 
     def _permissions(self):
-        login = self._login()
-        readonly = self.config.get("readonly")
-
-        db = self.dbm.session
-        return [permission.action \
-                for permission in db.query(schema.Permission).\
-                filter(schema.Permission.username==login)]
+        return Permissions(self, self._login())
 
     def _metanav(self):
         yield ("About",       self.url("/+about"),    )
