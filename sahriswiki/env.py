@@ -21,10 +21,11 @@ from genshi.template import TemplateLoader
 from creoleparser import create_dialect, creole11_base, Parser
 
 import macros
+import schema
 import sahriswiki
 from utils import page_mime
 from search import WikiSearch
-from dbm import DataBaseManager
+from dbm import DatabaseManager
 from storage import WikiSubdirectoryIndexesStorage as DefaultStorage
 
 from pagetypes import WikiPageText, WikiPageHTML
@@ -61,7 +62,7 @@ class Environment(BaseComponent):
 
         self.config = config
 
-        self.dbm = DataBaseManager(self.config.get("db"),
+        self.dbm = DatabaseManager(self.config.get("db"),
             echo=(self.config.get("debug") and self.config.get("verbose")),
         ).register(self)
 
@@ -114,23 +115,8 @@ class Environment(BaseComponent):
             "description": self.config.get("description"),
         }
 
-        self.users = self._create_users()
-
         self.request = None
         self.response = None
-
-    def _config(self):
-        """Return a safe config dict (with sensitive data removed)"""
-
-        hidden = ("password",)
-
-        config = self.config.copy()
-
-        for key in hidden:
-            if key in config:
-                del config[key]
-
-        return config
 
     def _login(self):
         return self.request.session.get("login", self.request.login)
@@ -143,12 +129,10 @@ class Environment(BaseComponent):
         login = self._login()
         readonly = self.config.get("readonly")
 
-        if (readonly and login) or (not readonly):
-            yield "PAGE_EDIT"
-            yield "PAGE_DELETE"
-            yield "PAGE_RENAME"
-            yield "PAGE_UPLOAD"
-            yield "CONFIG_VIEW"
+        db = self.dbm.session
+        return [permission.action \
+                for permission in db.query(schema.Permission).\
+                filter(schema.Permission.username==login)]
 
     def _metanav(self):
         yield ("About",       self.url("/+about"),    )
@@ -209,19 +193,6 @@ class Environment(BaseComponent):
                     yield ("/".join(xs), x, x,)
                 base = os.path.basename(name)
                 yield ("+backlinks/%s" % name, base, "View BackLinks",)
-
-    def _create_users(self):
-        users = {"admin": md5(self.config.get("password")).hexdigest()}
-        htpasswd = self.config.get("htpasswd", None)
-        if htpasswd:
-            f = open(htpasswd, "r")
-            for line in f:
-                line = line.strip()
-                if line:
-                    username, password = line.split(":")
-                    users["username"] = password
-            f.close()
-        return users
 
     def _wiki_links_class_func(self, type, url, body, name):
         if type == "wiki":
@@ -305,7 +276,7 @@ class Environment(BaseComponent):
             "url":         self.url,
             "site":        self.site,
             "include":     self.include,
-            "config":      self._config(),
+            "config":      self.config,
             "staticurl":   self.staticurl,
             "permissions": self._permissions(),
             "ctxnav":      chain(self._ctxnav(), data.get("ctxnav", [])),
@@ -319,3 +290,11 @@ class Environment(BaseComponent):
     def _on_request(self, request, response):
         self.request = request
         self.response = response
+
+    @handler("databaseloaded")
+    def _on_database_loaded(self):
+        if not self.dbm.session.query(schema.System).get("database_version"):
+            for Table, rows in schema.DATA:
+                for row in rows:
+                    self.dbm.session.add(Table(*row))
+            self.dbm.session.commit()

@@ -19,6 +19,7 @@ from genshi.core import Markup
 from circuits.web.tools import check_auth, basic_auth
 from circuits.web.controllers import expose, BaseController
 
+import schema
 from feedformatter import Feed
 from highlight import highlight
 from errors import ForbiddenErr, NotFoundErr
@@ -107,13 +108,15 @@ class Root(BaseController):
 
     @expose("+login")
     def login(self):
-        users = self.environ.users
+        db = self.environ.dbm.session
+        users = dict(((user.username, user.password) \
+                for user in db.query(schema.User).all()))
         realm = self.environ.config.get("name")
 
         if not check_auth(self.request, self.response, realm, users):
             return basic_auth(self.request, self.response, realm, users)
 
-        if not self.request.login in self.environ.users:
+        if not self.request.login in users:
             return basic_auth(self.request, self.response, realm, users)
 
         self.request.session["login"] = self.request.login
@@ -134,7 +137,9 @@ class Root(BaseController):
 
     @expose("+logout")
     def logout(self):
-        users = self.environ.users
+        db = self.environ.dbm.session
+        users = dict(((user.username, user.password) \
+                for user in db.query(schema.User).all()))
         realm = self.environ.config.get("name")
 
         if "login" in self.request.session:

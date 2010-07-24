@@ -7,33 +7,22 @@
 ...
 """
 
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine, Column, MetaData, String
 
-from circuits import handler, BaseComponent
+from circuits import handler, BaseComponent, Event
 
 metadata = MetaData()
 Base = declarative_base(metadata=metadata)
 
-class SysInfo(Base):
+class DatabaseLoaded(Event):
+    """Database Loaded Event"""
 
-    __tablename__ = "sysinfo"
-
-    name = Column(String(20), primary_key=True)
-    value = Column(String(80))
-
-    def __init__(self, name, value):
-        self.name = name
-        self.value = value
-
-    def __repr__(self):
-        return "<SysInfo('%s', '%s')>" % (self.name, self.value)
-
-class DataBaseManager(BaseComponent):
+class DatabaseManager(BaseComponent):
 
     def __init__(self, dburi, echo=False, convert_unicode=True):
-        super(DataBaseManager, self).__init__()
+        super(DatabaseManager, self).__init__()
 
         self.metadata = metadata
 
@@ -53,6 +42,7 @@ class DataBaseManager(BaseComponent):
     @handler("started", priority=1.0, target="*")
     def _on_started(self, component, mode):
         self.metadata.create_all(self.engine)
+        self.push(DatabaseLoaded())
 
     @handler("stopped", target="*")
     def _on_stopped(self, component):
