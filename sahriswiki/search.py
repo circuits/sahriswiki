@@ -181,10 +181,10 @@ without would yet you your yours yourself yourselves""")).split())
         """Gives a list of pages linking to specified page."""
 
         backlinks = self.db.query(func.distinct(Title.title)).\
-                join(Title.id, Link.src).\
+                join((Link, Link.src==Title.id)).\
                 filter(Link.target==title).\
                 order_by(Title.title)
-        for backlink in backlinks:
+        for (backlink,) in backlinks:
             yield unicode(backlink)
 
     def page_links(self, title):
