@@ -1,0 +1,10 @@
+= Features =
+//[[SahrisWiki]] Feature List//
+
+* Support for displaying [[BackLinks]], pages that refer to the current page.
+* A powerful cache-able full-text search thanks to [[http://hatta.sheep.art.pl/|Hatta]].
+* Supports the creole macro extension and includes a variety of useful [[Macros]].
+* Full plugin support allowing for easy and powerful extensibility. See: [[Plugins]].
+* Uses the [[http://genshi.edgewall.org/|genshi]] toolkit to make creating new [[Docs/Themes|Theme]] easy.
+* Is designed with [[Docs/Performance|Performance]] in mind.
+

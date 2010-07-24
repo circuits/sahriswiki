@@ -1,0 +1,332 @@
+<<SetTitle "Wiki Formatting Guide">>
+= Wiki Formatting =
+
+See also: [[CheatSheet]]
+
+== General Notes ==
+
+All text is entered as plain text, and will be converted to XHTML entities as necessary.  This means that {{{<}}}, {{{>}}}, {{{&}}},
+and so on are converted for you (//except in special situations where the characters are Wiki markup, [[SahrisWiki]] is generally smart enough to know when to convert and when not to).
+
+Just hit "return" twice to make a paragraph break. If you want to
+force a line break between two lines, use the {{{\\}}} special
+character sequence at the end of the line and press "return" once.
+This will force a hard line break.
+
+== Inline Formatting ==
+
+|| {{{//emphasis//}}}                  || //emphasis//                ||
+|| {{{**strong**}}}                    || **strong**                  ||
+|| {{{//**emphasis and strong**//}}}   || //**emphasis and strong**// ||
+|| {{{**//strong and emphasis//**}}}   || **//strong and emphasis//** ||
+|| {{{{{{teletype text}}}}}}           || {{{teletype text}}}         ||
+|| {{{super ^^1^^ script}}}            || super ^^1^^ script          ||
+
+== Smileys and Icons ==
+
+=== Smileys ===
+||{{{:)}}}||:)||
+||{{{:(}}}||:(||
+||{{{:P}}}||:P||
+
+== Literal Text
+
+If you don't want [[SahrisWiki]] to parse some text, enclose it in
+surrounding braces.
+
+{{{
+This //text// gets **parsed**.
+
+{{{This //text// does not get **parsed**.}}}
+}}}
+
+This //text// gets **parsed**.
+
+{{{This //text// does not get **parsed**.}}}
+
+== Headings ==
+
+You can make various levels of heading by putting equals-signs before and after the text (//all on its own line//):
+
+{{{
+= Level 1 Heading =
+== Level 2 Heading ==
+=== Level 3 Heading ===
+==== Level 4 Heading ====
+===== Level 5 Heading =====
+====== Level 6 Heading ======
+}}}
+
+= Level 1 Heading =
+== Level 2 Heading ==
+=== Level 3 Heading ===
+==== Level 4 Heading ====
+===== Level 5 Heading =====
+====== Level 6 Heading ======
+
+== Horizontal Rules
+Use four dashes ({{{----}}}) to create a horizontal rule:
+
+----
+
+== Lists ==
+
+=== Bullet Lists ==
+
+You can create bullet lists by starting a paragraph with one or more asterisks. The more asterisks indicate indentation level.
+
+{{{
+* Item 1
+** Item 1a
+* Item 2
+}}}
+
+* Item 1
+** Item 1a
+* Item 2
+
+=== Numbered Lists ==
+
+Similarly, you can create numbered lists by starting a paragraph with one or more hashes. The more hashes used indicate level.
+
+{{{
+# Item 1
+# Item 2
+## Item 2.1
+### Item 2.1.1
+# Item 3
+}}}
+
+# Item 1
+# Item 2
+## Item 2.1
+### Item 2.1.1
+# Item 3
+
+=== Mixing Bullet and Number List Items ==
+
+You can mix and match bullet and number lists:
+
+{{{
+# Item 1
+** Item aa
+** Item ab
+# Item 2
+** Item 2a
+** Item 2b
+*** Item 2b (a)
+#### Item 2.1
+#### Item 2.2
+# Item 3
+** Item 3a
+** Item 3b
+}}}
+
+
+# Item 1
+** Item aa
+** Item ab
+# Item 2
+** Item 2a
+** Item 2b
+*** Item 2b (a)
+#### Item 2.1
+#### Item 2.2
+# Item 3
+** Item 3a
+** Item 3b
+
+
+=== Definition Lists ==
+
+You can create a definition (description) list with the following syntax:
+
+<<code>>
+;Item 1: Something
+;Item 2: Something else
+<</code>>
+
+;Item 1: Something
+;Item 2: Something else
+
+----
+
+== Block Quotes
+
+You can mark a blockquote by starting a line with one or more '>' \\
+characters, followed by a space and the text to be quoted.
+
+<<code>>
+This is normal text here.
+
+> Indent me! The quick brown fox jumps over the lazy dog. \\
+Now this the time for all good men to come to the aid of \\
+their country. Notice how we can continue the block-quote \\
+in the same "paragraph" by using a backslash at the end of \\
+the line.
+>
+> Another block, leading to...
+>> Second level of indenting.  This second is indented even \\
+more than the previous one.
+
+Back to normal text.
+<</code>>
+
+This is normal text here.
+
+> Indent me! The quick brown fox jumps over the lazy dog. \\
+Now this the time for all good men to come to the aid of \\
+their country. Notice how we can continue the block-quote \\
+in the same "paragraph" by using a backslash at the end of \\
+the line.
+>
+> Another block, leading to...
+>> Second level of indenting.  This second is indented even \\
+more than the previous one.
+
+Back to normal text.
+
+
+----
+
+== Links and Images
+
+=== Wiki Links
+
+Internal links to other wiki pages can be created simply by making a link with the page name.
+
+{{{[[WikiFormatting]] WikiFormatting}}}
+
+[[WikiFormatting]] WikiFormatting
+
+You can refer to an anchor on a WikiPage using a hash mark: WikiPage#named_anchor
+
+You can make a "described" wiki link by putting it in brackets and following it \\
+with a nice text label:
+
+{{{This is a [[WikiFormatting#named_anchor link to a wiki page|cool!]]}}}
+
+This is a [[WikiFormatting#named_anchor link to a wiki page|cool!]]
+
+
+=== Interwiki Links
+
+Interwiki links are links to pages on other Wiki sites. \\
+Type the {{``SiteName:PageName``}} like this:
+
+* MeatBall:RecentChanges
+* Advogato:proj/WikkiTikkiTavi
+* Wiki:WorseIsBetter
+
+(Note: the interwiki site must be in the Text_Wiki {{interwiki}} option array.)
+
+=== URLs
+
+Create a remote link simply by typing its URL: http://ciaweb.net.
+
+If you like, enclose it in brackets to create a numbered reference \\
+and avoid cluttering the page; {{{##[[http://ciaweb.net/free/]]##}}} becomes ##[[http://ciaweb.net/free/]]##.
+
+Or you can have a described-reference instead of a numbered reference:
+
+{{{##[[http://pear.php.net|PEAR]]##}}}
+
+##[[http://pear.php.net|PEAR]]##
+
+=== Images
+
+You can put a picture in a page by typing the URL to the picture \\
+(it must end in gif, jpg, or png).
+<<code>>
+{{http://c2.com/sig/wiki.gif}}
+<</code>>
+
+{{http://c2.com/sig/wiki.gif}}
+
+You can use the described-reference URL markup to give the image an ALT tag:
+<<code>>
+{{http://c2.com/sig/wiki.gif|Wiki}}
+<</code>>
+
+{{http://c2.com/sig/wiki.gif|Wiki}}
+
+----
+== Code Blocks
+
+Create code blocks by using {{{<<code>>...<</code>>}}} tags (each on its own line).
+
+<<code>>
+This is an example code block!
+<</code>>
+
+
+To create PHP blocks that get automatically colorized when you use PHP tags, \\
+simply surround the code with {{{<<code lang="php">>...<</code>>}}} tags. The language selection can be any supported by Pygments.
+
+{{{
+<<code lang="php">>
+<?php
+// Set up the wiki options
+$options = array();
+$options['view_url'] = "index.php?page=";
+
+// load the text for the requested page
+$text = implode('', file($page . '.wiki.txt'));
+
+// create a Wiki objext with the loaded options
+$wiki = new Text_Wiki($options);
+
+// transform the wiki text.
+echo $wiki->transform($text);
+?>
+<</code>>
+}}}
+
+<<code lang="php">>
+<?php
+// Set up the wiki options
+$options = array();
+$options['view_url'] = "index.php?page=";
+
+// load the text for the requested page
+$text = implode('', file($page . '.wiki.txt'));
+
+// create a Wiki objext with the loaded options
+$wiki = new Text_Wiki($options);
+
+// transform the wiki text.
+echo $wiki->transform($text);
+?>
+<</code>>
+
+----
+
+== Tables
+
+You can create tables using pairs of vertical bars:
+
+<<code>>
+|| **column one** || **column two** ||
+|||| extended line ||
+|| cell four || cell five ||
+|| cell six || here's a very long cell ||
+<</code>>
+
+|| **column one** || **column two** ||
+|||| extended line ||
+|| cell four || cell five ||
+|| cell six || here's a very long cell ||
+
+<<code>>
+|| lines must start and end || with double vertical bars || nothing ||
+|| cells are separated by || double vertical bars || nothing ||
+|||| you can span multiple columns by || starting each cell ||
+|| with extra cell |||| separators ||
+|||||| but perhaps an example is the easiest way to see ||
+<</code>>
+
+|| lines must start and end || with double vertical bars || nothing ||
+|| cells are separated by || double vertical bars || nothing ||
+|||| you can span multiple columns by || starting each cell ||
+|| with extra cell |||| separators ||
+|||||| but perhaps an example is the easiest way to see ||

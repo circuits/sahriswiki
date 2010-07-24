@@ -1,0 +1,17 @@
+= Installing =
+
+To install [[SahrisWiki]] run the following command:
+<<code lang="sh">>
+$ python setup.py install
+<</code>>
+
+If you have cloned the [[http://bitbucket.org/prologic/sahriswiki/|SahrisWiki Repository]] and have [[http://pypi.python.org/pypi/setuptools|setuptools]] installed, then you can follow the development and keep up-to-date easily by building and installing in //develop// mode:
+<<code lang="sh">>
+$ python setup.py build develop
+<</code>>
+To update to the latest version simply issue a pull:
+<<code lang="sh">>
+$ hg pull -u
+<</code>>
+
+For general usage instructions and configuration options see [[Usage]]

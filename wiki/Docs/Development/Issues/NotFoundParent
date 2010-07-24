@@ -1,0 +1,12 @@
+= NotFound Parent =
+**Status**: Proposed
+
+In the context of creating a new page under an already existing subfolder, the following note is shown.
+
+<<code lang="text">>
+NOTE: This page's parent is http://wiki.kbeezie.com/Docs/Development. If you create http://wiki.kbeezie.com/Docs/Development/RoadMap it's parent will be renamed to an index page.
+<</code>>
+
+The suggestion would be that if the location being requested is already a subfolder (ie: check to see if for example /Docs/Development/Index already exists), then do not show the Note, otherwise show the note when appropriate (either Index does not exist, or if easier to see if the parent is already a folder). 
+----
+[..|Issues]]
