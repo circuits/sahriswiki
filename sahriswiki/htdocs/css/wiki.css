@@ -124,12 +124,15 @@
 	width : 50%;
 }
 
+.wiki div.left:after { clear: left; }
+
 .wiki div.right {
 	margin-left : 1em;
 	float : right;
 	position : relative;
 	width : 50%;
 }
+.wiki div.right:after { clear: right; }
 
 .wiki div.sidebar {
 	margin-left: 1em;
