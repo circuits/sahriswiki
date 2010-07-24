@@ -21,7 +21,6 @@ from circuits.web import Logger, Server, Sessions, Static
 from root import Root
 from config import Config
 from env import Environment
-from plugins import PluginManager
 from tools import CacheControl, Compression, ErrorHandler, SignalHandler
 
 def main():
@@ -52,8 +51,7 @@ def main():
             + Root(environ)
             + CacheControl(environ)
             + ErrorHandler(environ)
-            + SignalHandler(environ)
-            + PluginManager(environ))
+            + SignalHandler(environ))
 
     if not config.get("disable-logging"):
         manager += Logger(file=config.get("accesslog", sys.stdout))
