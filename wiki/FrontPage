@@ -10,11 +10,10 @@ Welcome to [[SahrisWiki]]'s development wiki and development environment.
 * [[http://www.python.org|Python]]
 * [[http://bitbucket.org/prologic/circuits/|circuits]] //Application Server//
 * [[http://mercurial.selenic.com/|Mercurial]] //Wiki Storage//
-* [[http://sqlite.org/|SQLite]] //Search Index//
+* [[http://www.sqlalchemy.org/|SQLAlchemy]] //Meta Data Storage//
 * [[http://code.google.com/p/creoleparser/|creoleparser]] //Wiki Parser//
 * [[http://genshi.edgewall.org/|genshi]] //Templates//
 * [[http://code.google.com/p/feedformatter/|feedformatter]] //RSS/Atom Feeds//
-* [[http://www.oswd.org/design/preview/id/2945|Blue Rain]] //Default Theme//
 
 For more information see [[Docs]].
 
