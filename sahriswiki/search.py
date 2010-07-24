@@ -270,7 +270,7 @@ without would yet you your yours yourself yourselves""")).split())
         if text is None and data is not None:
             text = unicode(data, self.storage.charset, 'replace')
 
-        self.db.begin()
+        self.db.begin(subtransactions=True)
 
         try:
             self.set_last_revision(self.storage.repo_revision())
