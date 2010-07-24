@@ -9,7 +9,7 @@
 
 from hashlib import md5
 
-from sqlalchemy import Column, Integer, Sequence, String
+from sqlalchemy import Boolean, Column, Integer, PickleType, Sequence, String
 
 from dbm import Base
 
@@ -62,8 +62,8 @@ class Session(Base):
     __tablename__ = "sessions"
 
     sid = Column(String(256), primary_key=True)
-    authenticated = Column(Integer, index=True, primary_key=True)
-    data = Column(String)
+    authenticated = Column(Boolean, index=True, primary_key=True)
+    data = Column(PickleType)
     time = Column(Integer, index=True)
 
     def __init__(self, sid, authenticated):
