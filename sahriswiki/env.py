@@ -288,8 +288,10 @@ class Environment(BaseComponent):
 
     @handler("databaseloaded")
     def _on_database_loaded(self):
-        if not self.dbm.session.query(schema.System).get("database_version"):
-            for Table, rows in schema.DATA:
+        tables = self.dbm.engine.table_names()
+        for Table, rows in schema.DATA:
+            if Table.__tablename__ not in tables:
+                self.dbm.session.begin()
                 for row in rows:
                     self.dbm.session.add(Table(*row))
-            self.dbm.session.commit()
+                self.dbm.session.commit()
