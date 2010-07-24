@@ -30,7 +30,6 @@ from mercurial.node import short
 from circuits.web.exceptions import Redirect
 from circuits.web.tools import expires, serve_file
 
-from tags import Tags
 from utils import NEWLINES
 from highlight import highlight
 from errors import NotImplementedErr, UnsupportedMediaTypeErr
