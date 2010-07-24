@@ -74,21 +74,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-else:
-    config = Config()
-    environ = Environment(config)
-
-    application = (Application() + Sessions()
-            + environ
-            + Root(environ)
-            + CacheControl(environ)
-            + ErrorHandler(environ)
-            + PluginManager(environ))
-
-    if not config.get("disable-static"):
-        application += Static(
-            docroot=os.path.join(config.get("theme"), "htdocs")
-        )
-
-    if not config.get("disable-hgweb"):
-        application += Gateway(hgweb(environ.storage.repo_path), "/+hg")
