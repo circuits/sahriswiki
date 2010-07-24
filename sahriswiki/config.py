@@ -28,8 +28,8 @@ class Config(reprconf.Config):
         self.check_options()
 
     def check_options(self):
-        paths = ("accesslog", "config", "data", "errorlog",
-                "htpasswd", "pidfile", "sock", "theme",)
+        paths = ("accesslog", "config", "repo", "errorlog",
+                "pidfile", "sock", "theme",)
 
         for path in paths:
             value = self.get(path, None)
@@ -123,10 +123,6 @@ class Config(reprconf.Config):
         add("--keywords", action="store", default=sahriswiki.__keywords__,
                 dest="keywords", metavar="KEYWORDS", type=str,
                 help="Set site keywords to KEYWORDS")
-
-        add("--htpasswd", action="store", default=None,
-                dest="htpasswd", metavar="FILE", type=str,
-                help="Read credentials for HTTP Auth from FILE")
 
         add("--password", action="store", default="admin",
                 dest="password", metavar="PASSWORD", type=str,
