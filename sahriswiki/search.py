@@ -15,8 +15,9 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import Column, ForeignKey, Integer, Sequence, String
 
+import schema
 from i18n import _
-from dbm import Base, SysInfo
+from dbm import Base
 from errors import NotFoundErr
 from utils import external_link, extract_links
 
@@ -300,16 +301,16 @@ without would yet you your yours yourself yourselves""")).split())
         # We use % here because the sqlite3's substitiution doesn't work
         # We store revision 0 as 1, 1 as 2, etc. because 0 means "no revision"
         
-        sysinfo = self.db.query(SysInfo).get("search_revision")
+        sysinfo = self.db.query(schema.System).get("search_revision")
         if sysinfo is None:
-            self.db.add(SysInfo("search_revision", (int(rev + 1))))
+            self.db.add(schema.System("search_revision", (int(rev + 1))))
         else:
             sysinfo.value = int(rev + 1)
 
     def get_last_revision(self):
         """Retrieve the last indexed repository revision."""
 
-        sysinfo = self.db.query(SysInfo).get("search_revision")
+        sysinfo = self.db.query(schema.System).get("search_revision")
         if sysinfo is None:
             return -1
         else:

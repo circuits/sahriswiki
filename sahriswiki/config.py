@@ -69,13 +69,14 @@ class Config(reprconf.Config):
                 dest="sock", metavar="FILE", type=str,
                 help="Listen on socket FILE")
 
-        add("-d", "--db", action="store", default="sqlite:///sahriswiki.db",
-                dest="db", metavar="DB", type=str,
-                help="Store meta data in database DB")
-
         add("-r", "--repo", action="store", default="wiki",
                 dest="repo", metavar="REPO", type=str,
                 help="Store pages in mercurial repository REPO")
+
+        add("-d", "--database", action="store",
+                default="sqlite:///sahriswiki.db",
+                dest="db", metavar="DB", type=str,
+                help="Store meta data in database DB")
 
         add("-t", "--theme", action="store",
                 default=os.path.join(os.path.dirname(__file__)),
@@ -123,10 +124,6 @@ class Config(reprconf.Config):
         add("--keywords", action="store", default=sahriswiki.__keywords__,
                 dest="keywords", metavar="KEYWORDS", type=str,
                 help="Set site keywords to KEYWORDS")
-
-        add("--password", action="store", default="admin",
-                dest="password", metavar="PASSWORD", type=str,
-                help="Set default admin password to PASSWORD")
 
         add("--readonly", action="store_true", default=False,
                 dest="readonly",
