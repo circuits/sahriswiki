@@ -42,7 +42,7 @@ except IOError:
 
 setup(
     name="sahriswiki",
-    description="A Lightweight Wiki / CMD / Blogging Engine using circuits.web",
+    description="A Lightweight Wiki / CMS / Blogging Engine using circuits.web",
     long_description="%s\n\n%s" % (README, HISTORY),
     author="James Mills",
     author_email="James Mills, prologic at shortcircuit dot net dot au",
