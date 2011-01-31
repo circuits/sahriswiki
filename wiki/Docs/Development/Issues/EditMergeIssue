@@ -1,0 +1,55 @@
+= Edit Merge Issue =
+
+An issue occurs where editing a page and saving a page that has since
+changed (//by someone else//) causes a **Lookup Error** by Mercurial:
+<<code lang="pytb">>
+ERROR: (<class 'mercurial.error.LookupError'>) data/wiki/SandBox.i@606a261cf09b: no match found
+  File "/home/prologic/work/circuits/circuits/core/manager.py", line 440, in __handleEvent
+    retval = handler(event, *eargs, **ekwargs)
+  File "/home/prologic/work/circuits/circuits/web/controllers.py", line 43, in wrapper
+    return f(self, *args, **kwargs)
+  File "/home/prologic/sahriswiki-0.8/sahriswiki/root.py", line 107, in edit
+    return page.edit()
+  File "/home/prologic/sahriswiki-0.8/sahriswiki/pagetypes.py", line 212, in edit
+    parent=parent)
+  File "/home/prologic/sahriswiki-0.8/sahriswiki/storage.py", line 255, in save_text
+    self.save_data(title, data, author, comment, parent)
+  File "/home/prologic/sahriswiki-0.8/sahriswiki/storage.py", line 240, in save_data
+    self.save_file(title, file_path, author, comment, parent)
+  File "/home/prologic/sahriswiki-0.8/sahriswiki/storage.py", line 36, in new_func
+    func(self, *args, **kwargs)
+  File "/home/prologic/sahriswiki-0.8/sahriswiki/storage.py", line 650, in save_file
+    title, file_name, author, comment, parent)
+  File "/home/prologic/sahriswiki-0.8/sahriswiki/storage.py", line 36, in new_func
+    func(self, *args, **kwargs)
+  File "/home/prologic/sahriswiki-0.8/sahriswiki/storage.py", line 476, in save_file
+    author, comment, parent)
+  File "/home/prologic/sahriswiki-0.8/sahriswiki/storage.py", line 36, in new_func
+    func(self, *args, **kwargs)
+  File "/home/prologic/sahriswiki-0.8/sahriswiki/storage.py", line 214, in save_file
+    msg = self.merge_changes(changectx, repo_file, text, user, parent)
+  File "/home/prologic/sahriswiki-0.8/sahriswiki/storage.py", line 174, in merge_changes
+    parent_node = filectx.changectx().node()
+  File "/usr/lib/python2.6/site-packages/mercurial-1.6-py2.6-linux-i686.egg/mercurial/context.py", line 346, in changectx
+    return self._changectx
+  File "/usr/lib/python2.6/site-packages/mercurial-1.6-py2.6-linux-i686.egg/mercurial/util.py", line 163, in __get__
+    result = self.func(obj)
+  File "/usr/lib/python2.6/site-packages/mercurial-1.6-py2.6-linux-i686.egg/mercurial/context.py", line 245, in _changectx
+    return changectx(self._repo, self._changeid)
+  File "/usr/lib/python2.6/site-packages/mercurial-1.6-py2.6-linux-i686.egg/mercurial/util.py", line 163, in __get__
+    result = self.func(obj)
+  File "/usr/lib/python2.6/site-packages/mercurial-1.6-py2.6-linux-i686.egg/mercurial/context.py", line 256, in _changeid
+    return self._filelog.linkrev(self._filerev)
+  File "/usr/lib/python2.6/site-packages/mercurial-1.6-py2.6-linux-i686.egg/mercurial/util.py", line 163, in __get__
+    result = self.func(obj)
+  File "/usr/lib/python2.6/site-packages/mercurial-1.6-py2.6-linux-i686.egg/mercurial/context.py", line 267, in _filerev
+    return self._filelog.rev(self._filenode)
+  File "/usr/lib/python2.6/site-packages/mercurial-1.6-py2.6-linux-i686.egg/mercurial/util.py", line 163, in __get__
+    result = self.func(obj)
+  File "/usr/lib/python2.6/site-packages/mercurial-1.6-py2.6-linux-i686.egg/mercurial/context.py", line 261, in _filenode
+    return self._filelog.lookup(self._fileid)
+  File "/usr/lib/python2.6/site-packages/mercurial-1.6-py2.6-linux-i686.egg/mercurial/revlog.py", line 943, in lookup
+    raise LookupError(id, self.indexfile, _('no match found'))
+<</code>>
+
+<<AddComment>>

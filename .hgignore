@@ -1,0 +1,16 @@
+syntax: glob
+
+tmp
+dist
+*.db
+*.pyc
+*.pyo
+build
+cache
+coverage
+*.journal
+.coverage
+docs/build
+__version__.py
+docs/source/api
+sahriswiki.egg-info

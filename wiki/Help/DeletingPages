@@ -1,0 +1,18 @@
+= Help on deleting pages =
+To delete a page use the **Delete** function in the //Context Navigation//.
+
+**Reasons to delete a page:**
+* It's an orphan page and is not likely to become connected. Click on the page title to find out if there are any [[HelpOnBackLinks|BackLinks]].
+* You're refactoring in a way that makes it redundant.
+* It's just flamage or an editing experiment by a newbie.
+* Deleting it resolves an argument amicably and consensually.
+* You wrote it and you think better of having written it. However, if others have contributed to it, think twice.
+
+**Reasons not to delete a page:**
+* Its on topic and unique.
+* You don't know what it means.
+* Its not on a topic that interests you.
+* Its content offends you.
+* Someone you don't like wrote it.
+* It's short.
+----
