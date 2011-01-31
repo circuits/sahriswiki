@@ -4,7 +4,7 @@
 
 """sahriswiki - Lightweight Wiki Engine
 
-:copyright: CopyRight (C) 2010 by James Mills
+:copyright: CopyRight (C) 2010-2011 by James Mills
 :license: MIT (See: LICENSE)
 """
 
