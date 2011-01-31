@@ -9,9 +9,5 @@
 """
 
 __author__ = "James Mills"
-__keywords__ = "lightweight creole wiki engine circuits circuits.web python"
-
-try:
-    from __version__ import version as __version__
-except ImportError:
-    __version__ = "unknown"
+__date__ = "31st January 2011"
+__version__ = "0.8"
