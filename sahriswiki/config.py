@@ -121,7 +121,7 @@ class Config(reprconf.Config):
                 dest="description", metavar="DESC", type=str,
                 help="Set site description to DESC")
 
-        add("--keywords", action="store", default=sahriswiki.__keywords__,
+        add("--keywords", action="store", default="sahriswiki",
                 dest="keywords", metavar="KEYWORDS", type=str,
                 help="Set site keywords to KEYWORDS")
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import os
+
 try:
     from setuptools import setup, find_packages
     HAS_SETUPTOOLS = True
@@ -31,18 +33,18 @@ if not HAS_SETUPTOOLS:
 
         return out
 
-import sahriswiki
-from sahriswiki.version import forget_version, get_version, remember_version
-
-forget_version()
-remember_version()
+path = os.path.abspath(os.path.dirname(__file__))
+try:
+    README = open(os.path.join(path, "README.rst")).read()
+    HISTORY = open(os.path.join(path, "HISTORY.rst")).read()
+except IOError:
+    README = HISTORY = ""
 
 setup(
     name="sahriswiki",
-    version=get_version(),
-    description="A Lightweight Wiki Engine",
-    long_description=open("README", "r").read(),
-    author=sahriswiki.__author__,
+    description="A Lightweight Wiki / CMD / Blogging Engine using circuits.web",
+    long_description="%s\n\n%s" % (README, HISTORY),
+    author="James Mills",
     author_email="James Mills, prologic at shortcircuit dot net dot au",
     url="http://bitbucket.org/prologic/sahriswiki/",
     download_url="http://bitbucket.org/prologic/sahriswiki/downloads/",
@@ -58,7 +60,7 @@ setup(
         "Programming Language :: Python :: 2.6",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application"],
     license="MIT",
-    keywords=sahriswiki.__keywords__,
+    keywords="wiki cms blog engine circuits",
     platforms="POSIX",
     packages=find_packages("."),
     package_data={
@@ -76,8 +78,10 @@ setup(
     """,
     install_requires = [
         "circuits",
-        "docutils >= 0.5",
-        "genshi >= 0.6",
-        "sqlalchemy >= 0.6.3",
+        "docutils",
+        "genshi",
+        "sqlalchemy",
     ],
+    setup_requires=("hgtools",),
+    use_hg_version={"increment": "0.01"},
 )
