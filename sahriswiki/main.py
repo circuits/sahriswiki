@@ -15,6 +15,7 @@ from mercurial.hgweb import hgweb
 from circuits.app import Daemon
 from circuits import Manager, Debugger
 
+from circuits.web.apps import MemoryMonitor
 from circuits.web.wsgi import Application, Gateway
 from circuits.web import Logger, Server, Sessions, Static
 
@@ -51,7 +52,9 @@ def main():
             + Root(environ)
             + CacheControl(environ)
             + ErrorHandler(environ)
-            + SignalHandler(environ))
+            + SignalHandler(environ)
+            + MemoryMonitor(channel="/memory")
+    )
 
     if not config.get("disable-logging"):
         manager += Logger(file=config.get("accesslog", sys.stdout))
