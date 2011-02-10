@@ -81,6 +81,7 @@ setup(
         "docutils",
         "genshi",
         "sqlalchemy",
+        "pygments",
     ],
     setup_requires=("hgtools",),
     use_hg_version={"increment": "0.01"},
