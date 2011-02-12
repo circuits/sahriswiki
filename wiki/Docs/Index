@@ -1,5 +1,6 @@
 = <<SetTitle "SahrisWiki Documentation" display=True>> =
 
+* [[./QuickStart|Quick Start Guide]]
 * [[./Downloading|Downloading]] and [[Docs/Installing|Installing]]
 * [[./Features|Features]]
 * [[./Development|Development]]
