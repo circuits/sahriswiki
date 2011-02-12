@@ -6,15 +6,12 @@
 
 Welcome to [[SahrisWiki]]'s development wiki and development environment. 
 
-[[SahrisWiki]] is a new wiki engine that uses the following libraries:
-* [[http://www.python.org|Python]]
-* [[http://bitbucket.org/prologic/circuits/|circuits]] //Application Server//
-* [[http://mercurial.selenic.com/|Mercurial]] //Wiki Storage//
-* [[http://www.sqlalchemy.org/|SQLAlchemy]] //Meta Data Storage//
-* [[http://code.google.com/p/creoleparser/|creoleparser]] //Wiki Parser//
-* [[http://genshi.edgewall.org/|genshi]] //Templates//
-* [[http://code.google.com/p/feedformatter/|feedformatter]] //RSS/Atom Feeds//
+This is [[http://en.wikipedia.org/wiki/Wiki_software|Wiki Software]], a [[http://simple.wikipedia.org/wiki/Wiki|Wiki]] Engine.
 
 For more information see [[Docs]].
 
-To try this wiki out for yourself, feel free to edit the [[SandBox]].
+Try this wiki out for yourself!
+* Navigate to [[SandBox]]
+* Hover over **Functions** (//bottom left of the page//)
+* Click **Edit**
+** Enter some text and click **Save**
