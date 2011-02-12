@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:py="http://genshi.edgewall.org/">
+ <xi:include href="layout.html" />
+ <head></head>
+ <body>
+  <py:if test="'PAGE_EDIT in permissions'">
+  	<div class="sidebar">
+	   <h4>Options</h4>
+   	<p>
+   		<a href="${url('/+edit', title)}">Create the Page</a><br/>
+   		<a href="${url('/+upload', title)}">Upload a File</a>
+    </p>
+   	<py:if test="defined('parent')">
+     <p py:with="parent, type = parent"
+      py:if="type == 'dir' and not parent == '.'">
+      <strong>NOTE:</strong>
+      This page's parent is <a href="${url('/%s' % parent)}">${parent}</a>.
+      If you create <a href="${url('/%s' % title)}">${title}</a> it's parent
+      will be renamed to an index page.
+     </p>
+    </py:if>
+   </div>
+  </py:if> 
+ 
+  <h1>Page Not Found</h1>
+  <p>
+   The page <strong>${title}</strong> you have requested
+   cannot be found.
+  </p>
+  <py:if test="results">
+   <p>Did you mean:
+    <ol>
+     <li py:for="score, name in results">
+      <b><a href="${url('/%s' % name)}">${name}</a></b>
+      <i>${score}</i>
+     </li>
+    </ol>
+   </p>
+  </py:if>
+  <br class="clearside"/>
+ </body>
+</html>

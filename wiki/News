@@ -1,0 +1,23 @@
+= News =
+//[[SahrisWiki]] News, Updates and Releases//
+
+== 31st January 2011 ==
+**New Release**: [[http://bitbucket.org/prologic/sahriswiki/get/0.8.tar.gz|0.8.tar.gz]]
+ * First Public PyPi Release: http://pypi.python.org/pypi/sahriswiki/0.8
+
+== 11th July 2010 ==
+**New Release**: [[http://bitbucket.org/prologic/sahriswiki/get/0.7.tar.gz|0.7.tar.gz]]
+ * Completely reorganized and restructured code base to be modular.
+ * Improved storage and search classes.
+ * NEW: Support for various mime types (//HTML, CSV, RST, Text and Images//).
+ * NEW: Fancier error page for when things go wrong.
+
+== 8th July 2010 ==
+
+**New Release**: [[http://bitbucket.org/prologic/sahriswiki/get/0.6.tar.gz|0.6.tar.gz]]
+ * Code is a lot cleaner!
+ * NEW: Plugin support --> +hello
+ * NEW: Upload support --> +upload
+ * NEW: Orphaned pages --> +orphaned
+ * NEW: Wanted pages --> +wanted
+
