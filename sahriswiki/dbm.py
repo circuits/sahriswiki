@@ -49,6 +49,7 @@ class DatabaseManager(BaseComponent):
                     for row in data:
                         self.session.add(Table(*row))
                     self.session.commit()
+            metadata.create_all(self.engine)
 
     @handler("stopped", target="*")
     def _on_stopped(self, component):
