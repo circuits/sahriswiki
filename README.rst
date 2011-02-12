@@ -1,3 +1,4 @@
+.. _sahriswiki Website: http://sahriswiki.org/
 .. _circuits: https://bitbucket.org/prologic/circuits/
 .. _sahriswiki Page on PyPi: http://pypi.python.org/pypi/sahriswiki
 .. _MIT License: http://www.opensource.org/licenses/mit-license.php
@@ -9,7 +10,7 @@ Overview
 --------
 
 sahriswiki is a **lightweight** **Wiki Engine** built using the
-`circutis`_ and circuits.web framework framework, is modular, plugable
+`circuits`_ and circuits.web framework framework, is modular, plugable
 and themeable.
 
 sahriswiki aims to implement a core set of features that are a mixture
