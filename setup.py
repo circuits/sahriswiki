@@ -36,14 +36,14 @@ if not HAS_SETUPTOOLS:
 path = os.path.abspath(os.path.dirname(__file__))
 try:
     README = open(os.path.join(path, "README.rst")).read()
-    HISTORY = open(os.path.join(path, "HISTORY.rst")).read()
+    RELEASE = open(os.path.join(path, "RELEASE.rst")).read()
 except IOError:
-    README = HISTORY = ""
+    README = RELEASE = ""
 
 setup(
     name="sahriswiki",
     description="A Lightweight Wiki / CMS / Blogging Engine using circuits.web",
-    long_description="%s\n\n%s" % (README, HISTORY),
+    long_description="%s\n\n%s" % (README, RELEASE),
     author="James Mills",
     author_email="James Mills, prologic at shortcircuit dot net dot au",
     url="http://bitbucket.org/prologic/sahriswiki/",
@@ -82,6 +82,7 @@ setup(
         "genshi",
         "sqlalchemy",
         "pygments",
+        "feedformatter",
     ],
     setup_requires=("hgtools",),
     use_hg_version={"increment": "0.01"},
