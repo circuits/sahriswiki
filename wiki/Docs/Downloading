@@ -9,4 +9,4 @@ Alternatively you can download [[SahrisWiki]] by using [[http://mercurial.seleni
 $ hg clone https://bitbucket.org/prologic/sahriswiki/
 <</code>>
 
-For installation instructions see [[Installing]]
+For installation instructions see [[Docs/Installing]]
