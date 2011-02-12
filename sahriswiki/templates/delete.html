@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:py="http://genshi.edgewall.org/">
+ <xi:include href="layout.html" />
+ <head>
+  <title>Delete Page</title>
+ </head>
+ <body>
+  <h1>Delete Page</h1>
+  <py:choose test="defined('success')">
+   <py:when test="True">
+    <py:choose test="success">
+    <py:when test="True">
+     <div id="message">${message}</div>
+    </py:when>
+    <py:otherwise>
+     <div id="message" class="error">${message}</div>
+    </py:otherwise>
+    </py:choose>
+   </py:when>
+   <py:otherwise>
+   <p>Are you sure you want to delete
+    <a href="$url('/%s' % title)">${title}</a> ?
+   </p>
+   </py:otherwise>
+  </py:choose>
+  <div id="delete" py:if="not defined('success')">
+   <form method="post" action="">
+		 	<h4><label for="comment">Comment:</label></h4>
+		 	<p class="input">
+    <input id="comment" name="comment" value="" />
+		 	</p>
+		 	<p class="button">
+     <button name="action" type="submit" value="delete">Delete</button>
+		 	</p>
+   </form>
+  </div>
+ </body>
+</html>

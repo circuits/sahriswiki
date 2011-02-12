@@ -1,0 +1,9 @@
+= Index Fallback =
+**Status**: DONE
+
+* **-i/--index** option/config to be a list of defaults to fallback to.
+* If a user tries to view ##/foo/bar/## and bar is a sub-directory of foo then an
+  index (//as specified by the -i/--index option//) will be searched for and
+  displayed.
+----
+[[..|Issues]]

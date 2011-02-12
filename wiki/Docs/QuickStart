@@ -1,0 +1,20 @@
+= Quick Start Guide to [[SahrisWiki]] =
+
+To get started quickly with [[SahrisWiki]] you may
+install [[SahrisWiki]] (//and it's dependencies//) by
+issues one of the following commands:
+
+== Using pip (1) ==
+<<code lang="sh">>
+$ pip install sahriswiki
+<</code>>
+
+== Using easy_install (2) ==
+<<code lang="sh">>
+$ easy_install sahriswiki
+<</code>>
+
+----
+
+# Requires [[http://pypi.python.org/pypi/pip/|pip]]
+# Requires [[http://pypi.python.org/pypi/setuptools/|setuptools]]
