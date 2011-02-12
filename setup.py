@@ -46,7 +46,7 @@ setup(
     long_description="%s\n\n%s" % (README, RELEASE),
     author="James Mills",
     author_email="James Mills, prologic at shortcircuit dot net dot au",
-    url="http://bitbucket.org/prologic/sahriswiki/",
+    url="http://sahriswiki.org/",
     download_url="http://bitbucket.org/prologic/sahriswiki/downloads/",
     classifiers=[
         "Development Status :: 4 - Beta",
