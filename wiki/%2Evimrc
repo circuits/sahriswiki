@@ -1,0 +1,26 @@
+set tabstop=4
+set shiftwidth=4
+set textwidth=75
+set expandtab
+set autoindent
+set nowritebackup
+set nobackup
+set nobomb
+
+autocmd FileType css setlocal shiftwidth=2
+autocmd FileType html setlocal shiftwidth=1 tabstop=1
+autocmd FileType xhtml setlocal shiftwidth=1 tabstop=1
+
+set mousemodel=popup
+
+noremap <silent> <F11> :cal VimCommanderToggle()<CR>
+
+" Dates/Times 
+imap \date  <C-R>=strftime("%d %B %Y")<CR>
+imap \time  <C-R>=strftime("%H%M")<CR>
+imap \st    StartTime: <C-R>=strftime("%H%M")<CR>
+imap \et    EndTime: <C-R>=strftime("%H%M")<CR>
+imap \ymd	<C-R>=strftime("%Y%m%d")<CR>
+
+" Other
+imap \me    James Mills, prologic at shortcircuit dot net dot au
