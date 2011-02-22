@@ -23,6 +23,7 @@ def include(macro, environ, data, *args, **kwargs):
     **Arguments:**
     * name=None (//the name of the page to include//)
     * parse=True (//whether to parse the page//)
+    * raw=False (//whether to include this raw//)
     * source=False (//whether to display the genereated HTML / source//)
 
     **Example(s):**
@@ -39,15 +40,19 @@ def include(macro, environ, data, *args, **kwargs):
     <<include "SandBox", parse=False>>
     """
     
+    import pdb
+    pdb.set_trace()
+
     name = kwargs.get("name", (args and args[0]) or None)
 
     if name is None:
         return None
 
     parse = kwargs.get("parse", True)
+    raw = kwargs.get("raw", False)
     source = kwargs.get("source", False)
 
-    contents = environ.include(name, parse, data=data)
+    contents = environ.include(name, parse, raw, data=data)
 
     if source:
         return tag.pre("".join(serializer(contents)))
