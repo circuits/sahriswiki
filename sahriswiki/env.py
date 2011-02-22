@@ -16,6 +16,7 @@ from urlparse import urlparse
 from circuits import handler, BaseComponent
 
 from genshi.builder import tag
+from genshi.core import Markup
 from genshi.template import TemplateLoader
 
 from creoleparser import create_dialect, creole11_base, Parser
@@ -251,14 +252,17 @@ class Environment(BaseComponent):
 
         return page_class(self, name, mime)
 
-    def include(self, name, parse=True, context="block", data=None):
+    def include(self, name, parse=True, raw=False, context="block", data=None):
         if name in self.storage:
             text = self.storage.page_text(name)
             if parse:
                 return self.parser.generate(text, context=context,
                         environ=(self, data))
             else:
-                return tag.pre(text)
+                if raw:
+                    return Markup(text)
+                else:
+                    return tag.pre(text)
         else:
             return tag.div(tag.p(u"Page %s Not Found" % name), class_="error")
 
