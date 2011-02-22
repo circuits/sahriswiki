@@ -40,9 +40,6 @@ def include(macro, environ, data, *args, **kwargs):
     <<include "SandBox", parse=False>>
     """
     
-    import pdb
-    pdb.set_trace()
-
     name = kwargs.get("name", (args and args[0]) or None)
 
     if name is None:
