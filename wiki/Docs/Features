@@ -1,0 +1,15 @@
+= Features =
+//[[SahrisWiki]] Feature List//
+
+* Support for displaying [[BackLinks]], pages that refer to the current page.
+* A powerful full-text search engine thanks to [[http://hatta.sheep.art.pl/|Hatta]].
+* Supports the creole macro extension and includes a variety of useful [[Macros]].
+* Uses the [[http://genshi.edgewall.org/|genshi]] toolkit to make creating new [[Docs/Themes|Theme]] easy.
+* Is designed with [[Docs/Performance|Performance]] in mind.
+* Breadcrumb navigation support.
+* User Authentication (HTTP Auth)
+* Flexible Permissions for groups/roles.
+* RSS/Atom Feeds
+* Edit, Rename, Delete, Upload functionality of content.
+* History / Recent Changes
+

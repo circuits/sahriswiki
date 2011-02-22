@@ -1,0 +1,132 @@
+<!DOCTYPE html
+ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:py="http://genshi.edgewall.org/"
+ py:strip="">
+ <py:match path="head" once="true">
+  <head py:attrs="select('@*')">
+   <title py:with="_title = list(select('title/text()'))">
+    ${_title} ${(defined('title') and title) or (defined('page') and page['name']) or ''} :: ${site['name']}
+   </title>
+   <meta name="description" content="${site['description']}" />
+   <meta name="keywords" content="${site['keywords']}" />
+   <meta name="author" content="${site['author']}" />
+   <meta http-equiv="Content-Type"
+    content="application/xhtml+xml; charset=utf-8" />
+   <py:if test="defined('page')">
+    <link py:if="'feed' in page" rel="alternate" title="${page['name']}"
+     href="${page['feed']}" type="application/xml" />
+   </py:if>
+   <link rel="stylesheet" type="text/css" media="screen"
+    href="${staticurl('css/screen.css')}" />
+   <link rel="stylesheet" type="text/css" href="${staticurl('css/wiki.css')}" />
+    <link rel="stylesheet" type="text/css"
+     href="${staticurl('css/pygments.css')}" />
+   <link py:for="stylesheet in stylesheets" rel="stylesheet"
+    type="text/css" href="${staticurl(stylesheet)}" />
+   <py:if test="defined('page')">
+    <style type="text/css">
+     #menu a[href="/${page['name']}"] {
+     	background : #fcfcfc;
+     	border : 1px solid #2b548c;
+     	border-bottom : 1px solid #fcfcfc;
+     	color : #437fda;
+     	padding: 6px 10px;
+     }
+     #menu a[href="/${page['name']}"]:hover {
+     	background : #fcfcfc;
+     	color : #ba8f43;
+     	padding: 6px 10px;     	
+      }
+    </style>
+   </py:if>
+   ${select('*[local-name()!="title"]')}
+    ${Markup('&lt;!--[if lt IE 9]&gt;')}
+		<script src="${staticurl('js/IE9.js')}"></script>
+	${Markup('&lt;![endif]--&gt;')}
+	 </head>
+ </py:match>
+ <py:match path="body" once="true">
+	<body py:attrs="select('@*')">
+		<div id="wrapper"><div id="main">
+			<div id="header">
+				<div id="metanav" py:if="defined('metanav')">
+					<ul>
+						<li py:for="text, href in metanav"><a href="${href}">${text}</a></li>
+					</ul>
+				</div>
+				<div id="search" style="clear: right;">
+					<form class="search" action="${url('/+search')}">
+      <div>
+       <input name="q" size="42" />
+       <button type="submit">Search</button>
+      </div>
+					</form>
+				</div>				
+	 		</div>
+
+    <div id="menu">
+     ${include(config.get('menu'))}
+    </div>
+
+    <div py:if="breadcrumbs" id="breadcrumbs" >
+     <span py:with="last = len(breadcrumbs) - 1"
+      py:for="i, (page, name) in enumerate(breadcrumbs)">
+      <a href="${url('/%s' % page)}">${name}</a>
+      <py:if test="not i == last"> &gt; </py:if>
+     </span>
+    </div>
+
+    <div id="content" class="${(defined('cls') and cls) or 'wiki'}">
+     ${select('*|text()')}
+    </div>
+
+    <py:def function="display_nav(nav)">
+     <py:for each="item in nav">
+      <py:choose test="item and isinstance(item[1], basestring)">
+       <py:when test="True">
+        <py:with vars="text, href = item">
+         <li><a href="${href}">${text}</a></li>
+        </py:with>
+       </py:when>
+       <py:otherwise>
+        <py:with vars="text, nav = item">
+         <li>
+          <a href="#">${text}</a>
+          <ul>
+            ${display_nav(nav)}
+          </ul>
+         </li>
+        </py:with>
+       </py:otherwise>
+      </py:choose>
+     </py:for>
+    </py:def>
+
+    <div id="ctxnav" class="nav" py:if="defined('ctxnav')">
+     <ul>${display_nav(ctxnav)}</ul>
+    </div>
+
+	 		<div id="footer">
+     <div id="software">
+      Powered by <a href="http:/sahriswiki.org/">sahriswiki -
+      <span class="version">${sahriswiki['version']}</span></a>
+     </div>
+     <div id="icons">
+      <a href="http://validator.w3.org/check/referer">
+       <img src="${staticurl('img/valid-xhtml10.png')}"
+        alt="Valid XHTML 1.0 Strict" width="80" height="15" />
+      </a>
+      <a href="http://jigsaw.w3.org/css-validator/check/referer">
+       <img src="${staticurl('img/valid-css.png')}" alt="Valid CSS"
+        width="80" height="15" />
+      </a>
+     </div>
+    </div>
+	 	</div>
+	 	</div>
+	 </body>
+ </py:match>
+</html>
