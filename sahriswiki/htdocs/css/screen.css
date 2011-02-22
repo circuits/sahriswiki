@@ -1,0 +1,172 @@
+/* CSS Reset */
+html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var,optgroup{font-style:inherit;font-weight:inherit;}del,ins{text-decoration:none;}li{list-style:none;}caption,th{text-align:left;}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}q:before,q:after{content:'';}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:baseline;}sub{vertical-align:baseline;}legend{color:#000;}input,button,textarea,select,optgroup,option{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;}input,button,textarea,select{font-size:100%;}
+
+#wrapper { width: 100%; position: relative; }
+#main { margin : 0 auto; width : 900px; }
+
+/* Universal (Not bound to a specific region) */
+html, body {
+  background-color: #fcfcfc;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a, a:visited, a:hover {
+    color : #437fda;
+    text-decoration : none;
+}
+a:hover { text-decoration: underline; }
+
+h1, h2, h3, h4 {
+    color: #333;
+    font-weight: bold;
+}
+
+h1 { font-size: 24px; line-height: 26px; margin-bottom: 15px; }
+h2 { font-size: 18px; line-height: 20px; margin-bottom: 10px; }
+h3 { font-size: 16px; line-height: 18px; margin-bottom: 10px; }
+h4 { font-size: 14px; line-height: 16px; margin-bottom: 5px; }
+
+/* Header Area */
+#header {
+    padding-top: 20px;
+    overflow: auto;
+}
+
+/* Search Area */
+#search {
+  float: right;
+  position: relative;
+  text-align: right;
+  width: 250px;
+}
+
+#search input {
+    background-color: #fff;
+    width: 150px;
+    font-size: 12px;
+    line-height: 12px;
+    padding: 4px;
+    margin-right: 0px;
+    border: 1px solid #cfcfcf;
+}
+
+#search input + button {
+    background-color: #fff;
+    border: 1px solid #cfcfcf;
+    padding: 4px;
+    font-size: 12px;
+    line-height: 12px;
+    text-align: center;
+}
+
+/* Meta Menu */
+
+#metanav {
+    text-align: right;
+}
+#metanav li {
+    font-size: 11px;
+    line-height: 14px;
+    height: 18px;
+    display : inline;
+    padding-right: 2px;
+    padding-left: 2px;
+    text-align: right;
+}
+#metanav li a {
+    text-decoration: none;
+    font-size: 11px;
+    margin-left: 5px;
+}
+
+#metanav li a:hover { border-bottom: 1px dotted #2b548c; }
+
+/* Menu Navigation */
+#menu {
+  clear: left;
+  position: relative;
+  margin: 0px; padding: 0px;
+  padding-left: 10px;
+  border-bottom: 1px solid #2b548c;
+  width: 100%;
+  height: 27px;
+}
+#menu a {
+    display: block;
+    padding: 7px 11px;
+    font-size: 14px; line-height: 14px;
+    color: #00c;
+    float: left;
+    border: none;
+    margin-right: 10px;
+}
+#menu a:hover {
+    background-color: #c1d7ff;
+    color: #00c;
+    border: 1px solid #2b548c;
+    border-bottom: 1px solid #c1d7ff;
+    text-decoration: none;
+    padding: 6px 10px;
+}
+
+/* Bread Crumbs */
+
+#breadcrumbs {
+  padding: 0px;
+  margin: 0px;
+  margin-bottom: 8px;
+  font-size: 11px;
+  text-align: left;
+  margin-bottom: 2px;
+  line-height: 12px;
+}
+#breadcrumbs span a {
+  font-size: 11px;
+  text-decoration: none;
+}
+#breadcrumbs span a:hover { text-decoration: underline; }
+
+/* Content Declarations */
+
+#content {
+    border-bottom : 1px solid #cfcfcf;
+    height : auto !important;
+    height : 1%;
+    overflow : hidden;
+    padding : 0px;
+    padding-top: 10px;
+    margin-bottom: 5px;
+}
+
+/* Sub Navigation */
+
+#ctxnav > * {
+    text-align: left;
+    font-size: 11px;
+}
+
+/* Top Level */
+.nav>ul { width:100%; list-style:none; margin-bottom:5px; margin-top: 3px; }
+.nav>ul li { float:left; margin-right: 10px; position:relative; }
+.nav>ul li a { display:block; padding:2px; text-decoration:none; }
+.nav>ul li a:hover { text-decoration: underline; }
+
+/* Second Level */
+.nav>ul li>ul { list-style: none; visibility: hidden; }
+.nav>ul li>ul li { float: none; margin-right: 0px; }
+.nav>ul li:hover>ul { visibility: visible; }
+
+/* Third Level */
+.nav>ul li>ul li>a+ul { visibility:hidden; float: left; }
+.nav>ul li>ul li:hover>ul { visibility: visible; }
+.nav>ul li>ul li>a+ul li>a { text-indent: 10px; }
+
+/* Footer */
+
+#footer {
+    font-size : 85%;
+    margin : auto;
+    padding : 1em 0 3em 0;
+    text-align : center;
+    width : 65%;
+}

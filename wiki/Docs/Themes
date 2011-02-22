@@ -1,0 +1,12 @@
+= Themes =
+
+* [[SahrisWiki]] uses [[http://genshi.edgewall.org/|genshi]] for templating.
+
+A theme consists of the following templates:
+{{{
+templates/
+templates/edit.html
+templates/layout.html
+templates/view.html
+}}}
+

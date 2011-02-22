@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:py="http://genshi.edgewall.org/">
+ <xi:include href="layout.html" />
+ <head>
+  <link rel="stylesheet" type="text/css"
+   href="${staticurl('css/about.css')}" />
+  <title>About SahrisWIki</title>
+ </head>
+ <body>
+   <div class="sidebar">
+	<a href="http://www.python.org/" style="border: none; float: right">
+	<img style="display: block" src="${staticurl('img/python.png')}"
+		alt="python powered" width="140" height="56" />
+	</a>
+   </div>
+   <h1>About SahrisWiki</h1>
+   <p>
+    SahrisWiki is a mixture of the best features of Wiki, Content Management
+    Systems (<i>CMS</i>) and Blogging Engines.
+   </p>
+   <p>
+    SahrisWiki is distributed under a MIT License.<br />
+    The complete text of the license can be found
+    <a href="http://sahriswiki.org/License">online</a>
+    as well as in the <tt>LICENSE</tt> file included in the distribution.
+   </p>
+   <p>Please visit the SahrisWiki open source project:
+    <a href="http://sahriswiki.org/">http://sahriswiki.org/</a>
+   </p>
+   <p class="copyright" xml:lang="en">Copyright &copy; 2010
+    <a href="http://prologic.shortcircuit.net.au/">James Mills</a>
+   </p>
+
+   <py:if test="systeminfo or plugins or config">
+    <div py:if="systeminfo" id="systeminfo">
+    <hr />    
+     <h2>System Information</h2>
+     <table class="listing">
+      <tr py:for="name, value in systeminfo">
+       <th>$name</th>
+       <td>$value</td>
+      </tr>
+     </table>
+    </div>
+
+    <div py:if="plugins" id="plugins">
+     <h2>Loaded Plugins</h2>
+     <table class="listing">
+      <tr py:for="plugin in plugins">
+       <th py:with="url = plugin.info.url or plugin.info.author_email and 'mailto:' + plugin.info.author_email">
+        <a py:strip="not url" href="$url">$plugin.name</a>
+       </th>
+       <td>${plugin.version or _('N/A')}</td>
+       <td class="file">$plugin.path</td>
+      </tr>
+     </table>
+    </div>
+
+    <div py:if="config and 'CONFIG_VIEW' in permissions" id="config">
+     <h2>Configuration</h2>
+     <table class="listing">
+      <thead>
+       <tr>
+        <th class="name">Option</th>
+        <th class="value">Value</th>
+       </tr>
+      </thead>
+      <tbody>
+       <tr py:for="option, value in config.items()">
+        <td class="option">${option}</td>
+        <td class="value">${value}</td>
+       </tr>
+      </tbody>
+     </table>
+    </div>
+   </py:if>
+	<br class="clearside"/>
+ </body>
+</html>

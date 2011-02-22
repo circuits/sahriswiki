@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:py="http://genshi.edgewall.org/">
+ <xi:include href="layout.html" />
+ <head></head>
+ <body>
+  <h1>History of <a href="${url('/%s' % name)}">${name}</a></h1>
+  <ul>
+   <li py:for="rev, date, author, comment in history">
+    <a href="${url('/+diff/%s?rev=%s' % (name, rev))}">
+     ${strftime('%Y-%m-%d', gmtime(date))}
+    </a>
+    by <a href="${url('/~%s' % author)}">${author}</a>
+    <py:choose test="len(comment) > 0">
+     <py:when test="True">
+      ${comment}
+     </py:when>
+     <py:otherwise>
+      <i>no comment</i>
+     </py:otherwise>
+    </py:choose>
+   </li>
+  </ul>
+ </body>
+</html>
