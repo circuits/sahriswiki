@@ -398,7 +398,7 @@ class WikiPageHTML(WikiPageText):
         if text is None:
             text = self._get_text()
 
-        return self.sanitizer(HTML(text))
+        return HTML(text)
 
     def edit(self):
         if not self.request.kwargs:
