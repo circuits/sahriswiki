@@ -11,6 +11,7 @@ import re
 import os
 import thread
 import tempfile
+from urllib import quote, unquote
 
 import mercurial.hg
 import mercurial.ui
@@ -19,7 +20,6 @@ import mercurial.revlog
 import mercurial.context
 from mercurial.node import short
 
-from circuits.web.utils import url_quote, url_unquote
 
 from i18n import _
 from errors import ForbiddenErr, NotFoundErr
@@ -137,7 +137,7 @@ class WikiStorage(object):
 
     def _title_to_file(self, title):
         title = unicode(title).strip()
-        filename = url_quote(title, safe='')
+        filename = quote(title, safe='')
         # Escape special windows filenames and dot files
         _windows_device_files = ('CON', 'AUX', 'COM1', 'COM2', 'COM3',
                                  'COM4', 'LPT1', 'LPT2', 'LPT3', 'PRN',
@@ -155,7 +155,7 @@ class WikiStorage(object):
         # Unescape special windows filenames and dot files
         if name.startswith('_') and len(name)>1:
             name = name[1:]
-        return url_unquote(name)
+        return unquote(name)
 
     def __contains__(self, title):
         if title:
@@ -416,7 +416,7 @@ class WikiStorage(object):
             if (os.path.isfile(file_path)
                 and not os.path.islink(file_path)
                 and not filename.startswith('.')):
-                yield url_unquote(filename)
+                yield unquote(filename)
 
     def changed_since(self, rev):
         """Return all pages that changed since specified repository revision."""
@@ -449,7 +449,7 @@ class WikiSubdirectoryStorage(WikiStorage):
         """Modified escaping allowing (some) slashes and spaces."""
 
         title = unicode(title).strip()
-        escaped = url_quote(title, safe='/ ')
+        escaped = quote(title, safe='/ ')
         escaped = self.periods_re.sub('%2E', escaped)
         escaped = self.slashes_re.sub('%2F', escaped)
         path = os.path.join(self.repo_prefix, escaped)
@@ -505,7 +505,7 @@ class WikiSubdirectoryStorage(WikiStorage):
                 filename = os.path.join(path, name)
                 if (os.path.isfile(os.path.join(self.path, filename))
                     and not filename.startswith('.')):
-                    yield url_unquote(filename)
+                    yield unquote(filename)
 
     def all_pages_tree(self):
         """
@@ -524,7 +524,7 @@ class WikiSubdirectoryStorage(WikiStorage):
                     yield {name: sorted(generate(path))}
                 elif os.path.isfile(path) and not name.startswith("."):
                     rel = os.path.relpath(path, self.path)
-                    yield url_unquote(rel),  url_unquote(name)
+                    yield unquote(rel),  unquote(name)
 
         return generate(self.path)
 
@@ -590,12 +590,12 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
             for name in filenames:
                 if os.path.basename(name) in self.indexes:
                     filename = os.path.join(path, os.path.dirname(name))
-                    yield url_unquote(filename)
+                    yield unquote(filename)
                 else:
                     filename = os.path.join(path, name)
                     if (os.path.isfile(os.path.join(self.path, filename))
                         and not filename.startswith('.')):
-                        yield url_unquote(filename)
+                        yield unquote(filename)
 
     def all_pages_tree(self):
         """
@@ -615,11 +615,11 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
                 if os.path.isdir(path):
                     has_index = any([os.path.join(base, name, index) in self
                         for index in self.indexes])
-                    yield {(url_unquote(rel), url_unquote(name), has_index):
+                    yield {(unquote(rel), unquote(name), has_index):
                             sorted(generate(path))}
                 elif os.path.isfile(path) and not os.path.islink(path) and \
                         name not in self.indexes:
-                    yield url_unquote(rel),  url_unquote(name)
+                    yield unquote(rel),  unquote(name)
 
         return generate(self.path)
 
