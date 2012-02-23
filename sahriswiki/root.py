@@ -16,6 +16,7 @@ from time import gmtime, strftime
 
 from genshi.core import Markup
 
+from circuits.tools import graph
 from circuits.web.tools import check_auth, basic_auth
 from circuits.web.controllers import expose, BaseController
 
@@ -470,3 +471,12 @@ class Root(BaseController):
         }
 
         return self.render("diff.html", **data)
+
+    @expose("+debug")
+    def debug(self):
+        graph(self.root)
+        return self.serve_file(
+                os.path.abspath(
+                    os.path.join(os.getcwd(), "Manager.png")
+                )
+            )
