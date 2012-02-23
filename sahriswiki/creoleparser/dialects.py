@@ -112,7 +112,7 @@ def creole10_base(wiki_links_base_url='',wiki_links_space_char='_',
     url_end_pattern = r'\S+?(?=([>)}\]]?[,.?!:;"\']?(([^a-zA-Z0-9])\5)?(\s|$))|<<<)'
 
     def raw_link_tag(mo, environ):
-        if mo.group('protocol') in ['http','https']:
+        if mo.group('protocol') in ['ftp', 'ftps', 'irc', 'http','https']:
             tag = 'a'
         else:
             tag = ''
@@ -131,7 +131,7 @@ def creole10_base(wiki_links_base_url='',wiki_links_space_char='_',
         pre = PreBlock('pre',['{{{','}}}'])
         #raw_link = RawLink('a',)
         br = GenericElement(blog_style_endings and r'\\\\\n?|\n(?!$)' or r'\\\\','br')
-        raw_link = GenericElement('(?P<protocol>https?|ftp)://'+ url_end_pattern, raw_link_tag,'{all}', dict(href='{all}'))
+        raw_link = GenericElement('(?P<protocol>https?|ftps?|irc)://'+ url_end_pattern, raw_link_tag,'{all}', dict(href='{all}'))
         #masked_raw_link = GenericElement('(ftp)://'+ url_end_pattern,'','{all}')
 
         link = AnchorElement('a',('[[',']]'),delimiter = '|',interwiki_delimiter=':',
