@@ -41,6 +41,8 @@ def main():
 
     environ = Environment(config)
 
+    SignalHandler(environ).register(environ)
+
     manager += environ
 
     if config.get("sock") is not None:
@@ -51,31 +53,32 @@ def main():
     else:
         bind = (config.get("bind"), config.get("port"),)
 
-    manager += (Server(bind)
+    server = (Server(bind)
             + Sessions()
             + Root(environ)
             + CacheControl(environ)
             + ErrorHandler(environ)
-            + SignalHandler(environ)
     )
 
     if MemoryMonitor is not None:
-        MemoryMonitor(channel="/memory").register(manager)
+        MemoryMonitor(channel="/memory").register(server)
 
     if not config.get("disable-logging"):
-        manager += Logger(file=config.get("accesslog", sys.stdout))
+        server += Logger(file=config.get("accesslog", sys.stdout))
 
     if not config.get("disable-static"):
-        manager += Static(docroot=os.path.join(config.get("theme"), "htdocs"))
+        server += Static(docroot=os.path.join(config.get("theme"), "htdocs"))
 
     if not config.get("disable-hgweb"):
-        manager += Gateway(hgweb(environ.storage.repo_path), "/+hg")
+        server += Gateway(hgweb(environ.storage.repo_path), "/+hg")
 
     if not config.get("disable-compression"):
-        manager += Compression(environ)
+        server += Compression(environ)
 
     if config.get("daemon"):
         manager += Daemon(config.get("pidfile"))
+
+    server.register(manager)
 
     manager.run()
 
