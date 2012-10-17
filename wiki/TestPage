@@ -1,0 +1,16 @@
+== SetTitle ==
+Set the title of the page.
+
+This macro allows you to set a custom title for a page that is
+different to the name of the page (//for SEO purposes//). You can
+also optinoally specify that you also want the newly set title
+to be rendered in-place.
+
+**Arguments:**
+* title (//the new title//)
+* display=False (//whether to render the title//)
+
+**Example(s):**
+{{{
+<<SetTitle "My Title">>
+}}}
