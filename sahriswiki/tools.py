@@ -79,7 +79,7 @@ class ErrorHandler(BaseComponent):
         data["traceback"] = Markup(data["traceback"])
         data["description"] = Markup(data["description"] or u"")
         response.body = self.render("error.html", **data)
-        return self.push(Response(response))
+        return self.fire(Response(response))
 
 class SignalHandler(BaseComponent):
 
