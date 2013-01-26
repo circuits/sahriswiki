@@ -33,13 +33,9 @@ def SetTitle(macro, environ, data, *args, **kwargs):
     <<SetTitle "My Title">>
     }}}
 
-    <<SetTitle "SahrisWiki Macros">>
-
     {{{
     <<SetTitle "My Title", display=True>>
     }}}
-
-    <<SetTitle "SahrisWiki Macros", display=True>>
     """
 
     title = kwargs.get("title", (args and args[0]) or u"")
@@ -66,8 +62,6 @@ def title(macro, environ, data, *args, **kwargs):
     {{{
     <<title>>
     }}}
-
-    <<title>>
     """
 
     if "title" in data:
