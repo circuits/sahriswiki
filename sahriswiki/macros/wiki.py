@@ -119,13 +119,13 @@ def AddComment(macro, environ, data, *args, **kwargs):
     # If we are submitting or previewing, inject comment as it should look
     if action == "preview":
         the_preview = tag.div(tag.h1("Preview"), id="preview")
-        the_preview += tag.div(parser.generate(comment, context="inline",
+        the_preview += tag.div(parser.generate(comment,
             environ=(environ, data)), class_="article")
 
     # When submitting, inject comment before macro
     if comment and action == "save":
         new_text = ""
-        comment_text = "==== Comment by %s on %s ====\n%s\n\n" % (
+        comment_text = "\n==== Comment by %s on %s ====\n\n%s\n\n" % (
                 author, time.strftime('%c', time.localtime()), comment)
         for line in page_text.split("\n"):
             if line.find("<<AddComment") == 0:
@@ -144,8 +144,8 @@ def AddComment(macro, environ, data, *args, **kwargs):
         search.update_page(environ.get_page(page_name), page_name,
                 text=new_text)
 
-        the_comment = parser.generate(comment_text, context="inline",
-                environ=(environ, data))
+        the_comment = tag.div(parser.generate(comment_text,
+            environ=(environ, data)), class_="article")
 
     the_form = tag.form(
             tag.input(type="hidden", name="parent", value=page["node"]),
@@ -162,7 +162,10 @@ def AddComment(macro, environ, data, *args, **kwargs):
                 ),
                 tag.h4(tag.label("Your email or username:", for_="author")),
                 tag.p(
-                    tag.input(id="author", name="author", type="text"),
+                    tag.input(id="author", name="author", type="text",
+                        value=(not action in ("cancel", "save"))
+                        and author or ""
+                    ),
                     class_="input"
                 ),
                 tag.p(
