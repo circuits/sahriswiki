@@ -51,7 +51,7 @@ class DatabaseManager(BaseComponent):
                     self.session.commit()
             metadata.create_all(self.engine)
 
-    @handler("stopped", target="*")
+    @handler("stopped", channel="*")
     def _on_stopped(self, component):
         self.session.flush()
         self.session.commit()

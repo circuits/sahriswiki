@@ -284,7 +284,7 @@ class Environment(BaseComponent):
         t = self.templates.load(template)
         return t.generate(**data).render("xhtml", doctype="xhtml")
 
-    @handler("request", priority=1.0, target="web")
+    @handler("request", priority=1.0, channel="web")
     def _on_request(self, request, response):
         self.request = request
         self.response = response
