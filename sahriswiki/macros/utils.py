@@ -25,5 +25,4 @@ def macros(macro, environ, data, *args, **kwargs):
     macros = environ.macros.items()
     s = "\n".join(["== %s ==\n%s\n" % (k, getdoc(v)) for k, v in macros])
 
-    return environ.parser.generate(s, context="inline",
-            environ=(environ, data))
+    return environ.parser.generate(s, environ=(environ, data))
