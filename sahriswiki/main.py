@@ -10,6 +10,7 @@
 import os
 import sys
 
+from mercurial.ui import ui
 from mercurial.hgweb import hgweb
 
 from circuits.app import Daemon
@@ -72,8 +73,19 @@ def main():
         server += Static(docroot=os.path.join(config.get("theme"), "htdocs"))
 
     if not config.get("disable-hgweb"):
+        baseui = ui()
+        baseui.setconfig("web", "prefix", "/+hg")
+        baseui.setconfig("web", "style", "gitweb")
+        baseui.setconfig("web", "allow_push", True)
+        baseui.setconfig("web", "allow_archive", ["bz2", "gz", "zip"])
+        baseui.setconfig("web", "description", config.get("description"))
+
         server += Gateway({
-            "/+hg": hgweb(environ.storage.repo_path)
+            "/+hg": hgweb(
+                environ.storage.repo_path,
+                config.get("name"),
+                baseui
+            )
         })
 
     if not config.get("disable-compression"):
