@@ -18,15 +18,16 @@ from circuits import Manager, Debugger
 try:
     from circuits.web.apps import MemoryMonitor
 except ImportError:
-    MemoryMonitor = None
+    MemoryMonitor = None  # NOQA
 
-from circuits.web.wsgi import Application, Gateway
+from circuits.web.wsgi import Gateway
 from circuits.web import Logger, Server, Sessions, Static
 
 from root import Root
 from config import Config
 from env import Environment
 from tools import CacheControl, Compression, ErrorHandler, SignalHandler
+
 
 def main():
     config = Config()
@@ -53,11 +54,12 @@ def main():
     else:
         bind = (config.get("bind"), config.get("port"),)
 
-    server = (Server(bind)
-            + Sessions()
-            + Root(environ)
-            + CacheControl(environ)
-            + ErrorHandler(environ)
+    server = (
+        Server(bind)
+        + Sessions()
+        + Root(environ)
+        + CacheControl(environ)
+        + ErrorHandler(environ)
     )
 
     if MemoryMonitor is not None:
@@ -70,7 +72,9 @@ def main():
         server += Static(docroot=os.path.join(config.get("theme"), "htdocs"))
 
     if not config.get("disable-hgweb"):
-        server += Gateway(hgweb(environ.storage.repo_path), "/+hg")
+        server += Gateway({
+            "/+hg": hgweb(environ.storage.repo_path)
+        })
 
     if not config.get("disable-compression"):
         server += Compression(environ)
