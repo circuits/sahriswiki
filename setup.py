@@ -77,11 +77,12 @@ setup(
     sahriswiki = sahriswiki.main:main
     """,
     install_requires = [
+        "genshi",
         "circuits",
         "docutils",
-        "genshi",
-        "sqlalchemy",
         "pygments",
+        "mercurial",
+        "sqlalchemy",
         "feedformatter",
     ],
     setup_requires=("hgtools",),
