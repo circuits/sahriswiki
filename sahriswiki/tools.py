@@ -88,7 +88,7 @@ class SignalHandler(BaseComponent):
 
         self.environ = environ
 
-    @handler("signal", target="*")
+    @handler("signal", channel="*")
     def _on_signal(self, sig, stack):
         if os.name == "posix" and sig == signal.SIGHUP:
             self.storage.reopen()
