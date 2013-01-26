@@ -96,6 +96,8 @@ def AddComment(macro, environ, data, *args, **kwargs):
     <<AddComment>>
     """
 
+    import pudb; pudb.set_trace()
+
     # Setup info and defaults
     parser = environ.parser
     request = environ.request
@@ -109,9 +111,9 @@ def AddComment(macro, environ, data, *args, **kwargs):
     action = request.kwargs.get("action", "")
     author = request.kwargs.get("author", environ._user())
     
-    # Ensure <<add-comment>> is not present in comment, so that infinite
+    # Ensure <<AddComment>> is not present in comment, so that infinite
     # recursion does not occur.
-    comment = re.sub("(^|[^!])(\<\<add-comment)", "\\1!\\2", comment)
+    comment = re.sub("(^|[^!])(\<\<AddComment)", "\\1!\\2", comment)
     
     the_preview = None
     the_comment = None
@@ -128,7 +130,7 @@ def AddComment(macro, environ, data, *args, **kwargs):
         comment_text = "==== Comment by %s on %s ====\n%s\n\n" % (
                 author, time.strftime('%c', time.localtime()), comment)
         for line in page_text.split("\n"):
-            if line.find("<<add-comment") == 0:
+            if line.find("<<AddComment") == 0:
                 new_text += comment_text
             new_text += line + "\n"
 
