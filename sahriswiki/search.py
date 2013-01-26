@@ -133,6 +133,7 @@ without would yet you your yours yourself yourselves""")).split())
                     Title.title==title).one().id
         except NoResultFound:
             self.db.add(Title(title))
+            self.db.commit()
             return self.db.query(Title.id).filter(
                     Title.title==title).one().id
 
@@ -145,14 +146,30 @@ without would yet you your yours yourself yourselves""")).split())
         title_words = self.count_words(self.split_text(title))
         for word, count in title_words.iteritems():
             words[word] = words.get(word, 0) + count
-        for word, count in words.iteritems():
-            self.db.add(Word(word, title_id, count))
+
+        self.db.begin(subtransactions=True)
+
+        try:
+            for word, count in words.iteritems():
+                self.db.add(Word(word, title_id, count))
+            self.db.commit()
+        except:
+            self.db.rollback()
+            raise
 
     def update_links(self, title, links_and_labels):
         title_id = self.title_id(title)
         self.db.query(Link).filter(Link.src==title_id).delete()
-        for number, (link, label) in enumerate(links_and_labels):
-            self.db.add(Link(title_id, link, label, number))
+
+        self.db.begin(subtransactions=True)
+
+        try:
+            for number, (link, label) in enumerate(links_and_labels):
+                self.db.add(Link(title_id, link, label, number))
+            self.db.commit()
+        except:
+            self.db.rollback()
+            raise
 
     def orphaned_pages(self):
         """Gives all pages with no links to them."""
@@ -304,6 +321,7 @@ without would yet you your yours yourself yourselves""")).split())
         sysinfo = self.db.query(schema.System).get("search_revision")
         if sysinfo is None:
             self.db.add(schema.System("search_revision", (int(rev + 1))))
+            self.db.commit()
         else:
             sysinfo.value = int(rev + 1)
 
