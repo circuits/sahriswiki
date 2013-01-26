@@ -96,8 +96,6 @@ def AddComment(macro, environ, data, *args, **kwargs):
     <<AddComment>>
     """
 
-    import pudb; pudb.set_trace()
-
     # Setup info and defaults
     parser = environ.parser
     request = environ.request
