@@ -1,0 +1,6 @@
+= <<SetTitle "Login Redirect">> =
+**Status**: DONE
+
+Upon clicking 'login' you are simply taken to +login and told login is successful (if of course you entered proper credentials). It would instead be nice that upon clicking login, and providing proper credentials that you be taken back to the page you were viewing a the time of clicking Login. 
+----
+[[..|Issues]]

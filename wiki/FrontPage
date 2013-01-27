@@ -1,0 +1,17 @@
+<<div class="right">>
+<<include "News">>
+<</div>>
+
+= [[<<SetTitle "SahrisWiki" display=True>>]] =
+
+Welcome to [[SahrisWiki]]'s development wiki and development environment. 
+
+This is [[http://en.wikipedia.org/wiki/Wiki_software|Wiki Software]], a [[http://simple.wikipedia.org/wiki/Wiki|Wiki]] Engine.
+
+For more information see [[Docs]].
+
+Try this wiki out for yourself!
+* Navigate to [[SandBox]]
+* Hover over **Functions** (//bottom left of the page//)
+* Click **Edit**
+* Enter some text and click **Save**
