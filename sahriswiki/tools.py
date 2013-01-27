@@ -16,12 +16,24 @@ from genshi import Markup
 
 from mercurial.node import short
 
+from circuits.io import Notify
 from circuits.web import Response
 from circuits.web.tools import gzip
 from circuits import handler, BaseComponent
 from circuits.web.tools import validate_etags
 
 import sahriswiki
+
+class AutoReloader(BaseComponent):
+
+    def init(self, environ):
+        self.environ = environ
+        self.notify = Notify().register(self)
+        self.notify.add_path(self.environ.config.get("repo"))
+
+    @handler("modified")
+    def _on_modified(self, *args, **kwargs):
+        self.environ.storage.reopen()
 
 class CacheControl(BaseComponent):
 
