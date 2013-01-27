@@ -80,6 +80,7 @@ def main():
         baseui.setconfig("web", "prefix", "/+hg")
         baseui.setconfig("web", "style", "gitweb")
         baseui.setconfig("web", "allow_push", "*")
+        baseui.setconfig("web", "push_ssl", False)
         baseui.setconfig("web", "allow_archive", ["bz2", "gz", "zip"])
         baseui.setconfig("web", "description", config.get("description"))
 
