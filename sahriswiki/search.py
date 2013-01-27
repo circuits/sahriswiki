@@ -288,29 +288,16 @@ without would yet you your yours yourself yourselves""")).split())
         if text is None and data is not None:
             text = unicode(data, self.storage.charset, 'replace')
 
-        self.db.begin(subtransactions=True)
-
-        try:
-            self.set_last_revision(self.storage.repo_revision())
-            self.reindex_page(page, title, text)
-            self.db.commit()
-        except:
-            self.db.rollback()
-            raise
+        self.set_last_revision(self.storage.repo_revision())
+        self.reindex_page(page, title, text)
+        self.db.commit()
 
     def reindex(self, environ, pages):
         """Updates specified pages in bulk."""
 
-        self.db.begin(subtransactions=True)
-
-        try:
-            for title in pages:
-                page = environ.get_page(title)
-                self.reindex_page(page, title)
-            self.db.commit()
-        except Exception, e:
-            self.db.rollback()
-            raise
+        for title in pages:
+            page = environ.get_page(title)
+            self.reindex_page(page, title)
 
     def set_last_revision(self, rev):
         """Store the last indexed repository revision."""

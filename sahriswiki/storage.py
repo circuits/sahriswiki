@@ -220,15 +220,7 @@ class WikiStorage(object):
 
 
     def _commit(self, files, text, user):
-        try:
-            return self.repo.commit(files=files, text=text, user=user,
-                                    force=True, empty_ok=True)
-        except TypeError:
-            # Mercurial 1.3 doesn't accept empty_ok or files parameter
-            match = mercurial.match.exact(self.repo_path, '', list(files))
-            return self.repo.commit(match=match, text=text, user=user,
-                                    force=True)
-
+        return self.repo.commit(text=text, user=user, force=True)
 
     def save_data(self, title, data, author=u'', comment=u'', parent=None):
         """Save data as specified page."""
