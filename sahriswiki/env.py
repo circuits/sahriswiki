@@ -237,11 +237,6 @@ class Environment(BaseComponent):
     def get_page(self, name):
         """Creates a page object based on page"s mime type"""
 
-        name = relpath(
-            self.storage._title_to_file(name),
-            basename(self.config.get("repo"))
-        )
-
         try:
             page_class, mime = self.filename_map[name]
         except KeyError:
