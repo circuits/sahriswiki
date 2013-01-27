@@ -1,0 +1,12 @@
+= Downloading =
+
+[[SahrisWiki]] can be downloaded from:
+ * Latest Snapshots: [[https://bitbucket.org/prologic/sahriswiki/downloads|Bitbucket]]
+ * Latest Releases: [[http://pypi.python.org/pypi/sahriswiki/|PyPi]]
+
+Alternatively you can download [[SahrisWiki]] by using [[http://mercurial.selenic.com/|Mercurial]] and cloning the repository:
+<<code lang="sh">>
+$ hg clone https://bitbucket.org/prologic/sahriswiki/
+<</code>>
+
+For installation instructions see [[Docs/Installing]]
