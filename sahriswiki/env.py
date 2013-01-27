@@ -12,7 +12,7 @@ from hashlib import md5
 from urllib import basejoin
 from itertools import chain
 from urlparse import urlparse
-from os.path import dirname, relpath
+from os.path import basename, dirname, relpath
 
 from circuits import handler, BaseComponent
 
@@ -239,7 +239,7 @@ class Environment(BaseComponent):
 
         name = relpath(
             self.storage._title_to_file(name),
-            self.config.get("repo")
+            basename(self.config.get("repo"))
         )
 
         try:
