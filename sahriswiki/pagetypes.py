@@ -234,6 +234,10 @@ class WikiPageWiki(WikiPageText):
 class WikiPageFile(WikiPage):
     """Pages of all other mime types use this for display."""
 
+    def view(self):
+        path = self.storage._file_path(self.name)
+        return serve_file(self.request, self.response, path, type=self.mime)
+
 class WikiPageImage(WikiPageFile):
     """Pages of mime type image/* use this for display."""
 

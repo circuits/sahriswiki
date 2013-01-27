@@ -12,6 +12,7 @@ from hashlib import md5
 from urllib import basejoin
 from itertools import chain
 from urlparse import urlparse
+from os.path import dirname, relpath
 
 from circuits import handler, BaseComponent
 
@@ -49,7 +50,7 @@ class Environment(BaseComponent):
         "text":                     WikiPageText,
         "application/javascript":   WikiPageColorText,
         "text/x-python":            WikiPageColorText,
-        "text/css":                 WikiPageColorText,
+        "text/css":                 WikiPageFile,
         "text/csv":                 WikiPageCSV,
         "text/html":                WikiPageHTML,
         "text/x-rst":               WikiPageRST,
@@ -68,10 +69,9 @@ class Environment(BaseComponent):
         ).register(self)
 
         self.storage = DefaultStorage(
+            self.config,
             self.config.get("repo"),
-            self.config.get("encoding"),
-            index=self.config.get("index"),
-            indexes=self.config.get("indexes"),
+            charset=self.config.get("encoding"),
         )
 
         self.search = WikiSearch(
@@ -236,6 +236,11 @@ class Environment(BaseComponent):
 
     def get_page(self, name):
         """Creates a page object based on page"s mime type"""
+
+        name = relpath(
+            self.storage._title_to_file(name),
+            self.config.get("repo")
+        )
 
         try:
             page_class, mime = self.filename_map[name]

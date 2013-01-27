@@ -46,7 +46,7 @@ class WikiStorage(object):
     change history, using Mercurial repository as the storage method.
     """
 
-    def __init__(self, path, charset=None):
+    def __init__(self, config, path, charset=None):
         """
         Takes the path to the directory where the pages are to be kept.
         If the directory doen't exist, it will be created. If it's inside
@@ -54,8 +54,10 @@ class WikiStorage(object):
         a new repository will be created in it.
         """
 
-        self.charset = charset or 'utf-8'
+        self.config = config
         self.path = os.path.abspath(path)
+        self.charset = charset or 'utf-8'
+
         if not os.path.exists(self.path):
             os.makedirs(self.path)
         self.repo_path = self._find_repo_path(self.path)
@@ -533,29 +535,17 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
     A version of WikiSubdirectoryStorage that defaults to a set of indexes.
     """
 
-    index = "Index" # Default index
-    indexes = ["FrontPage", "Index"] # Default list of search indexes
-
-    def __init__(self, path, charset=None, **kwargs):
-        super(WikiSubdirectoryIndexesStorage, self).__init__(path, charset)
-
-        if "index" in kwargs:
-            self.index = kwargs["index"]
-
-        if "indexes" in kwargs:
-            self.indexes = kwargs["indexes"]
-
     def _file_path(self, title):
         root = super(WikiSubdirectoryIndexesStorage, self)._file_path(title)
 
         if os.path.isfile(root) and not os.path.islink(root):
             return root
         elif os.path.isdir(root):
-            for index in self.indexes:
+            for index in self.config.get("indexes"):
                 path = os.path.join(root, index)
                 if os.path.isfile(path) and not os.path.islink(path):
                     return path
-            return os.path.join(root, self.indexes[0])
+            return os.path.join(root, self.config.get("indexes")[0])
         return root
 
     def _title_to_file(self, title):
@@ -570,12 +560,12 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
             return os.path.isdir(file_path) and not os.path.islink(file_path)
 
         if not exists(root):
-            for index in self.indexes:
+            for index in self.config.get("indexes"):
                 path = os.path.join(root, index)
                 if exists(path):
                     return path
             if isdir(root):
-                return os.path.join(root, self.index)
+                return os.path.join(root, self.config.get("index"))
 
         return root
 
@@ -588,7 +578,7 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
         for (dirpath, dirnames, filenames) in os.walk(self.path):
             path = dirpath[len(self.path)+1:]
             for name in filenames:
-                if os.path.basename(name) in self.indexes:
+                if os.path.basename(name) in self.config.get("indexes"):
                     filename = os.path.join(path, os.path.dirname(name))
                     yield unquote(filename)
                 else:
@@ -614,11 +604,11 @@ class WikiSubdirectoryIndexesStorage(WikiSubdirectoryStorage):
                 base = os.path.dirname(rel)
                 if os.path.isdir(path):
                     has_index = any([os.path.join(base, name, index) in self
-                        for index in self.indexes])
+                        for index in self.config.get("indexes")])
                     yield {(unquote(rel), unquote(name), has_index):
                             sorted(generate(path))}
                 elif os.path.isfile(path) and not os.path.islink(path) and \
-                        name not in self.indexes:
+                        name not in self.config.get("indexes"):
                     yield unquote(rel),  unquote(name)
 
         return generate(self.path)
