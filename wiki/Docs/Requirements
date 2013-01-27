@@ -1,0 +1,15 @@
+= [[SahrisWiki]] Requirements =
+//Software Dependencies//
+
+[[SahrisWiki]] requires and depends on the following software:
+* [[http://www.python.org|Python]]
+* [[http://bitbucket.org/prologic/circuits/|circuits]] //Application Server//
+* [[http://mercurial.selenic.com/|Mercurial]] //Wiki Storage//
+* [[http://www.sqlalchemy.org/|SQLAlchemy]] //Meta Data Storage//
+* [[http://code.google.com/p/creoleparser/|creoleparser]] //Wiki Parser//
+* [[http://genshi.edgewall.org/|genshi]] //Templates//
+* [[http://code.google.com/p/feedformatter/|feedformatter]] //RSS/Atom Feeds//
+
+Please ensure that they are installed and working correctly and install each
+dependency either by following it's installation instructions or by isntalling
+using your package manager.

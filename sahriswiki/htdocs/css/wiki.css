@@ -1,0 +1,169 @@
+@import url(code.css);
+
+.wiki img {
+  margin: 1em 1em 0 1em;
+}
+
+.wiki img.left {
+	float: left;
+	margin: 1em 1em 0 0;
+}
+.wiki img.right {
+	float: right;
+	margin: 1em 0 0 1em;
+}
+
+.wiki blockquote {
+  quotes: none;
+  background-color: #f8f8f8;
+  border-left: 2px solid #eaeaea;
+  color: #111;
+  font-style: italic;
+  margin:0 0 9px;
+  padding:7px;
+}
+.wiki blockquote:before, .wiki blockquote:after {
+  content: "";
+}
+
+.wiki form button {
+	background : #f8f8f8;
+	border : 1px solid #cfcfcf;
+	padding : 0.25em;
+	margin : 0 0 0 0.75em;
+}
+.wiki form input {
+	border : none;
+	width : 100%;
+}
+.wiki form textarea {
+	border : none;
+	width : 100%;
+	height : 100%;
+}
+.wiki form p.button {
+	text-align : right;
+	margin-right: 1em;
+	padding-top: 7px;
+	margin-bottom: 7px;
+}
+.wiki form p.input,
+.wiki form p.text {
+	background : #ffffff;
+	border : 1px solid #cfcfcf;
+	padding : 0.25em;
+	margin : 0.25em 1em 0 1em;
+}
+.wiki form h4 { margin-left: 1em; margin-top: 7px; }
+
+.wiki em {
+  font-style: italic;
+}
+
+.wiki strong {
+  font-weight: bold;
+}
+
+.wiki sup {
+  vertical-align: super;
+}
+
+.wiki sub {
+  vertical-align: sub;
+}
+
+.wiki p {
+	font-family: Helvetica;
+	font-size: 14px; line-height: 20px;
+	margin-bottom: 18px;
+}
+
+.wiki span.highlight {
+  background-color: #ffff00;
+}
+
+.wiki code, pre {
+	background-color:#F4F8F9;
+	border-bottom:1px solid #E6F0F2;
+	border-top:1px solid #E6F0F2;
+	color:#3e5867;
+	display:block;
+	font-size:12px;
+	line-height:19px;
+	margin: 1.75em 0;
+	padding: 8px;
+	white-space: pre-wrap;
+	line-height: 15px;
+	overflow: auto;
+	font-weight: normal;
+}
+
+.wiki code { display: inline; padding: 0px; background-color: transparent; border: none; }
+.wiki img.smiley {
+ vertical-align: baseline;
+}
+
+.wiki table {
+    border: 1px solid #dedede;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 10px;
+}
+
+.wiki th {
+  text-align: center;
+  font-weight: bold;
+}
+
+.wiki td { padding: 4px; margin: 0px; border: 1px solid #dedede; }
+
+.wiki div.left {
+	left : -1em;
+	float : left;
+	position : relative;
+	width : 50%;
+}
+
+.wiki div.left:after { clear: left; }
+
+.wiki div.right {
+	margin-left : 1em;
+	float : right;
+	position : relative;
+	width : 50%;
+}
+.wiki div.right:after { clear: right; }
+
+.wiki div.sidebar {
+	margin-left: 1em;
+	float: right;
+	position: relative;
+	width: 30%;
+	padding: 0px;
+	margin-right: 10px;
+}
+
+.wiki div.sidebar p { font-size: 12px; text-align: justify; margin-bottom: 10px; }
+.wiki div.sidebar h4 { font-size: 14px; font-weight: bold; margin-bottom: 10px; }
+.wiki div.sidebar ul { margin-bottom: 5px; margin-top: 5px; padding: 0px; }
+.wiki br.clearside { clear: right; }
+
+.wiki ul,
+.wiki ol {
+	padding : 1em 1em 0 1.5em;
+	padding-top: 0px;
+	margin-bottom: 15px;
+	list-style: disc;
+}
+
+.wiki li { font-family: Helvetica; font-size: 12px; line-height: 16px; list-style: disc; }
+
+.wiki ol li { list-style: decimal; }
+
+.wiki a.new {
+  color: #8B0000;
+}
+
+.wiki a.external {
+  color: #4B0082;
+}

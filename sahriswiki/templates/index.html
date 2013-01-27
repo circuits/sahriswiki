@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+ xmlns:xi="http://www.w3.org/2001/XInclude"
+ xmlns:py="http://genshi.edgewall.org/">
+ <xi:include href="layout.html" />
+ <head></head>
+ <body>
+  <h1>${title}</h1>
+
+  <py:def function="display(pages)">
+   <py:choose test="type(pages)">
+    <py:when test="dict">
+     <py:for each="root, pages in pages.items()">
+      <py:choose test="type(root)">
+       <py:when test="tuple">
+        <py:with vars="name, title, index = root">
+         <py:choose test="index">
+          <py:when test="True">
+           <strong><a href="${url('/%s' % name)}">${title}</a></strong>
+          </py:when>
+          <py:otherwise>
+           <strong>${title}</strong>
+          </py:otherwise>
+         </py:choose>
+        </py:with>
+       </py:when>
+       <py:otherwise>
+        <strong>${root}</strong>
+       </py:otherwise>
+      </py:choose>
+      <ul>${display(pages)}</ul>
+     </py:for>
+    </py:when>
+    <py:when test="list">
+     <py:for each="page in pages">
+      <li>${display(page)}</li>
+     </py:for>
+    </py:when>
+    <py:otherwise>
+     <py:choose test="type(page)">
+      <py:when test="tuple">
+       <a py:with="name, title = page" href="${url('/%s' % name)}">${title}</a>
+      </py:when>
+      <py:otherwise>
+       <a py:with="name = page" href="${url('/%s' % name)}">${name}</a>
+      </py:otherwise>
+     </py:choose>
+    </py:otherwise>
+   </py:choose>
+  </py:def>
+
+  <py:choose test="type(pages)">
+   <py:when test="dict">
+    ${display(pages)}
+   </py:when>
+   <py:when test="list">
+    <ul>${display(pages)}</ul>
+   </py:when>
+  </py:choose>
+
+ </body>
+</html>
