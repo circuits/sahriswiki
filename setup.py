@@ -82,6 +82,7 @@ setup(
         "docutils",
         "pygments",
         "mercurial",
+        "pyinotify",
         "sqlalchemy",
         "feedformatter",
     ],
