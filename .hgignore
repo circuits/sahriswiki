@@ -2,9 +2,11 @@ syntax: glob
 
 tmp
 dist
+.tox
 *.db
 *.pyc
 *.pyo
+*.xml
 build
 cache
 coverage
