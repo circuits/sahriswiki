@@ -17,3 +17,28 @@ Try this wiki out for yourself!
 * Enter some text and click **Save**
 
 **NB**: To help circumvent SPAM Authentication and Authorization has been turned on. [[+login|Login]] with {{{admin:admin}}} before editing these pages.
+
+Want to install the latest development version? Perform these steps:
+
+# Ensure you have: [[http://www.python.org/|Python]], [[http://pypi.python.org/pypi/setuptools|setuptools]] or [[http://pypi.python.org/pypi/distribute]] and [[http://mercurial.selenic.com/|Mercurial]] installed on your system.
+
+# Clone and Install circuits-dev
+<<code lang="sh">>
+$ hg clone https://bitbucket.org/prologic/circuits-dev/
+$ cd circuits-dev
+$ python setup.py develop
+<<//code>>
+
+# Clone and Install sahriswiki
+<<code lang="sh">>
+$ hg clone https://bitbucket.org/prologic/sahriswiki/
+$ cd sahriswiki
+$ python setup.py develop
+<<//code>>
+
+# Run {{{sahriswiki}}}
+<<code lang="sh">>
+$ sahriswiki --help
+<</code>>
+
+Enjoy! :)
