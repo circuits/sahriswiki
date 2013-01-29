@@ -10,4 +10,4 @@
 
 __author__ = "James Mills"
 __date__ = "31st January 2011"
-__version__ = "0.8"
+__version__ = "0.9.0dev"
