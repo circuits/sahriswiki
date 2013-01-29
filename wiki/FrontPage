@@ -27,14 +27,14 @@ Want to install the latest development version? Perform these steps:
 $ hg clone https://bitbucket.org/prologic/circuits-dev/
 $ cd circuits-dev
 $ python setup.py develop
-<<//code>>
+<</code>>
 
 # Clone and Install sahriswiki
 <<code lang="sh">>
 $ hg clone https://bitbucket.org/prologic/sahriswiki/
 $ cd sahriswiki
 $ python setup.py develop
-<<//code>>
+<</code>>
 
 # Run {{{sahriswiki}}}
 <<code lang="sh">>
