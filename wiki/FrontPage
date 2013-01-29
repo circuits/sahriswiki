@@ -20,7 +20,7 @@ Try this wiki out for yourself!
 
 Want to install the latest development version? Perform these steps:
 
-# Ensure you have: [[http://www.python.org/|Python]], [[http://pypi.python.org/pypi/setuptools|setuptools]] or [[http://pypi.python.org/pypi/distribute]] and [[http://mercurial.selenic.com/|Mercurial]] installed on your system.
+# Ensure you have: [[http://www.python.org/|Python]], [[http://pypi.python.org/pypi/setuptools|setuptools]] or [[http://pypi.python.org/pypi/distribute|distribute]] and [[http://mercurial.selenic.com/|Mercurial]] installed on your system.
 
 # Clone and Install circuits-dev
 <<code lang="sh">>
