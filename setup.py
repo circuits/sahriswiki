@@ -56,6 +56,7 @@ setup(
     },
     install_requires=[
         "genshi",
+        "argparse",
         "circuits",
         "docutils",
         "pygments",
