@@ -13,8 +13,8 @@
 * [[http://pygments.org/|pygments]] //Syntax Highlighting//
 * [[http://pyinotify.sourceforge.net/|pyinotify]] //File System Monitoring//
 
-All of these dependencies should automatically get installed when you isntall
-[[SahrisWiki]]. If not, most of them can be instaleld by simply issueing
+All of these dependencies should automatically get installed when you install
+[[SahrisWiki]]. If not, most of them can be installed by simply issuing
 the command:
 
 <<code lang="sh">>
@@ -25,5 +25,5 @@ $ pip install foo
 * [[http://code.google.com/p/creoleparser/|creoleparser-0.7.2]] //Wiki Parser//
 
 Please ensure that they are installed and working correctly and install each
-dependency either by following it's installation instructions or by isntalling
+dependency either by following it's installation instructions or by installing
 using your package manager.
