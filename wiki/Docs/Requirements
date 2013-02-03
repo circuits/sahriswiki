@@ -22,7 +22,7 @@ $ pip install foo
 <</code>>
 
 [[SahrisWiki]] also integrate the following libraries:
-* [[http://code.google.com/p/creoleparser/|creoleparser]] //Wiki Parser//
+* [[http://code.google.com/p/creoleparser/|creoleparser-0.7.2]] //Wiki Parser//
 
 Please ensure that they are installed and working correctly and install each
 dependency either by following it's installation instructions or by isntalling
