@@ -6,9 +6,23 @@
 * [[http://bitbucket.org/prologic/circuits/|circuits]] //Application Server//
 * [[http://mercurial.selenic.com/|Mercurial]] //Wiki Storage//
 * [[http://www.sqlalchemy.org/|SQLAlchemy]] //Meta Data Storage//
-* [[http://code.google.com/p/creoleparser/|creoleparser]] //Wiki Parser//
 * [[http://genshi.edgewall.org/|genshi]] //Templates//
 * [[http://code.google.com/p/feedformatter/|feedformatter]] //RSS/Atom Feeds//
+* [[http://code.google.com/p/argparse/|argparse]] //CLI Options//
+* [[http://docutils.sourceforge.net/|docutils]] //reStructuredText Support//
+* [[http://pygments.org/|pygments]] //Syntax Highlighting//
+* [[http://pyinotify.sourceforge.net/|pyinotify]] //File System Monitoring//
+
+All of these dependencies should automatically get installed when you isntall
+[[SahrisWiki]]. If not, most of them can be instaleld by simply issueing
+the command:
+
+<<code lang="sh">>
+$ pip install foo
+<</code>>
+
+[[SahrisWiki]] also integrate the following libraries:
+* [[http://code.google.com/p/creoleparser/|creoleparser]] //Wiki Parser//
 
 Please ensure that they are installed and working correctly and install each
 dependency either by following it's installation instructions or by isntalling
