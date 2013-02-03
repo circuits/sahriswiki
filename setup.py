@@ -14,6 +14,7 @@ except IOError:
 
 setup(
     name="sahriswiki",
+    version="0.9.0",
     description="A Lightweight Wiki Engine using circuits.web",
     long_description="%s\n\n%s" % (README, RELEASE),
     author="James Mills",
