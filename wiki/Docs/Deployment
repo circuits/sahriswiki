@@ -19,7 +19,7 @@ Here are various ways you can deploy [[SahrisWiki]].
 * Run {{{sahriswiki}}}:
 
 <<code lang="sh">>
-$ sahriswiki =d -b 0.0.0.0:8000
+$ sahriswiki -d -b 0.0.0.0:8000
 <</code>>
 
 * For other configuration options:

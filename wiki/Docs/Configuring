@@ -1,0 +1,77 @@
+= Configuring =
+
+[[SahrisWiki]] can be configured in one of two ways:
+
+== Command Line Options ==
+
+<<code lang="sh">>
+$ sahriswiki --help
+usage: sahriswiki [-h] [--config FILE] [-b INT] [-p PORT] [-s FILE] [-r REPO]
+                  [-d DB] [-t DIR] [--frontpage PAGE] [--index PAGE]
+                  [--indexes LIST [LIST ...]] [--menu PAGE] [--encoding ENC]
+                  [--language LANG] [--name NAME] [--author NAME]
+                  [--description DESC] [--keywords KEYWORDS] [--readonly]
+                  [--debug] [--daemon] [--verbose] [--errorlog FILE]
+                  [--accesslog FILE] [--pidfile FILE] [--disable-hgweb]
+                  [--disable-logging] [--disable-static]
+                  [--disable-compression] [--static-baseurl URL]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --config FILE         Read configuration from FILE
+  -b INT, --bind INT    Listen on interface INT
+  -p PORT, --port PORT  Listen on port PORT
+  -s FILE, --sock FILE  Listen on socket FILE
+  -r REPO, --repo REPO  Store pages in mercurial repository REPO
+  -d DB, --database DB  Store meta data in database DB
+  -t DIR, --theme DIR   Set theme (static and templates) path to DIR
+  --frontpage PAGE      Set default front page to PAGE
+  --index PAGE          Set default index page to PAGE
+  --indexes LIST [LIST ...]
+                        Set index search list to LIST
+  --menu PAGE           Set default site menu page to PAGE
+  --encoding ENC        Use encoding ENC to read and write pages
+  --language LANG       Translate interface to LANG
+  --name NAME           Set site name to NAME
+  --author NAME         Set site author to NAME
+  --description DESC    Set site description to DESC
+  --keywords KEYWORDS   Set site keywords to KEYWORDS
+  --readonly            Set the wiki into readonly mode
+  --debug               Enable debugging mode
+  --daemon              Run as a background process
+  --verbose             Enable verbose debugging
+  --errorlog FILE       Store debug and error information in FILE
+  --accesslog FILE      Store web server access logs in FILE
+  --pidfile FILE        Write process id to FILE
+  --disable-hgweb       Disable hgweb interface
+  --disable-logging     Disable access logging
+  --disable-static      Disable static file serving
+  --disable-compression
+                        Disable compression
+  --static-baseurl URL  Set static baseurl to URL
+<</code>>
+
+== Configuration File (//INI Style//) ==
+
+By using the {{{--config}}} option you can tell [[SahrisWiki]] to gather it's
+options from a config file. Here's an example config file:
+
+<<code lang="ini">>
+
+[global]
+repo = "/path/to/pages"
+theme = "/path/to/theme"
+db = "sqlite:////path/to/wiki.db"
+pidfile = '/path/to/wiki.pid"
+accesslog = "/path/to/access.log"
+errorlog = "/path/to/error.log"
+keywords = "My Wiki's Description"
+description = "My Wiki Wiki"
+name = "John Doe"
+readonly = True
+daemon = True
+debug = True
+bind = "0.0.0.0:8000"
+<</code>>
+
+Basically any Command Line Option can be used as a Key/Value pair in the config file.
