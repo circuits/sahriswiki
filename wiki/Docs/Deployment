@@ -4,7 +4,7 @@ Here are various ways you can deploy [[SahrisWiki]].
 
 == Apache + mod_proxy ==
 
-# Ensure you have Apache isntaleld with mod_proxy
+# Ensure you have Apache installed with mod_proxy
 # Configure a VirtualHost like this:
 
 <<code lang="apache">>
