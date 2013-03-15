@@ -16,13 +16,13 @@ Here are various ways you can deploy [[SahrisWiki]].
 </VirtualHost>
 <</code>>
 
-# Run ``sahriswiki``:
+* Run {{{sahriswiki}}}:
 
 <<code lang="sh">>
 $ sahriswiki =d -b 0.0.0.0:8000
 <</code>>
 
-For other configuration options:
+* For other configuration options:
 
 <<code lang="sh">>
 $ sahriswiki --help
