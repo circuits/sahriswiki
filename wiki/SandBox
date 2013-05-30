@@ -4,3 +4,20 @@ This is just a page to practice stuff and learn [[WikiFormatting]].
 
 Go ahead, edit it freely, yah editing stuff.
 ----
+
+<<code lang="php">>
+<?php
+// Set up the wiki options
+$options = array();
+$options['view_url'] = "index.php?page=";
+
+// load the text for the requested page
+$text = implode('', file($page . '.wiki.txt'));
+
+// create a Wiki objext with the loaded options
+$wiki = new Text_Wiki($options);
+
+// transform the wiki text.
+echo $wiki->transform($text);
+?>
+<</code>>
