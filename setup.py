@@ -57,12 +57,12 @@ setup(
     install_requires=[
         "genshi",
         "argparse",
-        "circuits",
         "docutils",
         "pygments",
         "mercurial",
         "pyinotify",
         "sqlalchemy",
         "feedformatter",
+        "circuits==2.1.0",
     ]
 )
