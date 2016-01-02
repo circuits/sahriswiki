@@ -1,11 +1,5 @@
-![image](https://badge.waffle.io/prologic/sahriswiki.png?label=ready&title=Ready)
+[!['Stories in Ready'](https://badge.waffle.io/prologic/sahriswiki.png?label=ready&title=Ready)](https://waffle.io/prologic/sahriswiki)
 
-> target  
-> <https://waffle.io/prologic/sahriswiki>
->
-> alt  
-> 'Stories in Ready'
->
 sahriswiki is a **lightweight** **Wiki Engine** built using the [circuits](https://bitbucket.org/prologic/circuits/) and circuits.web framework framework, is modular, plugable and themeable.
 
 sahriswiki aims to implement a core set of features that are a mixture of "best of breed" Wiki, Blog, and CMS features.

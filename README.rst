@@ -7,8 +7,8 @@
 
 
 .. image:: https://badge.waffle.io/prologic/sahriswiki.png?label=ready&title=Ready 
- :target: https://waffle.io/prologic/sahriswiki
- :alt: 'Stories in Ready'
+   :target: https://waffle.io/prologic/sahriswiki
+   :alt: 'Stories in Ready'
 
 
 sahriswiki is a **lightweight** **Wiki Engine** built using the
