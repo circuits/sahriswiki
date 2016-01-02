@@ -1,6 +1,3 @@
-.. image:: https://badge.waffle.io/prologic/sahriswiki.png?label=ready&title=Ready 
- :target: https://waffle.io/prologic/sahriswiki
- :alt: 'Stories in Ready'
 .. _sahriswiki Website: http://sahriswiki.org/
 .. _circuits: https://bitbucket.org/prologic/circuits/
 .. _sahriswiki Page on PyPi: http://pypi.python.org/pypi/sahriswiki
@@ -9,8 +6,10 @@
 .. _sahriswiki Downloads page: https://bitbucket.org/prologic/sahriswiki/downloads
 
 
-Overview
---------
+.. image:: https://badge.waffle.io/prologic/sahriswiki.png?label=ready&title=Ready 
+ :target: https://waffle.io/prologic/sahriswiki
+ :alt: 'Stories in Ready'
+
 
 sahriswiki is a **lightweight** **Wiki Engine** built using the
 `circuits`_ and circuits.web framework framework, is modular, plugable
@@ -84,4 +83,3 @@ I am on twitter `@therealprologic <http://twitter.com/therealprologic>`_.
 Do you have suggestions for improvement? Then please `Create an Issue`_
 with details of what you would like to see. I'll take a look at it and
 work with you to either incorporate the idea or find a better solution.
-
