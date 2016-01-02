@@ -1,3 +1,6 @@
+sahriswiki
+==========
+
 [!['Stories in Ready'](https://badge.waffle.io/prologic/sahriswiki.png?label=ready&title=Ready)](https://waffle.io/prologic/sahriswiki)
 
 sahriswiki is a **lightweight** **Wiki Engine** built using the [circuits](https://bitbucket.org/prologic/circuits/) and circuits.web framework framework, is modular, plugable and themeable.
@@ -13,14 +16,14 @@ sahriswiki aims to implement a core set of features that are a mixture of "best 
 **PyPI page**: <http://pypi.python.org/pypi/sahriswiki>
 
 Features
-========
+--------
 
 -   small and lightweight
 -   mercurial storage engine
 -   plugin architecture
 
 Requirements
-============
+------------
 
 sahriswiki depends on the following software:
 
@@ -32,7 +35,7 @@ sahriswiki depends on the following software:
 -   [feedformatter](http://code.google.com/p/feedformatter/)
 
 Installation
-============
+------------
 
 The simplest and recommended way to install sahriswiki is with pip. You may install the latest stable release from PyPI with pip:
 
@@ -47,12 +50,12 @@ Alternatively, you may download the source package from the [sahriswiki Page on 
     > python setup.py install
 
 License
-=======
+-------
 
 sahriswiki is licensed under the [MIT License](http://www.opensource.org/licenses/mit-license.php).
 
 Feedback
-========
+--------
 
 I welcome any questions or feedback about bugs and suggestions on how to improve sahriswiki. Let me know what you think about sahriswiki. I am on twitter [@therealprologic](http://twitter.com/therealprologic).
 
