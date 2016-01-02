@@ -1,3 +1,6 @@
+.. image:: https://badge.waffle.io/prologic/sahriswiki.png?label=ready&title=Ready 
+ :target: https://waffle.io/prologic/sahriswiki
+ :alt: 'Stories in Ready'
 .. _sahriswiki Website: http://sahriswiki.org/
 .. _circuits: https://bitbucket.org/prologic/circuits/
 .. _sahriswiki Page on PyPi: http://pypi.python.org/pypi/sahriswiki
