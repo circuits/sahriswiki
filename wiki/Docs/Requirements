@@ -3,7 +3,7 @@
 
 [[SahrisWiki]] requires and depends on the following software:
 * [[http://www.python.org|Python]]
-* [[http://bitbucket.org/prologic/circuits/|circuits]] //Application Server//
+* [[http://github.com/circuits/circuits/|circuits]] //Application Server//
 * [[http://mercurial.selenic.com/|Mercurial]] //Wiki Storage//
 * [[http://www.sqlalchemy.org/|SQLAlchemy]] //Meta Data Storage//
 * [[http://genshi.edgewall.org/|genshi]] //Templates//

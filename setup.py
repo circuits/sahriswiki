@@ -20,7 +20,7 @@ setup(
     author="James Mills",
     author_email="James Mills, prologic at shortcircuit dot net dot au",
     url="http://sahriswiki.org/",
-    download_url="http://bitbucket.org/prologic/sahriswiki/downloads/",
+    download_url="http://github.com/prologic/sahriswiki/downloads/",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Environment :: Plugins",

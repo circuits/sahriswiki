@@ -24,13 +24,9 @@ Ensure you have: [[http://www.python.org/|Python]], [[http://pypi.python.org/pyp
 
 Then perform the following steps:
 <<code lang="sh">>
-$ hg clone https://bitbucket.org/prologic/circuits-dev/
-$ cd circuits-dev
-$ python setup.py develop
-
-$ hg clone https://bitbucket.org/prologic/sahriswiki/
+$ git clone https://github.com/prologic/sahriswiki/
 $ cd sahriswiki
-$ python setup.py develop
+$ pip install -e .
 
 $ sahriswiki --help
 <</code>>

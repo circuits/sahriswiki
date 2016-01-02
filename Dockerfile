@@ -4,7 +4,7 @@ FROM prologic/crux-python
 MAINTAINER James Mills <prologic@shortcircuitnet.au>
 
 # Install Source
-RUN pip install https://bitbucket.org/prologic/sahriswiki/get/tip.tar.bz2#egg=sahriswiki
+RUN pip install https://github.com/prologic/sahriswiki/get/tip.tar.bz2#egg=sahriswiki
 
 # Expose Service
 EXPOSE 8000

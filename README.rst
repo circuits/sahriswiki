@@ -1,9 +1,9 @@
 .. _sahriswiki Website: http://sahriswiki.org/
-.. _circuits: https://bitbucket.org/prologic/circuits/
+.. _circuits: https://github.com/circuits/circuits/
 .. _sahriswiki Page on PyPi: http://pypi.python.org/pypi/sahriswiki
 .. _MIT License: http://www.opensource.org/licenses/mit-license.php
-.. _Create an Issue: https://bitbucket.org/prologic/sahriswiki/issue/new
-.. _sahriswiki Downloads page: https://bitbucket.org/prologic/sahriswiki/downloads
+.. _Create an Issue: https://github.com/prologic/sahriswiki/issue/new
+.. _sahriswiki Downloads page: https://github.com/prologic/sahriswiki/downloads
 
 
 sahriswiki
@@ -24,7 +24,7 @@ of "best of breed" Wiki, Blog, and CMS features.
 
 **Documentation**: http://sahriswiki.org/Docs/
 
-**Project website**: https://bitbucket.org/prologic/sahriswiki/
+**Project website**: https://github.com/prologic/sahriswiki/
 
 **PyPI page**: http://pypi.python.org/pypi/sahriswiki
 

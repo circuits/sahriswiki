@@ -5,7 +5,7 @@ To install [[SahrisWiki]] run the following command:
 $ python setup.py install
 <</code>>
 
-If you have cloned the [[http://bitbucket.org/prologic/sahriswiki/|SahrisWiki Repository]] and have [[http://pypi.python.org/pypi/setuptools|setuptools]] installed, then you can follow the development and keep up-to-date easily by building and installing in //develop// mode:
+If you have cloned the [[http://github.com/prologic/sahriswiki/|SahrisWiki Repository]] and have [[http://pypi.python.org/pypi/setuptools|setuptools]] installed, then you can follow the development and keep up-to-date easily by building and installing in //develop// mode:
 <<code lang="sh">>
 $ python setup.py build develop
 <</code>>
