@@ -1,0 +1,7 @@
+sahriswiki:
+  build: .
+  environment:
+    - VIRTUALHOST=wiki.mills.io
+  volume_driver: local
+  volumes:
+    - sahriswikidata:/data

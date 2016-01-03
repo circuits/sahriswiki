@@ -1,13 +1,16 @@
-# Docker Image for ircnotifier
+FROM prologic/python-runtime:2.7
 
-FROM prologic/crux-python
-MAINTAINER James Mills <prologic@shortcircuitnet.au>
+ENTRYPOINT ["sahriswiki"]
+CMD ["-p", "80", "--debug"]
 
-# Install Source
-RUN pip install https://github.com/prologic/sahriswiki/get/tip.tar.bz2#egg=sahriswiki
+EXPOSE 80
 
-# Expose Service
-EXPOSE 8000
+RUN apk -U add build-base python-dev git && \
+    rm -rf /var/cache/apk/*
 
-# Startup
-ENTRYPOINT ["/usr/bin/sahriswiki"]
+COPY requirements.txt /tmp/requirements.txt
+RUN pip install -r /tmp/requirements.txt && rm /tmp/requirements.txt
+
+WORKDIR /app
+COPY . /app/
+RUN pip install .

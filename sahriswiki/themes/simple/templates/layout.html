@@ -21,12 +21,12 @@
      href="${page['feed']}" type="application/xml" />
    </py:if>
    <link rel="stylesheet" type="text/css" media="screen"
-    href="${staticurl('css/screen.css')}" />
-   <link rel="stylesheet" type="text/css" href="${staticurl('css/wiki.css')}" />
+    href="${staticuri('css/screen.css')}" />
+   <link rel="stylesheet" type="text/css" href="${staticuri('css/wiki.css')}" />
     <link rel="stylesheet" type="text/css"
-     href="${staticurl('css/pygments.css')}" />
+     href="${staticuri('css/pygments.css')}" />
    <link py:for="stylesheet in stylesheets" rel="stylesheet"
-    type="text/css" href="${staticurl(stylesheet)}" />
+    type="text/css" href="${staticuri(stylesheet)}" />
    <py:if test="defined('page')">
     <style type="text/css">
      #menu a[href="/${page['name']}"] {
@@ -45,7 +45,7 @@
    </py:if>
    ${select('*[local-name()!="title"]')}
     ${Markup('&lt;!--[if lt IE 9]&gt;')}
-		<script src="${staticurl('js/IE9.js')}"></script>
+		<script src="${staticuri('js/IE9.js')}"></script>
 	${Markup('&lt;![endif]--&gt;')}
 	 </head>
  </py:match>
@@ -59,7 +59,7 @@
 					</ul>
 				</div>
 				<div id="search" style="clear: right;">
-					<form class="search" action="${url('/+search')}">
+					<form class="search" action="${uri('/+search')}">
       <div>
        <input name="q" size="42" />
        <button type="submit">Search</button>
@@ -75,7 +75,7 @@
     <div py:if="breadcrumbs" id="breadcrumbs" >
      <span py:with="last = len(breadcrumbs) - 1"
       py:for="i, (page, name) in enumerate(breadcrumbs)">
-      <a href="${url('/%s' % page)}">${name}</a>
+      <a href="${uri('/%s' % page)}">${name}</a>
       <py:if test="not i == last"> &gt; </py:if>
      </span>
     </div>
@@ -117,11 +117,11 @@
      </div>
      <div id="icons">
       <a href="http://validator.w3.org/check/referer">
-       <img src="${staticurl('img/valid-xhtml10.png')}"
+       <img src="${staticuri('img/valid-xhtml10.png')}"
         alt="Valid XHTML 1.0 Strict" width="80" height="15" />
       </a>
       <a href="http://jigsaw.w3.org/css-validator/check/referer">
-       <img src="${staticurl('img/valid-css.png')}" alt="Valid CSS"
+       <img src="${staticuri('img/valid-css.png')}" alt="Valid CSS"
         width="80" height="15" />
       </a>
      </div>

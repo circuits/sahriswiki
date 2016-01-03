@@ -47,7 +47,7 @@ class WikiPage(object):
         self.request = self.environ.request
         self.response = self.environ.response
 
-        self.url = self.request.url
+        self.uri = self.request.uri
         self.render = self.environ.render
 
         self.search = self.environ.search
@@ -132,7 +132,7 @@ class WikiPageText(WikiPage):
         text = NEWLINES.sub("\n", text)
 
         if action == "cancel":
-            raise Redirect(self.url("/%s" % self.name))
+            raise Redirect(self.uri("/%s" % self.name))
         elif action == "preview":
             data = {
                 "page": {"name": self.name, "text": text},
@@ -150,7 +150,7 @@ class WikiPageText(WikiPage):
                 comment, parent=parent)
             self.search.update_page(self, self.name, text=text)
 
-            raise Redirect(self.url("/%s" % self.name))
+            raise Redirect(self.uri("/%s" % self.name))
         else:
             raise Exception("Invalid action %r" % action)
 
@@ -201,7 +201,7 @@ class WikiPageWiki(WikiPageText):
         text = NEWLINES.sub("\n", text)
 
         if action == "cancel":
-            raise Redirect(self.url("/%s" % self.name))
+            raise Redirect(self.uri("/%s" % self.name))
         elif action == "preview":
             data = {
                 "page": {"name": self.name, "text": text},
@@ -219,7 +219,7 @@ class WikiPageWiki(WikiPageText):
                     comment, parent=parent)
             self.search.update_page(self, self.name, text=text)
 
-            raise Redirect(self.url("/%s" % self.name))
+            raise Redirect(self.uri("/%s" % self.name))
         else:
             raise Exception("Invalid action %r" % action)
 
@@ -256,7 +256,7 @@ class WikiPageImage(WikiPageFile):
             "name": self.name,
             "html": tag.img(
                 alt=self.name,
-                src=self.url("/+download/%s" % self.name)
+                src=self.uri("/+download/%s" % self.name)
             ),
             "ctxnav": list(self.environ._ctxnav("view", self.name)),
         }
@@ -295,7 +295,7 @@ class WikiPageCSV(WikiPageFile):
         text = NEWLINES.sub("\n", text)
 
         if action == "cancel":
-            raise Redirect(self.url("/%s" % self.name))
+            raise Redirect(self.uri("/%s" % self.name))
         elif action == "preview":
             data = {
                 "page": {"name": self.name, "text": text},
@@ -313,7 +313,7 @@ class WikiPageCSV(WikiPageFile):
                     parent=parent)
             self.search.update_page(self, self.name, text=text)
 
-            raise Redirect(self.url("/%s" % self.name))
+            raise Redirect(self.uri("/%s" % self.name))
         else:
             raise Exception("Invalid action %r" % action)
 
@@ -356,7 +356,7 @@ class WikiPageRST(WikiPageText):
         text = NEWLINES.sub("\n", text)
 
         if action == "cancel":
-            raise Redirect(self.url("/%s" % self.name))
+            raise Redirect(self.uri("/%s" % self.name))
         elif action == "preview":
             data = {
                 "page": {"name": self.name, "text": text},
@@ -374,7 +374,7 @@ class WikiPageRST(WikiPageText):
                     comment, parent=parent)
             self.search.update_page(self, self.name, text=text)
 
-            raise Redirect(self.url("/%s" % self.name))
+            raise Redirect(self.uri("/%s" % self.name))
         else:
             raise Exception("Invalid action %r" % action)
 
@@ -421,7 +421,7 @@ class WikiPageHTML(WikiPageText):
         text = NEWLINES.sub("\n", text)
 
         if action == "cancel":
-            raise Redirect(self.url("/%s" % self.name))
+            raise Redirect(self.uri("/%s" % self.name))
         elif action == "preview":
             data = {
                 "page": {"name": self.name, "text": text},
@@ -439,7 +439,7 @@ class WikiPageHTML(WikiPageText):
                 comment, parent=parent)
             self.search.update_page(self, self.name, text=text)
 
-            raise Redirect(self.url("/%s" % self.name))
+            raise Redirect(self.uri("/%s" % self.name))
         else:
             raise Exception("Invalid action %r" % action)
 

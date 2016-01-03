@@ -138,7 +138,7 @@ class WikiStorage(object):
         return os.path.join(self.repo_path, self._title_to_file(title))
 
     def _title_to_file(self, title):
-        title = unicode(title).strip()
+        title = title.encode(self.charset).__strip()
         filename = quote(title, safe='')
         # Escape special windows filenames and dot files
         _windows_device_files = ('CON', 'AUX', 'COM1', 'COM2', 'COM3',
@@ -228,9 +228,8 @@ class WikiStorage(object):
         try:
             temp_path = tempfile.mkdtemp(dir=self.path)
             file_path = os.path.join(temp_path, 'saved')
-            f = open(file_path, "wb")
-            f.write(data)
-            f.close()
+            with open(file_path, "wb") as f:
+                f.write(data)
             self.save_file(title, file_path, author, comment, parent)
         finally:
             try:
@@ -442,7 +441,8 @@ class WikiSubdirectoryStorage(WikiStorage):
     def _title_to_file(self, title):
         """Modified escaping allowing (some) slashes and spaces."""
 
-        title = unicode(title).strip()
+        title = title.encode(self.charset).strip()
+
         escaped = quote(title, safe='/ ')
         escaped = self.periods_re.sub('%2E', escaped)
         escaped = self.slashes_re.sub('%2F', escaped)

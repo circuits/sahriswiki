@@ -12,6 +12,16 @@ try:
 except IOError:
     README = RELEASE = ""
 
+
+def parse_requirements(filename):
+    with open(filename, "r") as f:
+        for line in f:
+            if line.startswith("git+http"):
+                continue
+            if line and line[:2] not in ("#", "-e"):
+                yield line.strip()
+
+
 setup(
     name="sahriswiki",
     version="0.9.0",
@@ -38,31 +48,21 @@ setup(
     packages=find_packages("."),
     package_data={
         "sahriswiki": [
-            "templates/*.html",
-            "htdocs/css/*.css",
-            "htdocs/img/*.png",
-            "htdocs/favicon.ico",
-            "htdocs/img/icons/*.png",
+            "themes/*/templates/*.html",
+            "themes/*/htdocs/css/*.css",
+            "themes/*/htdocs/img/*.png",
+            "themes/*/htdocs/favicon.ico",
+            "themes/*/htdocs/img/icons/*.png",
         ]
     },
     include_package_data=True,
     scripts=[
         "scripts/sahriswiki"
     ],
+    install_requires=list(parse_requirements("requirements.txt")),
     entry_points={
         "console_script": [
             "sahriswiki = sahriswiki.main:main"
         ]
     },
-    install_requires=[
-        "genshi",
-        "argparse",
-        "docutils",
-        "pygments",
-        "mercurial",
-        "pyinotify",
-        "sqlalchemy",
-        "feedformatter",
-        "circuits==2.1.0",
-    ]
 )

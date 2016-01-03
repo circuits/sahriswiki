@@ -10,11 +10,11 @@
   <h1>Recent Changes</h1>
   <ul>
    <li py:for="name, rev, date, author, comment in history">
-    <a href="${url('/+diff/%s?rev=%s' % (name, rev))}">
+    <a href="${uri('/+diff/%s?rev=%s' % (name, rev))}">
      ${strftime('%Y-%m-%d', gmtime(date))}
     </a>
-    <a href="${url('/%s' % name)}">${name}</a>
-    by <a href="${url('/~%s' % author)}">${author}</a>
+    <a href="${uri('/%s' % name)}">${name}</a>
+    by <a href="${uri('/~%s' % author)}">${author}</a>
     <py:choose test="len(comment) > 0">
      <py:when test="True">
       ${comment}

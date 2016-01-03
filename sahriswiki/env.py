@@ -130,17 +130,17 @@ class Environment(BaseComponent):
         return Permissions(self, self._login())
 
     def _metanav(self):
-        yield ("About",       self.url("/+about"),    )
-        yield ("Help",        self.url("/Help"),      )
-        yield ("History",     self.url("/+history"),  )
+        yield ("About",       self.uri("/+about"),    )
+        yield ("Help",        self.uri("/Help"),      )
+        yield ("History",     self.uri("/+history"),  )
 
         if not self._login():
-            yield ("Login",   self.url("/+login"),    )
+            yield ("Login",   self.uri("/+login"),    )
         else:
-            yield ("Logout",  self.url("/+logout"),   )
-            yield ("Profile", self.url("/+profile"),  )
+            yield ("Logout",  self.uri("/+logout"),   )
+            yield ("Profile", self.uri("/+profile"),  )
 
-        yield ("Register",    self.url("/+register"), )
+        yield ("Register",    self.uri("/+register"), )
 
     def _ctxnav(self, type="view", name=None):
         permissions = self._permissions()
@@ -149,32 +149,32 @@ class Environment(BaseComponent):
             yield ("Information",   self._ctxnav("info", name),)
             yield ("Miscellaneous", self._ctxnav("misc", name),)
         elif type in ("index", "search"):
-            yield ("Index",         self.url("/+search"))
-            yield ("Orphaned",      self.url("/+orphaned"))
-            yield ("Wanted",        self.url("/+wanted"))
+            yield ("Index",         self.uri("/+search"))
+            yield ("Orphaned",      self.uri("/+orphaned"))
+            yield ("Wanted",        self.uri("/+wanted"))
         elif type == "history":
             if name:
-                yield ("RSS 1.0",   self.url("/+feed/%s/?format=rss1") % name)
-                yield ("RSS 2.0",   self.url("/+feed/%s/?format=rss2") % name)
-                yield ("Atom",      self.url("/+feed/%s/?format=atom") % name)
+                yield ("RSS 1.0",   self.uri("/+feed/%s/?format=rss1" % name))
+                yield ("RSS 2.0",   self.uri("/+feed/%s/?format=rss2" % name))
+                yield ("Atom",      self.uri("/+feed/%s/?format=atom" % name))
             else:
-                yield ("RSS 1.0",   self.url("/+feed/?format=rss1"))
-                yield ("RSS 2.0",   self.url("/+feed/?format=rss2"))
-                yield ("Atom",      self.url("/+feed/?format=atom"))
+                yield ("RSS 1.0",   self.uri("/+feed/?format=rss1"))
+                yield ("RSS 2.0",   self.uri("/+feed/?format=rss2"))
+                yield ("Atom",      self.uri("/+feed/?format=atom"))
         elif name and type == "func":
             if "PAGE_EDIT" in permissions:
-                yield ("Edit",      self.url("/+edit/%s" % name))
+                yield ("Edit",      self.uri("/+edit/%s" % name))
             if "PAGE_DELETE" in permissions:
-                yield ("Delete",    self.url("/+delete/%s" % name))
+                yield ("Delete",    self.uri("/+delete/%s" % name))
             if "PAGE_RENAME" in permissions:
-                yield ("Rename",    self.url("/+rename/%s" % name))
+                yield ("Rename",    self.uri("/+rename/%s" % name))
         elif name and type == "info":
-            yield ("History",       self.url("/+history/%s" % name))
+            yield ("History",       self.uri("/+history/%s" % name))
             yield ("Feeds",          self._ctxnav("history", name))
         elif name and type == "misc":
-            yield ("Download",      self.url("/+download/%s" % name))
+            yield ("Download",      self.uri("/+download/%s" % name))
             if "PAGE_UPLOAD" in permissions:
-                yield ("Upload",    self.url("/+upload/%s" % name))
+                yield ("Upload",    self.uri("/+upload/%s" % name))
 
     def _breadcrumbs(self, page=None):
         yield ("", "Home", "Home",)
@@ -202,14 +202,14 @@ class Environment(BaseComponent):
             else:
                 return "wiki new"
         elif type == "url":
-            base = urlparse(self.url("/"))
+            base = urlparse(self.uri("/"))
             link = urlparse(url)
             if not all([base[i] == link[i] for i in range(2)]):
                 return "external"
 
     def _wiki_links_path_func(self, tag, path, (environ, context)):
         if tag == "img":
-            return self.url("/+download", path)
+            return self.uri("/+download", path)
         elif tag == "a":
             if path.startswith(".."):
                 path = path[2:]
@@ -224,15 +224,15 @@ class Environment(BaseComponent):
                 return os.path.join(context["page"]["name"], path)
         return path
 
-    def url(self, *args):
-        return self.request.url("/".join(args))
+    def uri(self, *args):
+        return self.request.uri("/".join(args))
 
-    def staticurl(self, url):
+    def staticuri(self, url):
         base = self.config.get("static-baseurl", None)
         if base:
             return basejoin(base, url)
         else:
-            return self.request.url("/%s" % url)
+            return self.request.uri("/%s" % url)
 
     def get_page(self, name):
         """Creates a page object based on page"s mime type"""
@@ -271,11 +271,11 @@ class Environment(BaseComponent):
             "sahriswiki": {
                 "version": sahriswiki.__version__
             },
-            "url":         self.url,
+            "uri":         self.uri,
             "site":        self.site,
             "include":     self.include,
             "config":      self.config,
-            "staticurl":   self.staticurl,
+            "staticuri":   self.staticuri,
             "permissions": self._permissions(),
             "ctxnav":      chain(self._ctxnav(), data.get("ctxnav", [])),
             "metanav":     chain(self._metanav(), data.get("metanav", [])),

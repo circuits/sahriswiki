@@ -81,7 +81,8 @@ class Root(BaseController):
             file = kwargs.get("file", None)
             if file is not None:
                 filename = file.filename
-                filedata = file.value
+                file.file.seek(0)
+                filedata = file.file.read()
                 comment = kwargs.get("comment", "Uploaded file: %s" % filename)
 
                 data["filename"] = filename
@@ -124,7 +125,7 @@ class Root(BaseController):
 
         referer = self.request.headers.get("Referer", None)
         if referer:
-            base = urlparse(self.url())
+            base = urlparse(self.uri.utf8())
             link = urlparse(referer)
             if all([base[i] == link[i] for i in range(2)]):
                 return self.redirect(referer)

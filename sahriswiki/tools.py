@@ -16,24 +16,13 @@ from genshi import Markup
 
 from mercurial.node import short
 
-from circuits.io import Notify
-from circuits.web import Response
+from circuits.web import response
 from circuits.web.tools import gzip
 from circuits import handler, BaseComponent
 from circuits.web.tools import validate_etags
 
 import sahriswiki
 
-class AutoReloader(BaseComponent):
-
-    def init(self, environ):
-        self.environ = environ
-        self.notify = Notify().register(self)
-        self.notify.add_path(self.environ.config.get("repo"))
-
-    @handler("modified")
-    def _on_modified(self, *args, **kwargs):
-        self.environ.storage.reopen()
 
 class CacheControl(BaseComponent):
 
@@ -44,8 +33,8 @@ class CacheControl(BaseComponent):
 
         self.environ = environ
 
-    @handler("request", filter=True, priority=1.0)
-    def _on_request(self, request, response):
+    @handler("request", priority=1.0)
+    def _on_request(self, event, request, response):
         if request.path in ("/+login", "/+logout"):
             return
 
@@ -59,7 +48,9 @@ class CacheControl(BaseComponent):
         response.headers.add_header("ETag", etag)
         response = validate_etags(request, response)
         if response:
+            event.stop()
             return response
+
 
 class Compression(BaseComponent):
 
@@ -72,6 +63,7 @@ class Compression(BaseComponent):
         response = response_event[0]
         gzip(response, mime_types=self.mime_types)
 
+
 class ErrorHandler(BaseComponent):
 
     channel = "web"
@@ -82,16 +74,20 @@ class ErrorHandler(BaseComponent):
         self.environ = environ
         self.render = self.environ.render
 
-    @handler("httperror", filter=True)
-    def _on_httperror(self, event, request, response, code, **kwargs):
-        self.environ.request = request
-        self.environ.response = response
+    @handler("httperror", priority=1.0)
+    def _on_httperror(self, event, req, res, code, **kwargs):
+        event.stop()
+
+        self.environ.request = req
+        self.environ.response = res
         data = event.data.copy()
         data["title"] = "Error"
         data["traceback"] = Markup(data["traceback"])
         data["description"] = Markup(data["description"] or u"")
         response.body = self.render("error.html", **data)
-        return self.fire(Response(response))
+
+        return self.fire(response(res))
+
 
 class SignalHandler(BaseComponent):
 

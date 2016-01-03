@@ -11,7 +11,6 @@
 * [[http://code.google.com/p/argparse/|argparse]] //CLI Options//
 * [[http://docutils.sourceforge.net/|docutils]] //reStructuredText Support//
 * [[http://pygments.org/|pygments]] //Syntax Highlighting//
-* [[http://pyinotify.sourceforge.net/|pyinotify]] //File System Monitoring//
 
 All of these dependencies should automatically get installed when you install
 [[SahrisWiki]]. If not, most of them can be installed by simply issuing

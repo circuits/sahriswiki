@@ -27,7 +27,6 @@ from circuits.web import Logger, Server, Sessions, Static
 from root import Root
 from config import Config
 from env import Environment
-from tools import AutoReloader
 from tools import CacheControl, Compression
 from tools import ErrorHandler, SignalHandler
 
@@ -45,7 +44,6 @@ def main():
 
     environ = Environment(config)
 
-    AutoReloader(environ).register(environ)
     SignalHandler(environ).register(environ)
 
     manager += environ

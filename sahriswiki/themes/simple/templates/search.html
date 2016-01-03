@@ -11,7 +11,7 @@
     <py:when test="True">
      <ol>
       <li py:for="score, name, snippet in results">
-       <b><a href="${url('/%s' % name)}">${name}</a></b>
+       <b><a href="${uri('/%s' % name)}">${name}</a></b>
        <i>${score}</i>
        <p>${snippet}</p>
       </li>
@@ -21,8 +21,8 @@
      <p py:if="'PAGE_EDIT in permissions'">
       Maybe you wanted to:
       <ul>
-       <li><a href="${url('/+edit', query)}">Create the Page</a></li>
-       <li><a href="${url('/+upload', query)}">Upload a File</a></li>
+       <li><a href="${uri('/+edit', query)}">Create the Page</a></li>
+       <li><a href="${uri('/+upload', query)}">Upload a File</a></li>
       </ul>
      </p>
     </py:otherwise>
