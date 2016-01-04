@@ -5,6 +5,8 @@ CMD ["-p", "80", "--debug"]
 
 EXPOSE 80
 
+VOLUME /data
+
 RUN apk -U add build-base python-dev git && \
     rm -rf /var/cache/apk/*
 
