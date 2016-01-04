@@ -14,7 +14,7 @@ sahriswiki
    :alt: 'Stories in Ready'
 
 sahriswiki is a **lightweight** **Wiki Engine** built using the
-`circuits`_ and circuits.web framework framework, is modular, pluggable
+`circuits`_ and circuits.web framework framework, is modular, plugable
 and themeable.
 
 sahriswiki aims to implement a core set of features that are a mixture
