@@ -1,1 +1,1 @@
-Initial Commit
+Added a Quick Start for Docker

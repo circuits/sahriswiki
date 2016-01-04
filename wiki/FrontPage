@@ -18,6 +18,21 @@ Try this wiki out for yourself!
 
 **NB**: To help circumvent SPAM Authentication and Authorization has been turned on. [[+login|Login]] with {{{admin:admin}}} before editing these pages.
 
+== Quick Start with Docker ==
+
+You can easily and quickly spin up an instance of the SahrisWiki Engine
+using [[https://www.docker.com|Docker]] by simply running:
+
+<<code lang="sh">>
+docker run -p 80:80 prologic/sahriswiki
+<</code>>
+
+This image is an Automated Build available on the
+[[https://hub.docker.com|Docker Hub]] at
+[[https://hub.docker.com/r/prologic/sahriswiki|prologic/sahriswiki]]
+
+Enjoy! :)
+
 == Installing the latest Development Version ==
 
 Ensure you have: [[http://www.python.org/|Python]], [[http://pypi.python.org/pypi/setuptools|setuptools]] or [[http://pypi.python.org/pypi/distribute|distribute]] and [[http://mercurial.selenic.com/|Mercurial]] installed on your system.
@@ -30,5 +45,3 @@ $ pip install -e .
 
 $ sahriswiki --help
 <</code>>
-
-Enjoy! :)
