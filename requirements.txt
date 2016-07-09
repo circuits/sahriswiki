@@ -1,8 +1,8 @@
 genshi
+circuits
 argparse
 docutils
 pygments
 mercurial
 sqlalchemy
 feedformatter
-git+https://github.com/circuits/circuits#egg=circuits
